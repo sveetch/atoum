@@ -11,11 +11,18 @@ class Consumable(models.Model):
     Attributes:
         created (models.DateTimeField): Required creation datetime, automatically
             filled.
+        modified (models.DateTimeField): Required creation datetime, automatically
+            filled.
         title (models.CharField): Required unique title string.
         slug (models.CharField): Required unique slug string.
     """
     created = models.DateTimeField(
-        _("created on"),
+        _("creation date"),
+        db_index=True,
+        default=timezone.now,
+    )
+    modified = models.DateTimeField(
+        _("modification date"),
         db_index=True,
         default=timezone.now,
     )
@@ -33,6 +40,11 @@ class Consumable(models.Model):
         default="",
         unique=True,
     )
+
+    COMMON_ORDER_BY = ["title"]
+    """
+    List of field order commonly used in frontend view/api
+    """
 
     class Meta:
         verbose_name = _("Consumable")
@@ -55,3 +67,9 @@ class Consumable(models.Model):
         return reverse("atoum:consumable-detail", args=[
             str(self.id)
         ])
+
+    def save(self, *args, **kwargs):
+        # Auto update 'modified' value on each save
+        self.modified = timezone.now()
+
+        super().save(*args, **kwargs)

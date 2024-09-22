@@ -12,6 +12,8 @@ class Assortment(models.Model):
         consumable (models.ForeignKey): Required Consumable object.
         created (models.DateTimeField): Required creation datetime, automatically
             filled.
+        modified (models.DateTimeField): Required creation datetime, automatically
+            filled.
         title (models.CharField): Required unique title string.
         slug (models.CharField): Required unique slug string.
     """
@@ -21,7 +23,12 @@ class Assortment(models.Model):
         on_delete=models.CASCADE
     )
     created = models.DateTimeField(
-        _("created on"),
+        _("creation date"),
+        db_index=True,
+        default=timezone.now,
+    )
+    modified = models.DateTimeField(
+        _("modification date"),
         db_index=True,
         default=timezone.now,
     )
@@ -39,6 +46,11 @@ class Assortment(models.Model):
         default="",
         unique=True,
     )
+
+    COMMON_ORDER_BY = ["title"]
+    """
+    List of field order commonly used in frontend view/api
+    """
 
     class Meta:
         verbose_name = _("Assortment")
@@ -61,3 +73,9 @@ class Assortment(models.Model):
         return reverse("atoum:assortment-detail", args=[
             str(self.id)
         ])
+
+    def save(self, *args, **kwargs):
+        # Auto update 'modified' value on each save
+        self.modified = timezone.now()
+
+        super().save(*args, **kwargs)

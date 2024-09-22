@@ -16,13 +16,20 @@ class Brand(models.Model):
     Attributes:
         created (models.DateTimeField): Required creation datetime, automatically
             filled.
+        modified (models.DateTimeField): Required creation datetime, automatically
+            filled.
         title (models.CharField): Required unique title string.
         slug (models.CharField): Required unique slug string.
         description (models.TextField): Optional description long string.
         cover (SmartMediaField): Optional cover image file.
     """
     created = models.DateTimeField(
-        _("created on"),
+        _("creation date"),
+        db_index=True,
+        default=timezone.now,
+    )
+    modified = models.DateTimeField(
+        _("modification date"),
         db_index=True,
         default=timezone.now,
     )
@@ -53,6 +60,11 @@ class Brand(models.Model):
         default="",
     )
 
+    COMMON_ORDER_BY = ["title"]
+    """
+    List of field order commonly used in frontend view/api
+    """
+
     class Meta:
         verbose_name = _("Brand")
         verbose_name_plural = _("Brands")
@@ -74,6 +86,12 @@ class Brand(models.Model):
         return reverse("atoum:brand-detail", args=[
             str(self.id)
         ])
+
+    def save(self, *args, **kwargs):
+        # Auto update 'modified' value on each save
+        self.modified = timezone.now()
+
+        super().save(*args, **kwargs)
 
 
 # Connect some signals

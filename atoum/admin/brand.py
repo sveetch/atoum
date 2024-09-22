@@ -5,4 +5,4 @@ from ..models import Brand
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ["created", "modified"]

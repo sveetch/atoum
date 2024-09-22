@@ -5,4 +5,4 @@ from ..models import Assortment
 
 @admin.register(Assortment)
 class AssortmentAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ["created", "modified"]

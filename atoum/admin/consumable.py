@@ -5,4 +5,4 @@ from ..models import Consumable
 
 @admin.register(Consumable)
 class ConsumableAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ["created", "modified"]

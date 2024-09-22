@@ -15,7 +15,10 @@ class Product(models.Model):
 
     Attributes:
         category (models.ForeignKey): Required Assortment object.
+        brands (models.ManyToManyField): Optional Brand objects.
         created (models.DateTimeField): Required creation datetime, automatically
+            filled.
+        modified (models.DateTimeField): Required creation datetime, automatically
             filled.
         title (models.CharField): Required unique title string.
         slug (models.CharField): Required unique slug string.
@@ -27,8 +30,19 @@ class Product(models.Model):
         verbose_name="Related Category",
         on_delete=models.CASCADE
     )
+    brands = models.ManyToManyField(
+        "atoum.brand",
+        verbose_name=_("brands"),
+        related_name="products",
+        blank=True,
+    )
     created = models.DateTimeField(
-        _("created on"),
+        _("creation date"),
+        db_index=True,
+        default=timezone.now,
+    )
+    modified = models.DateTimeField(
+        _("modification date"),
         db_index=True,
         default=timezone.now,
     )
@@ -38,7 +52,6 @@ class Product(models.Model):
         max_length=100,
         default="",
         unique=True,
-        # Unique for category ?
     )
     slug = models.CharField(
         _("slug"),
@@ -46,7 +59,6 @@ class Product(models.Model):
         max_length=130,
         default="",
         unique=True,
-        # Unique for category ?
     )
     description = models.TextField(
         _("description"),
@@ -60,6 +72,11 @@ class Product(models.Model):
         blank=True,
         default="",
     )
+
+    COMMON_ORDER_BY = ["title"]
+    """
+    List of field order commonly used in frontend view/api
+    """
 
     class Meta:
         verbose_name = _("Product")
@@ -82,6 +99,12 @@ class Product(models.Model):
         return reverse("atoum:product-detail", args=[
             str(self.id)
         ])
+
+    def save(self, *args, **kwargs):
+        # Auto update 'modified' value on each save
+        self.modified = timezone.now()
+
+        super().save(*args, **kwargs)
 
 
 # Connect some signals

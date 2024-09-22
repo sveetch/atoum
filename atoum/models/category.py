@@ -12,6 +12,8 @@ class Category(models.Model):
         assortment (models.ForeignKey): Required Assortment object.
         created (models.DateTimeField): Required creation datetime, automatically
             filled.
+        modified (models.DateTimeField): Required creation datetime, automatically
+            filled.
         title (models.CharField): Required unique title string.
         slug (models.CharField): Required unique slug string.
     """
@@ -21,7 +23,12 @@ class Category(models.Model):
         on_delete=models.CASCADE
     )
     created = models.DateTimeField(
-        _("created on"),
+        _("creation date"),
+        db_index=True,
+        default=timezone.now,
+    )
+    modified = models.DateTimeField(
+        _("modification date"),
         db_index=True,
         default=timezone.now,
     )
@@ -41,6 +48,11 @@ class Category(models.Model):
         unique=True,
         # Unique for assortment ?
     )
+
+    COMMON_ORDER_BY = ["title"]
+    """
+    List of field order commonly used in frontend view/api
+    """
 
     class Meta:
         verbose_name = _("Category")
@@ -63,3 +75,9 @@ class Category(models.Model):
         return reverse("atoum:category-detail", args=[
             str(self.id)
         ])
+
+    def save(self, *args, **kwargs):
+        # Auto update 'modified' value on each save
+        self.modified = timezone.now()
+
+        super().save(*args, **kwargs)
