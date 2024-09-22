@@ -145,7 +145,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.staticfiles",
     "django.forms",
-    "atoum.apps.atoumConfig",
+    "atoum",
 ]
 
 LOGIN_REDIRECT_URL = "/"
@@ -156,6 +156,15 @@ LOGOUT_REDIRECT_URL = "/"
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 
+"""
+Django smart media configuration using its defaults
+"""
+from smart_media.settings import *  # noqa: E402,F401,F403
+
+INSTALLED_APPS.extend([
+    "sorl.thumbnail",
+    "smart_media",
+])
 
 
 """
