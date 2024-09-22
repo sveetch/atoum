@@ -63,6 +63,12 @@ help:
 	@echo "  po                         -- to update every PO files from application for enabled languages"
 	@echo "  mo                         -- to build MO files from application PO files"
 	@echo
+	@echo "  Diskette commands"
+	@echo "  ================="
+	@echo
+	@echo "  disk-dump                  -- to create a Diskette archive with data and storages"
+	@echo "  disk-load                  -- to load a Diskette archive, your current database and storages will be overwritten"
+	@echo
 	@echo "  Frontend commands"
 	@echo "  ================="
 	@echo
@@ -162,7 +168,7 @@ install-backend:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Install everything for development <---$(FORMATRESET)\n"
 	@echo ""
-	$(PIP_BIN) install -e .[dev,quality,doc,doc-live,release]
+	$(PIP_BIN) install -e .[sandbox,dev,quality,doc,doc-live,release]
 .PHONY: install-backend
 
 install-frontend:
@@ -293,6 +299,26 @@ livedocs:
 	@echo ""
 	$(SPHINX_RELOAD_BIN)
 .PHONY: livedocs
+
+disk-dump:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Creating a Diskette archive <---$(FORMATRESET)\n"
+	@echo ""
+	$(PYTHON_BIN) $(DJANGO_MANAGE) diskette_dump -v 2
+.PHONY: disk-dump
+
+disk-load:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Loading local Diskette archive <---$(FORMATRESET)\n"
+	@echo ""
+	rm -Rf var/backup_db
+	rm -Rf var/backup_media
+	mv var/db var/backup_db
+	mv var/media var/backup_media
+	$(MAKE) create-var-dirs
+	$(MAKE) migrate
+	$(PYTHON_BIN) $(DJANGO_MANAGE) diskette_load -v 2 --storages-basepath . diskette_data_storages.tar.gz
+.PHONY: disk-load
 
 flake:
 	@echo ""

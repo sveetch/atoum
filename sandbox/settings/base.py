@@ -145,7 +145,6 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.staticfiles",
     "django.forms",
-    "atoum",
 ]
 
 LOGIN_REDIRECT_URL = "/"
@@ -168,6 +167,54 @@ INSTALLED_APPS.extend([
 
 
 """
-SPECIFIC BASE APPLICATIONS SETTINGS BELOW
+Atoum settings
 """
 from atoum.settings import *  # noqa: E402,F401,F403
+
+INSTALLED_APPS.append("atoum")
+
+
+"""
+Diskette configuration using its defaults
+"""
+from diskette.settings import *  # noqa: E402,F401,F403
+
+INSTALLED_APPS.append("diskette")
+
+DISKETTE_APPS = [
+    [
+        "django.contrib.auth", {
+            "comments": "django.contrib.auth: user and groups, no perms",
+            "natural_foreign": True,
+            "models": ["auth.Group","auth.User"]
+        }
+    ],
+    [
+        "django.contrib.sites", {
+            "comments": "django.contrib.sites",
+            "natural_foreign": True,
+            "models": "sites"
+        }
+    ],
+    [
+        "atoum", {
+            "comments": "Atoum",
+            "natural_foreign": True,
+            "models": [
+                "atoum.Assortment",
+                "atoum.Brand",
+                "atoum.Category",
+                "atoum.Consumable",
+                "atoum.Product_brands",
+                "atoum.Product"
+            ]
+        }
+    ]
+]
+
+DISKETTE_STORAGES = [MEDIA_ROOT]
+DISKETTE_STORAGES_EXCLUDES = [
+    "cache/*",
+    "pil/*",
+    "public/thumbnails/*",
+]
