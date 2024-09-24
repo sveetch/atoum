@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
 from ..models import Consumable
 
@@ -9,3 +10,19 @@ class ConsumableAdmin(admin.ModelAdmin):
     prepopulated_fields = {
         "slug": ("title",),
     }
+    ordering = Consumable.COMMON_ORDER_BY
+    search_fields = [
+        "title",
+    ]
+    list_display = (
+        "title",
+        "count_assortments",
+        "modified",
+    )
+
+    def count_assortments(self, obj):
+        """
+        Count related assortments.
+        """
+        return obj.assortment_set.count()
+    count_assortments.short_description = _("Assortments")

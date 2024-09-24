@@ -15,7 +15,7 @@ class Product(models.Model):
 
     Attributes:
         category (models.ForeignKey): Required Assortment object.
-        brands (models.ManyToManyField): Optional Brand objects.
+        brand (models.ForeignKey): Optional Brand object.
         created (models.DateTimeField): Required creation datetime, automatically
             filled.
         modified (models.DateTimeField): Required creation datetime, automatically
@@ -27,14 +27,16 @@ class Product(models.Model):
     """
     category = models.ForeignKey(
         "atoum.category",
-        verbose_name="Related Category",
+        verbose_name=_("Category"),
         on_delete=models.CASCADE
     )
-    brands = models.ManyToManyField(
+    brand = models.ForeignKey(
         "atoum.brand",
-        verbose_name=_("brands"),
-        related_name="products",
+        verbose_name=_("brand"),
+        on_delete=models.CASCADE,
         blank=True,
+        null=True,
+        default=None,
     )
     created = models.DateTimeField(
         _("creation date"),

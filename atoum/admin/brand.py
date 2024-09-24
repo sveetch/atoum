@@ -11,3 +11,8 @@ class BrandAdmin(SmartModelAdmin):
     prepopulated_fields = {
         "slug": ("title",),
     }
+    ordering = Brand.COMMON_ORDER_BY
+    search_fields = [
+        "title",
+        "description",
+    ]

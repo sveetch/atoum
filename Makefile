@@ -221,7 +221,7 @@ run:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Running development server <---$(FORMATRESET)\n"
 	@echo ""
-	$(PYTHON_BIN) $(DJANGO_MANAGE) runserver 0.0.0.0:8001
+	$(PYTHON_BIN) $(DJANGO_MANAGE) runserver 0.0.0.0:8888
 .PHONY: run
 
 po:
@@ -304,7 +304,7 @@ disk-dump:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Creating a Diskette archive <---$(FORMATRESET)\n"
 	@echo ""
-	$(PYTHON_BIN) $(DJANGO_MANAGE) diskette_dump -v 2
+	$(PYTHON_BIN) $(DJANGO_MANAGE) diskette_dump -v 2 --indent 4
 .PHONY: disk-dump
 
 disk-load:
@@ -385,3 +385,10 @@ quality: check-django check-migrations test-initial flake docs check-release fre
 	@echo ""
 	@echo ""
 .PHONY: quality
+
+import:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Import samples <---$(FORMATRESET)\n"
+	@echo ""
+	rm -Rf var && cp -r initial_var var && $(PYTHON_BIN) $(DJANGO_MANAGE) importer
+.PHONY: import

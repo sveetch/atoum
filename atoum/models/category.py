@@ -19,7 +19,7 @@ class Category(models.Model):
     """
     assortment = models.ForeignKey(
         "atoum.assortment",
-        verbose_name="Related consumable assortment",
+        verbose_name=_("Assortment"),
         on_delete=models.CASCADE
     )
     created = models.DateTimeField(
@@ -37,16 +37,12 @@ class Category(models.Model):
         blank=False,
         max_length=100,
         default="",
-        unique=True,
-        # Unique for assortment ?
     )
     slug = models.CharField(
         _("slug"),
         blank=False,
         max_length=130,
         default="",
-        unique=True,
-        # Unique for assortment ?
     )
 
     COMMON_ORDER_BY = ["title"]
@@ -59,6 +55,22 @@ class Category(models.Model):
         verbose_name_plural = _("Categories")
         ordering = [
             "title",
+        ]
+        constraints = [
+            # Enforce unique couple assortment + title
+            models.UniqueConstraint(
+                fields=[
+                    "assortment", "title"
+                ],
+                name="atoum_unique_cat_assortment_title"
+            ),
+            # Enforce unique couple assortment + slug
+            models.UniqueConstraint(
+                fields=[
+                    "assortment", "slug"
+                ],
+                name="atoum_unique_cat_assortment_slug"
+            ),
         ]
 
     def __str__(self):

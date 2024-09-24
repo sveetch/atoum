@@ -11,3 +11,19 @@ class ProductAdmin(SmartModelAdmin):
     prepopulated_fields = {
         "slug": ("title",),
     }
+    ordering = Product.COMMON_ORDER_BY
+    search_fields = [
+        "title",
+        "description",
+    ]
+    list_display = (
+        "title",
+        "category",
+        "brand",
+        "modified",
+    )
+    autocomplete_fields = ["category", "brand"]
+    list_filter = (
+        "category",
+        "brand",
+    )

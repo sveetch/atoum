@@ -19,7 +19,7 @@ class Assortment(models.Model):
     """
     consumable = models.ForeignKey(
         "atoum.consumable",
-        verbose_name="Related consumable",
+        verbose_name=_("Consumable"),
         on_delete=models.CASCADE
     )
     created = models.DateTimeField(
