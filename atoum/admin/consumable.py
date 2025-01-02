@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
 from ..models import Consumable
+from .assortment import AssortmentInline
 
 
 @admin.register(Consumable)
@@ -19,6 +20,9 @@ class ConsumableAdmin(admin.ModelAdmin):
         "count_assortments",
         "modified",
     )
+    inlines = [
+        AssortmentInline,
+    ]
 
     def count_assortments(self, obj):
         """

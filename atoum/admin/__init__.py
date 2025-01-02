@@ -2,7 +2,7 @@ from .assortment import AssortmentAdmin
 from .brand import BrandAdmin
 from .category import CategoryAdmin
 from .consumable import ConsumableAdmin
-from .product import ProductAdmin
+from .product import ProductAdmin, ProductInline
 
 
 __all__ = [
@@ -11,4 +11,5 @@ __all__ = [
     "CategoryAdmin",
     "ConsumableAdmin",
     "ProductAdmin",
+    "ProductInline",
 ]

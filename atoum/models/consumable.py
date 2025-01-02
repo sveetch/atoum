@@ -56,17 +56,14 @@ class Consumable(models.Model):
     def __str__(self):
         return self.title
 
-    def disable_get_absolute_url(self):
+    def get_absolute_url(self):
         """
-        NOTE: Disabled until view exist to avoid admin error 500
         Return absolute URL to the detail view.
 
         Returns:
             string: An URL.
         """
-        return reverse("atoum:consumable-detail", args=[
-            str(self.id)
-        ])
+        return reverse("atoum:consumable-detail", args=[self.slug])
 
     def save(self, *args, **kwargs):
         # Auto update 'modified' value on each save

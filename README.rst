@@ -6,7 +6,7 @@
 Atoum
 =====
 
-A Django application to manage stock and further.
+A Django application to manage stock of consumables and further.
 
 This is currently in early stage development.
 

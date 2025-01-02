@@ -1,10 +1,16 @@
-from .blog import BlogFactory
-from .article import ArticleFactory
+from .assortment import AssortmentFactory
+from .brand import BrandFactory
+from .category import CategoryFactory
+from .consumable import ConsumableFactory
+from .product import ProductFactory
 from .user import UserFactory
 
 
 __all__ = [
-    "ArticleFactory",
-    "BlogFactory",
+    "AssortmentFactory",
+    "BrandFactory",
+    "CategoryFactory",
+    "ConsumableFactory",
+    "ProductFactory",
     "UserFactory",
 ]

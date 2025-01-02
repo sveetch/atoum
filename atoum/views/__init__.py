@@ -1,6 +1,7 @@
 from .blog import BlogIndexView, BlogDetailView
 from .article import ArticleDetailView
 from .consumable import RecursiveTreeView
+from .consumable import DummyView
 
 
 __all__ = [
@@ -8,4 +9,5 @@ __all__ = [
     "BlogDetailView",
     "ArticleDetailView",
     "RecursiveTreeView",
+    "DummyView",
 ]
