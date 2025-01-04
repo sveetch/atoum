@@ -5,7 +5,7 @@ from atoum.utils.tests import (
 )
 
 
-def test_key_admin_ping_add(db, admin_client):
+def test_admin_ping_add(db, admin_client):
     """
     Consumable model admin add form view should not raise error on GET request.
     """
@@ -16,7 +16,7 @@ def test_key_admin_ping_add(db, admin_client):
     assert response.status_code == 200
 
 
-def test_key_admin_ping_list(db, admin_client):
+def test_admin_ping_list(db, admin_client):
     """
     Consumable model admin list view should not raise error on GET request.
     """
@@ -27,7 +27,7 @@ def test_key_admin_ping_list(db, admin_client):
     assert response.status_code == 200
 
 
-def test_key_admin_ping_detail(db, admin_client):
+def test_admin_ping_detail(db, admin_client):
     """
     Consumable model admin detail view should not raise error on GET request.
     """

@@ -330,7 +330,7 @@ test:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Tests <---$(FORMATRESET)\n"
 	@echo ""
-	$(PYTEST_BIN) tests/
+	$(PYTEST_BIN) --reuse-db tests/
 	rm -Rf var/media-tests/
 .PHONY: test
 
