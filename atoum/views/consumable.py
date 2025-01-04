@@ -1,4 +1,4 @@
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView
 
 
 from ..models import Consumable
@@ -7,19 +7,21 @@ from ..models import Consumable
 class RecursiveTreeView(ListView):
     """
     Full recursive tree of Atoum objects (excepted Brand).
+
+    .. WARNING::
+
+        This recursive tree is highly innefficient on database queries.
+        Usage of ``prefetch_related`` is not enough to avoid cascade of queryset for
+        products.
+
+        If this view is to be keeped, it will need to be optimized with a tree resolving
+        that would gather objects of respectively all consumables, assortments,
+        categories and then products.
     """
     model = Consumable
     template_name = "atoum/recursivetree.html"
     paginate_by = None
 
     def get_queryset(self):
-        q = self.model.objects.all()
+        q = self.model.objects.all().prefetch_related("assortment_set")
         return q.order_by("title")
-
-
-class DummyView(TemplateView):
-    """
-    Temporary dummy view that show nothing. Used for get_absolute_url from models until
-    their detail view has been done.
-    """
-    template_name = "atoum/dummy.html"

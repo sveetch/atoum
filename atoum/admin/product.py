@@ -2,11 +2,13 @@ from django.contrib import admin
 
 from smart_media.admin import SmartModelAdmin
 
+from ..forms import ProductAdminForm
 from ..models import Product
 
 
 @admin.register(Product)
 class ProductAdmin(SmartModelAdmin):
+    form = ProductAdminForm
     list_select_related = ["category"]
     readonly_fields = ["created", "modified"]
     prepopulated_fields = {
@@ -23,14 +25,14 @@ class ProductAdmin(SmartModelAdmin):
         "brand",
         "modified",
     )
-    autocomplete_fields = ["category", "brand"]
+    autocomplete_fields = ["brand"]
     list_filter = (
         "category",
         "brand",
     )
 
 
-class ProductInline(admin.StackedInline):
+class ProductAdminInline(admin.StackedInline):
     model = Product
     autocomplete_fields = ["category", "brand"]
     exclude = ["created", "modified", "description"]

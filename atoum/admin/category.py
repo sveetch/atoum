@@ -1,12 +1,14 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from ..forms import CategoryAdminForm
 from ..models import Category
-from .product import ProductInline
+from .product import ProductAdminInline
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    form = CategoryAdminForm
     list_select_related = ["assortment"]
     readonly_fields = ["created", "modified"]
     prepopulated_fields = {
@@ -25,9 +27,8 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter = (
         "assortment",
     )
-    autocomplete_fields = ["assortment"]
     inlines = [
-        ProductInline,
+        ProductAdminInline,
     ]
 
     def count_products(self, obj):

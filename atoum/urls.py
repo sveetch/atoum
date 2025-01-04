@@ -2,7 +2,10 @@ from django.urls import path
 
 from .views import (
     RecursiveTreeView,
+    AssortmentAutocompleteView,
+    CategoryAutocompleteView,
     DummyView,
+    ProductAutocompleteView,
 )
 
 
@@ -40,5 +43,20 @@ urlpatterns = [
         "products/<slug:slug>/",
         DummyView.as_view(),
         name="product-detail"
+    ),
+    path(
+        "autocomplete/assortments/",
+        AssortmentAutocompleteView.as_view(),
+        name="autocomplete-assortments",
+    ),
+    path(
+        "autocomplete/categories/",
+        CategoryAutocompleteView.as_view(),
+        name="autocomplete-categories",
+    ),
+    path(
+        "autocomplete/products/",
+        ProductAutocompleteView.as_view(),
+        name="autocomplete-products",
     ),
 ]

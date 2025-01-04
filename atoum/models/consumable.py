@@ -56,6 +56,15 @@ class Consumable(models.Model):
     def __str__(self):
         return self.title
 
+    def get_assortments(self):
+        """
+        Return a queryset for assortment related to the consumable.
+
+        Returns:
+            Queryset:
+        """
+        return self.assortment_set.all()
+
     def get_absolute_url(self):
         """
         Return absolute URL to the detail view.

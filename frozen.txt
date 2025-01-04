@@ -1,0 +1,24 @@
+# Frozen requirement versions for 'atoum==0.2.0rc6' installation
+Django==5.0.9
+django-smart-media==0.3.1
+django-autocomplete-light==3.11.0
+# From extra requirements 'sandbox'
+diskette==0.3.6
+django-debug-toolbar==4.4.6
+# From extra requirements 'dev'
+pytest==8.3.3
+pytest-django==4.9.0
+factory-boy==3.3.1
+pyquery==2.0.1
+freezegun==1.5.1
+# From extra requirements 'quality'
+flake8==7.1.1
+tox==4.20.0
+# From extra requirements 'doc'
+sphinx==8.0.2
+furo==2024.8.6
+sphinx-copybutton==0.5.2
+# From extra requirements 'doc-live'
+livereload==2.7.0
+# From extra requirements 'release'
+twine==5.1.1

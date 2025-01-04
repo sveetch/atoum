@@ -18,6 +18,38 @@ DATABASES = {
 
 # Import local settings if any
 try:
+    import debug_toolbar  # noqa: F401,F403
+except ImportError:
+    pass
+else:
+    INTERNAL_IPS = [
+        "192.168.0.115",
+    ]
+
+    DEBUG_TOOLBAR_PANELS = [
+        # "debug_toolbar.panels.history.HistoryPanel",
+        "debug_toolbar.panels.versions.VersionsPanel",
+        "debug_toolbar.panels.timer.TimerPanel",
+        "debug_toolbar.panels.settings.SettingsPanel",
+        "debug_toolbar.panels.headers.HeadersPanel",
+        "debug_toolbar.panels.request.RequestPanel",
+        "debug_toolbar.panels.sql.SQLPanel",
+        "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+        "debug_toolbar.panels.templates.TemplatesPanel",
+        "debug_toolbar.panels.cache.CachePanel",
+        # "debug_toolbar.panels.signals.SignalsPanel",
+        # "debug_toolbar.panels.redirects.RedirectsPanel",
+        # "debug_toolbar.panels.profiling.ProfilingPanel",
+    ]
+
+    MIDDLEWARE = [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ] + MIDDLEWARE
+
+    INSTALLED_APPS.append("debug_toolbar")
+
+# Import local settings if any
+try:
     from .local import *  # noqa: F401,F403
 except ImportError:
     pass

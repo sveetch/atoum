@@ -1,13 +1,14 @@
-from .blog import BlogIndexView, BlogDetailView
-from .article import ArticleDetailView
+from .assortment import AssortmentAutocompleteView
+from .category import CategoryAutocompleteView
 from .consumable import RecursiveTreeView
-from .consumable import DummyView
+from .dummy import DummyView
+from .product import ProductAutocompleteView
 
 
 __all__ = [
-    "BlogIndexView",
-    "BlogDetailView",
-    "ArticleDetailView",
-    "RecursiveTreeView",
+    "AssortmentAutocompleteView",
+    "CategoryAutocompleteView",
     "DummyView",
+    "ProductAutocompleteView",
+    "RecursiveTreeView",
 ]

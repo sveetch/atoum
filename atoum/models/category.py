@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import format_html
 
 
 class Category(models.Model):
@@ -84,6 +85,37 @@ class Category(models.Model):
             string: An URL.
         """
         return reverse("atoum:category-detail", args=[str(self.id)])
+
+    def parenting_crumbs(self):
+        """
+        Return parenting crumbs from Consumable to Assortment to Category.
+
+        Returns:
+            list: List of crumb titles in order.
+        """
+        return [
+            self.assortment.consumable.title,
+            self.assortment.title,
+            self.title
+        ]
+
+    def parenting_crumbs_html(self):
+        """
+        Display HTML of Category label with its parent consumable then assortment.
+
+        Returns:
+            string: A label such as ``Consumable > Assortment > Category``.
+        """
+        return format_html("{0} &gt; {1} &gt; {2}", *self.parenting_crumbs())
+
+    def get_products(self):
+        """
+        Return a queryset for products related to the category.
+
+        Returns:
+            Queryset:
+        """
+        return self.product_set.all()
 
     def save(self, *args, **kwargs):
         # Auto update 'modified' value on each save

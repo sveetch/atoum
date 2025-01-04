@@ -147,6 +147,7 @@ INSTALLED_APPS = [
     "django.forms",
 ]
 
+LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
@@ -164,6 +165,15 @@ INSTALLED_APPS.extend([
     "sorl.thumbnail",
     "smart_media",
 ])
+
+
+"""
+django-autocomplete-light part
+"""
+INSTALLED_APPS[0:0] = [
+    "dal",
+    "dal_select2",
+]
 
 
 """
@@ -200,14 +210,7 @@ DISKETTE_APPS = [
         "atoum", {
             "comments": "Atoum",
             "natural_foreign": True,
-            "models": [
-                "atoum.Assortment",
-                "atoum.Brand",
-                "atoum.Category",
-                "atoum.Consumable",
-                "atoum.Product_brands",
-                "atoum.Product"
-            ]
+            "models": "atoum"
         }
     ]
 ]

@@ -3,6 +3,7 @@ from django.db.models.signals import post_delete, pre_save
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import format_html
 
 from smart_media.mixins import SmartFormatMixin
 from smart_media.modelfields import SmartMediaField
@@ -98,6 +99,29 @@ class Product(SmartFormatMixin, models.Model):
             string: An URL.
         """
         return reverse("atoum:product-detail", args=[self.slug])
+
+    def parenting_crumbs(self):
+        """
+        Return parenting crumbs from Consumable to Assortment to Category to Product.
+
+        Returns:
+            list: List of crumb titles in order.
+        """
+        return [
+            self.category.assortment.consumable.title,
+            self.category.assortment.title,
+            self.category.title,
+            self.title
+        ]
+
+    def parenting_crumbs_html(self):
+        """
+        Display HTML of Product label with its parent consumable then assortment.
+
+        Returns:
+            string: A label such as ``Consumable > Assortment > Category > Product``.
+        """
+        return format_html("{0} &gt; {1} &gt; {2} &gt; {3}", *self.parenting_crumbs())
 
     def save(self, *args, **kwargs):
         # Auto update 'modified' value on each save
