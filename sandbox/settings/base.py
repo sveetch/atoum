@@ -147,8 +147,11 @@ INSTALLED_APPS = [
     "django.forms",
 ]
 
+# URL to redirect for authentication
 LOGIN_URL = "/admin/login/"
+# URL to redirect once logged in
 LOGIN_REDIRECT_URL = "/"
+# URL to redirect once logged out
 LOGOUT_REDIRECT_URL = "/"
 
 # Ensure we can override applications widgets templates from project template
