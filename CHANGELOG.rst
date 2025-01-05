@@ -3,8 +3,10 @@
 Changelog
 =========
 
-Version 0.2.0 - Unreleased
+Version 0.2.0 - 2025/01/05
 --------------------------
+
+Not release as a package because it still is in an experimental phase.
 
 * Added catalog models: Consumable, Assortment, Category, Product and Brand;
 * Added new extra requirement section ``sandbox``, dedicated to dependencies only used
@@ -17,11 +19,13 @@ Version 0.2.0 - Unreleased
 * Improved Admin forms;
 * Added requirement ``django-autocomplete-light`` for better relation choice field into
   forms;
-* Added test for models, factories and autocompletes views;
+* Added test for models, forms, factories and autocompletes views;
 * Added ``django-debug-toolbar`` with conditionnal config in demo settings and urls;
 
 
-Version 0.1.0 - Not released
-----------------------------
+Version 0.1.0 - 2024/09/20
+--------------------------
 
 Initial commit from cookiecutter-sveetch-djangoapp v0.7.2
+
+Not release as a package because it is in an experimental phase.
