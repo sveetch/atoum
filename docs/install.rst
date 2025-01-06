@@ -6,7 +6,7 @@ Install
 
 Install package in your environment : ::
 
-    pip install atoum
+    pip install atoum[breadcrumbs]
 
 For development usage see :ref:`development_install`.
 

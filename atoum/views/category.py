@@ -1,10 +1,98 @@
+from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest
+from django.views.generic import ListView
+from django.views.generic.detail import SingleObjectMixin
+from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 
 from dal import autocomplete
 
 from ..models import Category
+from .dashboard import DashboardView
+from .consumable import ConsumableIndexView, ConsumableDetailView
+from .assortment import AssortmentDetailView
+from .mixins import AtoumBreadcrumMixin
+
+
+class CategoryDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
+    """
+    Assortment detail and its related category list
+    """
+    template_name = "atoum/category/detail.html"
+    paginate_by = settings.PRODUCT_PAGINATION
+    context_object_name = "category_object"
+    crumb_title = None  # No usage since title depends from object
+    crumb_urlname = "atoum:category-detail"
+
+    @property
+    def crumbs(self):
+        return [
+            (
+                DashboardView.crumb_title,
+                reverse(DashboardView.crumb_urlname)
+            ),
+            (
+                ConsumableIndexView.crumb_title,
+                reverse(ConsumableIndexView.crumb_urlname)
+            ),
+            (
+                self.object.assortment.consumable.title,
+                reverse(ConsumableDetailView.crumb_urlname, kwargs={
+                    "slug": self.object.assortment.consumable.slug,
+                })
+            ),
+            (
+                self.object.assortment.title,
+                reverse(AssortmentDetailView.crumb_urlname, kwargs={
+                    "consumable_slug": self.object.assortment.consumable.slug,
+                    "assortment_slug": self.object.assortment.slug,
+                })
+            ),
+            (
+                self.object.title,
+                reverse(self.crumb_urlname, kwargs={
+                    "consumable_slug": self.object.assortment.consumable.slug,
+                    "assortment_slug": self.object.assortment.slug,
+                    "category_slug": self.object.slug,
+                })
+            ),
+        ]
+
+    def get_queryset(self):
+        """
+        Queryset to list sub relations
+        """
+        return self.object.product_set.order_by("title")
+
+    def get_object(self):
+        """
+        Get the Category object for details
+        """
+        consumable_slug = self.kwargs.get("consumable_slug")
+        assortment_slug = self.kwargs.get("assortment_slug")
+        category_slug = self.kwargs.get("category_slug")
+
+        try:
+            obj = Category.objects.filter(**{
+                "assortment__consumable__slug": consumable_slug,
+                "assortment__slug": assortment_slug,
+                "slug": category_slug,
+            }).select_related("assortment__consumable", "assortment").get()
+        except Category.DoesNotExist:
+            raise Http404(
+                _("No {} found matching the query").format(
+                    Category._meta.verbose_name
+                )
+            )
+
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        return super().get(request, *args, **kwargs)
 
 
 class CategoryAutocompleteView(UserPassesTestMixin, autocomplete.Select2QuerySetView):

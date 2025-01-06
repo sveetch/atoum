@@ -1,27 +1,70 @@
+from django.conf import settings
 from django.views.generic import ListView
-
+from django.views.generic.detail import SingleObjectMixin
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from ..models import Consumable
+from .dashboard import DashboardView
+from .mixins import AtoumBreadcrumMixin
 
 
-class RecursiveTreeView(ListView):
+class ConsumableIndexView(AtoumBreadcrumMixin, ListView):
     """
-    Full recursive tree of Atoum objects (excepted Brand).
-
-    .. WARNING::
-
-        This recursive tree is highly innefficient on database queries.
-        Usage of ``prefetch_related`` is not enough to avoid cascade of queryset for
-        products.
-
-        If this view is to be keeped, it will need to be optimized with a tree resolving
-        that would gather objects of respectively all consumables, assortments,
-        categories and then products.
+    List of consumables
     """
     model = Consumable
-    template_name = "atoum/recursivetree.html"
+    queryset = Consumable.objects.order_by("title")
+    template_name = "atoum/consumable/index.html"
     paginate_by = None
+    crumb_title = _("Consumables")
+    crumb_urlname = "atoum:consumable-index"
+
+    @property
+    def crumbs(self):
+        return [
+            (
+                DashboardView.crumb_title,
+                reverse(DashboardView.crumb_urlname)
+            ),
+            (
+                ConsumableIndexView.crumb_title,
+                reverse(ConsumableIndexView.crumb_urlname)
+            ),
+        ]
+
+
+class ConsumableDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
+    """
+    Consumable detail and its related assortment list
+    """
+    template_name = "atoum/consumable/detail.html"
+    paginate_by = settings.ASSORTMENT_PAGINATION
+    context_object_name = "consumable_object"
+    crumb_title = None  # No usage since title depends from object
+    crumb_urlname = "atoum:consumable-detail"
+
+    @property
+    def crumbs(self):
+        return [
+            (
+                DashboardView.crumb_title,
+                reverse(DashboardView.crumb_urlname)
+            ),
+            (
+                ConsumableIndexView.crumb_title,
+                reverse(ConsumableIndexView.crumb_urlname)
+            ),
+            (
+                self.object.title,
+                reverse(self.crumb_urlname, kwargs={"slug": self.object.slug})
+            ),
+        ]
 
     def get_queryset(self):
-        q = self.model.objects.all().prefetch_related("assortment_set")
-        return q.order_by("title")
+        return self.object.assortment_set.order_by("title")
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=Consumable.objects.all())
+
+        return super().get(request, *args, **kwargs)

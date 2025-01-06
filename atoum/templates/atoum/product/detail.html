@@ -1,0 +1,42 @@
+{% extends "atoum/base.html" %}
+{% load i18n smart_image %}
+{% block head_title %}{{ product_object.title }} - {{ block.super }}{% endblock head_title %}
+
+{% block app_content %}{% spaceless %}
+    <div class="product-detail">
+        <p class="mb-0">
+            <small class="text-body-secondary">{% translate "Product" %}</small>
+        </p>
+
+        <h2>
+            {{ product_object.title }}
+        </h2>
+
+        <div class="grid">
+            <div class="g-col-8">
+                <div class="cover text-bg-light p-3">
+                    {% if product_object.cover %}
+                        {% media_thumb product_object.cover "400x400" format="JPEG" as cover_thumb %}
+                        <img src="{{ cover_thumb.url }}" class="img-fluid img-thumbnail m-auto w-auto mw-100 d-block" alt="">
+                    {% else %}
+                        <svg class="img-fluid img-thumbnail m-auto w-auto mw-100 d-block" width="400" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Card image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Cover image empty</title><rect width="100%" height="100%" style="fill:RGBA(var(--bs-secondary-rgb),var(--bs-bg-opacity,1));"></rect></svg>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="g-col-4 text-bg-light d-flex justify-content-center d-flex align-items-center p-2">
+                <p class="text-body-secondary"><em>Tools todo.</em></p>
+            </div>
+
+            <div class="g-col-6">
+                <div class="description">
+                    {% if product_object.description %}
+                        {{ product_object.description|linebreaks }}
+                    {% else %}
+                        <p class="empty text-body-secondary"><em>{% translate "No description." %}</em></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endspaceless %}{% endblock app_content %}

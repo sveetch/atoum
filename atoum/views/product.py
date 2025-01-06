@@ -1,10 +1,107 @@
+from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest
+from django.views.generic import TemplateView
+from django.views.generic.detail import SingleObjectMixin
+from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 
 from dal import autocomplete
 
 from ..models import Product
+from .dashboard import DashboardView
+from .category import CategoryDetailView
+from .consumable import ConsumableIndexView, ConsumableDetailView
+from .assortment import AssortmentDetailView
+from .mixins import AtoumBreadcrumMixin
+
+
+class ProductDetailView(AtoumBreadcrumMixin, SingleObjectMixin, TemplateView):
+    """
+    Product detail and its related product list
+    """
+    template_name = "atoum/product/detail.html"
+    context_object_name = "product_object"
+    crumb_title = None  # No usage since title depends from object
+    crumb_urlname = "atoum:product-detail"
+
+    @property
+    def crumbs(self):
+        return [
+            (
+                DashboardView.crumb_title,
+                reverse(DashboardView.crumb_urlname)
+            ),
+            (
+                ConsumableIndexView.crumb_title,
+                reverse(ConsumableIndexView.crumb_urlname)
+            ),
+            (
+                self.object.category.assortment.consumable.title,
+                reverse(ConsumableDetailView.crumb_urlname, kwargs={
+                    "slug": self.object.category.assortment.consumable.slug,
+                })
+            ),
+            (
+                self.object.category.assortment.title,
+                reverse(AssortmentDetailView.crumb_urlname, kwargs={
+                    "consumable_slug": self.object.category.assortment.consumable.slug,
+                    "assortment_slug": self.object.category.assortment.slug,
+                })
+            ),
+            (
+                self.object.category.title,
+                reverse(CategoryDetailView.crumb_urlname, kwargs={
+                    "consumable_slug": self.object.category.assortment.consumable.slug,
+                    "assortment_slug": self.object.category.assortment.slug,
+                    "category_slug": self.object.category.slug,
+                })
+            ),
+            (
+                self.object.title,
+                reverse(self.crumb_urlname, kwargs={
+                    "consumable_slug": self.object.category.assortment.consumable.slug,
+                    "assortment_slug": self.object.category.assortment.slug,
+                    "category_slug": self.object.category.slug,
+                    "product_slug": self.object.slug,
+                })
+            ),
+        ]
+
+    def get_object(self):
+        """
+        Get the Product object for details
+        """
+        consumable_slug = self.kwargs.get("consumable_slug")
+        assortment_slug = self.kwargs.get("assortment_slug")
+        category_slug = self.kwargs.get("category_slug")
+        product_slug = self.kwargs.get("product_slug")
+
+        try:
+            obj = Product.objects.filter(**{
+                "category__assortment__consumable__slug": consumable_slug,
+                "category__assortment__slug": assortment_slug,
+                "category__slug": category_slug,
+                "slug": product_slug,
+            }).select_related(
+                "category",
+                "category__assortment",
+                "category__assortment__consumable",
+            ).get()
+        except Product.DoesNotExist:
+            raise Http404(
+                _("No {} found matching the query").format(
+                    Product._meta.verbose_name
+                )
+            )
+
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        return super().get(request, *args, **kwargs)
 
 
 class ProductAutocompleteView(UserPassesTestMixin, autocomplete.Select2QuerySetView):

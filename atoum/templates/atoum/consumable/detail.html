@@ -1,0 +1,28 @@
+{% extends "atoum/base.html" %}
+{% load i18n %}
+{% block head_title %}{{ consumable_object.title }} - {{ block.super }}{% endblock head_title %}
+
+{% block app_content %}{% spaceless %}
+    <div class="consumable-detail">
+        <p class="mb-0">
+            <small class="text-body-secondary">{% translate "Consumable" %}</small>
+        </p>
+
+        <h2>{{ consumable_object.title }}</h2>
+
+        <div class="consumable-assortments">
+            <h3>{% translate "Assortments" %}</h3>
+            <ul class="assortment-list">
+                {% for assortment in object_list %}
+                    <li>
+                        <a href="{{ assortment.get_absolute_url }}">{{ assortment.title }}</a>
+                    </li>
+                {% empty %}
+                    <li class="empty">{% translate "No assortments yet." %}</li>
+                {% endfor %}
+            </ul>
+
+            {% include "atoum/pagination.html" %}
+        </div>
+    </div>
+{% endspaceless %}{% endblock app_content %}

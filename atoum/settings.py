@@ -6,14 +6,29 @@ These are the default settings you can override in your own project settings
 right after the line which load the default app settings.
 
 """
-BLOG_PAGINATION = 5
+from django.utils.translation import gettext_lazy as _
+
+
+ASSORTMENT_PAGINATION = 30
 """
-Blog entry per page limit for pagination, set it to ``None`` to disable
+Assortment per page limit for pagination, set it to ``None`` to disable
 pagination.
 """
 
-ARTICLE_PAGINATION = 6
+CATEGORY_PAGINATION = 25
 """
-Article entry per page limit for pagination, set it to ``None`` to disable
+Category per page limit for pagination, set it to ``None`` to disable
 pagination.
+"""
+
+PRODUCT_PAGINATION = 50
+"""
+Product per page limit for pagination, set it to ``None`` to disable
+pagination.
+"""
+
+ATOUM_BREADCRUMBS_SHOW_HOME = False
+"""
+If breadcrumbs should include the site homepage entry or not. This is only working
+in Atoum views.
 """

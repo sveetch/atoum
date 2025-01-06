@@ -70,7 +70,10 @@ class Assortment(models.Model):
         Returns:
             string: An URL.
         """
-        return reverse("atoum:assortment-detail", args=[self.slug])
+        return reverse("atoum:assortment-detail", kwargs={
+            "consumable_slug": self.consumable.slug,
+            "assortment_slug": self.slug,
+        })
 
     def parenting_crumbs(self):
         """

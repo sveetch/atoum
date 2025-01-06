@@ -1,0 +1,22 @@
+{% extends "atoum/base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Dashboard" %} - {{ block.super }}{% endblock head_title %}
+
+{% block app_content %}{% spaceless %}
+    <div class="dashboard">
+        <h2>{% translate "Dashboard" %}</h2>
+
+        <div class="consumable-list">
+            <h3>{% translate "Consumables" %}</h3>
+            <ul>
+                {% for consumable in consumables %}
+                    <li>
+                        <a href="{{ consumable.get_absolute_url }}">{{ consumable.title }}</a>
+                    </li>
+                {% empty %}
+                    <li>{% translate "No consumables yet." %}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endspaceless %}{% endblock app_content %}

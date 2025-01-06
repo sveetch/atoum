@@ -1,11 +1,17 @@
 from django.urls import path
 
 from .views import (
-    RecursiveTreeView,
     AssortmentAutocompleteView,
+    AssortmentDetailView,
     CategoryAutocompleteView,
+    CategoryDetailView,
+    ConsumableIndexView,
+    ConsumableDetailView,
+    DashboardView,
     DummyView,
     ProductAutocompleteView,
+    ProductDetailView,
+    RecursiveTreeView,
 )
 
 
@@ -13,37 +19,52 @@ app_name = "atoum"
 
 
 urlpatterns = [
-    path("", RecursiveTreeView.as_view(), name="recursive-tree"),
+    path("", DashboardView.as_view(), name="dashboard"),
+
+    # Full recursive tree of everything
+    path("tree/", RecursiveTreeView.as_view(), name="tree"),
+
     path(
-        "assortments/<slug:slug>/",
-        DummyView.as_view(),
-        name="assortment-detail"
-    ),
-    path(
-        "categories/<int:pk>/",
-        DummyView.as_view(),
-        name="category-detail"
+        "consumables/",
+        ConsumableIndexView.as_view(),
+        name="consumable-index"
     ),
     path(
         "consumables/<slug:slug>/",
-        DummyView.as_view(),
+        ConsumableDetailView.as_view(),
         name="consumable-detail"
     ),
     path(
-        "brands/<slug:slug>/",
-        DummyView.as_view(),
-        name="brand-detail"
+        "consumables/<slug:consumable_slug>/<slug:assortment_slug>/",
+        AssortmentDetailView.as_view(),
+        name="assortment-detail"
     ),
     path(
-        "brands/<slug:slug>/",
-        DummyView.as_view(),
-        name="brand-detail"
+        (
+            "consumables/<slug:consumable_slug>/<slug:assortment_slug>/"
+            "<slug:category_slug>/"
+        ),
+        CategoryDetailView.as_view(),
+        name="category-detail"
     ),
     path(
-        "products/<slug:slug>/",
-        DummyView.as_view(),
+        (
+            "consumables/<slug:consumable_slug>/<slug:assortment_slug>/"
+            "<slug:category_slug>/<slug:product_slug>/"
+        ),
+        ProductDetailView.as_view(),
         name="product-detail"
     ),
+
+    # TODO: These are temporarily dummy views enabled to allow reversing until
+    # implemented
+    path(
+        "brands/<slug:slug>/",
+        DummyView.as_view(),
+        name="brand-detail"
+    ),
+
+    # Autocomplete views for various models, only for staff users
     path(
         "autocomplete/assortments/",
         AssortmentAutocompleteView.as_view(),

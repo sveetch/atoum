@@ -72,7 +72,9 @@ class Consumable(models.Model):
         Returns:
             string: An URL.
         """
-        return reverse("atoum:consumable-detail", args=[self.slug])
+        return reverse("atoum:consumable-detail", kwargs={
+            "slug": self.slug,
+        })
 
     def save(self, *args, **kwargs):
         # Auto update 'modified' value on each save

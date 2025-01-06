@@ -98,7 +98,12 @@ class Product(SmartFormatMixin, models.Model):
         Returns:
             string: An URL.
         """
-        return reverse("atoum:product-detail", args=[self.slug])
+        return reverse("atoum:product-detail", kwargs={
+            "consumable_slug": self.category.assortment.consumable.slug,
+            "assortment_slug": self.category.assortment.slug,
+            "category_slug": self.category.slug,
+            "product_slug": self.slug,
+        })
 
     def parenting_crumbs(self):
         """

@@ -168,7 +168,7 @@ install-backend:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Install everything for development <---$(FORMATRESET)\n"
 	@echo ""
-	$(PIP_BIN) install -e .[sandbox,dev,quality,doc,doc-live,release]
+	$(PIP_BIN) install -e .[breadcrumbs,sandbox,dev,quality,doc,doc-live,release]
 .PHONY: install-backend
 
 install-frontend:

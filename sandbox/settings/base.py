@@ -171,6 +171,19 @@ INSTALLED_APPS.extend([
 
 
 """
+django-view-breadcrumbs optional part
+"""
+try:
+    import view_breadcrumbs  # noqa: F401
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS[0:0] = [
+        "view_breadcrumbs",
+    ]
+
+
+"""
 django-autocomplete-light part
 """
 INSTALLED_APPS[0:0] = [

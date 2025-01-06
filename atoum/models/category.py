@@ -84,7 +84,11 @@ class Category(models.Model):
         Returns:
             string: An URL.
         """
-        return reverse("atoum:category-detail", args=[str(self.id)])
+        return reverse("atoum:category-detail", kwargs={
+            "consumable_slug": self.assortment.consumable.slug,
+            "assortment_slug": self.assortment.slug,
+            "category_slug": self.slug,
+        })
 
     def parenting_crumbs(self):
         """

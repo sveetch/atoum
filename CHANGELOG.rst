@@ -3,8 +3,15 @@
 Changelog
 =========
 
+Development
+***********
+
+* Added ``django-view-breadcrumbs`` requirement and configuration;
+* Added catalog views to browse into Consumables, Assortments, Categories and Products;
+
+
 Version 0.2.0 - 2025/01/05
---------------------------
+**************************
 
 Not release as a package because it still is in an experimental phase.
 
@@ -24,7 +31,7 @@ Not release as a package because it still is in an experimental phase.
 
 
 Version 0.1.0 - 2024/09/20
---------------------------
+**************************
 
 Initial commit from cookiecutter-sveetch-djangoapp v0.7.2
 
