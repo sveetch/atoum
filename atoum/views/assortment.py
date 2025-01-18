@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from dal import autocomplete
 
-from ..models import Consumable, Assortment
+from ..models import Assortment
 from .dashboard import DashboardView
 from .consumable import ConsumableIndexView, ConsumableDetailView
 from .mixins import AtoumBreadcrumMixin

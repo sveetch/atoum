@@ -1,6 +1,6 @@
 import pytest
 
-# from atoum.factories import ShoppingFactory
+from atoum.factories import ShoppingFactory
 from atoum.models import Shopping
 from atoum.utils.tests import (
     get_admin_add_url, get_admin_change_url, get_admin_list_url,

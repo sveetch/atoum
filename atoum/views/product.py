@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import Http404, HttpResponseBadRequest
 from django.views.generic import TemplateView

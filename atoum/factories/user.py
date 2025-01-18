@@ -28,6 +28,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = safe_get_user_model()
+        skip_postgeneration_save = True
 
     class Params:
         """

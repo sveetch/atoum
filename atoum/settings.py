@@ -6,8 +6,6 @@ These are the default settings you can override in your own project settings
 right after the line which load the default app settings.
 
 """
-from django.utils.translation import gettext_lazy as _
-
 
 ASSORTMENT_PAGINATION = 30
 """

@@ -16,7 +16,10 @@ def test_basic(db):
     assortment.full_clean()
     assortment.save()
 
-    url = "/assortments/{}/".format(assortment.slug)
+    url = "/consumables/{consumable}/{assortment}/".format(
+        assortment=assortment.slug,
+        consumable=assortment.consumable.slug,
+    )
 
     assert Assortment.objects.filter(title="Foo").count() == 1
     assert "Foo" == assortment.title

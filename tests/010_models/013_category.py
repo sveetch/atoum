@@ -16,7 +16,11 @@ def test_basic(db):
     category.full_clean()
     category.save()
 
-    url = "/categories/{}/".format(category.pk)
+    url = "/consumables/{consumable}/{assortment}/{category}/".format(
+        consumable=category.assortment.consumable.slug,
+        assortment=category.assortment.slug,
+        category=category.slug,
+    )
 
     assert Category.objects.filter(title="Foo").count() == 1
     assert "Foo" == category.title

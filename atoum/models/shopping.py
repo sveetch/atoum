@@ -13,7 +13,8 @@ class Shopping(models.Model):
             filled.
         planning (models.DateTimeField): Required planning datetime, automatically
             filled.
-        title (models.CharField): Required unique title string.
+        title (models.CharField): Optional title string.
+        done (models.CharField): Optional boolean.
         products (models.ManyToManyField): Optional product selection
     """
     created = models.DateTimeField(
@@ -31,7 +32,11 @@ class Shopping(models.Model):
         blank=True,
         max_length=100,
         default="",
-        unique=True,
+    )
+    done = models.BooleanField(
+        verbose_name=_("done"),
+        default=False,
+        blank=True,
     )
     products = models.ManyToManyField(
         "atoum.Product",
@@ -57,7 +62,7 @@ class Shopping(models.Model):
     def __str__(self):
         """
         TODO: We should return a localized and humanized date when falling back to
-        planning date.
+        planning date because of empty title.
         """
         return self.title or str(self.planning)
 
