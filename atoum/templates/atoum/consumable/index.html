@@ -1,21 +1,31 @@
 {% extends "atoum/base.html" %}
 {% load i18n %}
-{% block head_title %}{% translate "Consumables" %} - {{ block.super }}{% endblock head_title %}
+{% block header-title %}{% translate "Consumables" %} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <h2>
+        <i class="bi bi-boxes"></i>
+        {% translate "Consumables" %}
+    </h2>
+{% endspaceless %}{% endblock title-content %}
 
 {% block app_content %}{% spaceless %}
     <div class="consumable-index">
-        <h2>{% translate "Consumables" %}</h2>
-
         <div class="consumables">
-            <ul class="consumable-list">
+            <div class="consumable-list grid">
                 {% for consumable in object_list %}
-                    <li>
-                        <a href="{{ consumable.get_absolute_url }}">{{ consumable.title }}</a>
-                    </li>
+                    <div class="card text-center text-bg-success g-col-12 g-col-md-6 g-col-lg-4">
+                        <div class="card-body">
+                            <a href="{{ consumable.get_absolute_url }}"
+                                class="directory-list__title btn btn-success stretched-link">
+                                {{ consumable.title }}
+                            </a>
+                        </div>
+                    </div>
                 {% empty %}
-                    <li>{% translate "No consumables yet." %}</li>
+                    <div class="empty g-col-12"><p><em>{% translate "No consumable yet." %}</em></p></div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
 {% endspaceless %}{% endblock app_content %}

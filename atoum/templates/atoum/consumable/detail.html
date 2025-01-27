@@ -1,26 +1,36 @@
 {% extends "atoum/base.html" %}
 {% load i18n %}
-{% block head_title %}{{ consumable_object.title }} - {{ block.super }}{% endblock head_title %}
+{% block header-title %}{{ consumable_object.title }} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <p class="mb-0">
+        <small class="text-body-secondary">{% translate "Consumable" %}&nbsp;:</small>
+    </p>
+
+    <h2>{{ consumable_object.title }}</h2>
+{% endspaceless %}{% endblock title-content %}
 
 {% block app_content %}{% spaceless %}
     <div class="consumable-detail">
-        <p class="mb-0">
-            <small class="text-body-secondary">{% translate "Consumable" %}</small>
-        </p>
-
-        <h2>{{ consumable_object.title }}</h2>
-
         <div class="consumable-assortments">
-            <h3>{% translate "Assortments" %}</h3>
-            <ul class="assortment-list">
+            <h3>
+                <i class="bi bi-stack"></i>
+                {% translate "Assortments" %}
+            </h3>
+            <div class="assortment-list grid" style="--bs-gap: 1rem;">
                 {% for assortment in object_list %}
-                    <li>
-                        <a href="{{ assortment.get_absolute_url }}">{{ assortment.title }}</a>
-                    </li>
+                    <div class="card text-bg-primary text-center g-col-12 g-col-md-6 g-col-lg-3">
+                        <div class="card-body">
+                            <a href="{{ assortment.get_absolute_url }}"
+                                class="btn btn-primary stretched-link">
+                                {{ assortment.title }}
+                            </a>
+                        </div>
+                    </div>
                 {% empty %}
-                    <li class="empty">{% translate "No assortments yet." %}</li>
+                    <div class="empty g-col-12"><p><em>{% translate "No assortment yet." %}</em></p></div>
                 {% endfor %}
-            </ul>
+            </div>
 
             {% include "atoum/pagination.html" %}
         </div>

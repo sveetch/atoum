@@ -1,0 +1,32 @@
+///
+/// Additional global CSS attributes for color themes
+///
+
+:root,
+[data-bs-theme="light"] {
+  --callout-link: #{$blue-600};
+  --callout-code-color: #{$pink-600};
+
+  // Menu keeps the same colors in all color modes
+  --site-menu-bg: #{$gray-900};
+  --site-menu-color: #{$white-cloud};
+  --site-menu-emphasis: #{$white};
+  --site-menu-subtle: #{$gray-600};
+  --site-menu-padding-x: #{space("normal")};
+  --site-menu-hover-bg: #{$gray-800};
+
+  --site-context-bg: var(--bs-body-bg);
+  --site-context-color: var(--bs-body-color);
+  --site-context-emphasis: var(--bs-light-bg-subtle);
+  --site-context-subtle: #{$gray-300};
+}
+
+@include color-mode(dark, true) {
+  --callout-link: #{$blue-300};
+  --callout-code-color: #{$pink-300};
+
+  --site-context-bg: var(--site-menu-bg);
+  --site-context-color: var(--site-menu-color);
+  --site-context-emphasis: #{$gray-600};
+  --site-context-subtle: var(--site-menu-subtle);
+}

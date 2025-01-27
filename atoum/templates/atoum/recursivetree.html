@@ -1,73 +1,27 @@
 {% extends "atoum/base.html" %}
 {% load i18n %}
 
-{% block head_styles %}
-    {{ block.super }}
-    <style>
-    .tree,
-    .tree ul {
-        margin: 0 0 0 1em;
-        padding: 0;
-        list-style: none;
-        position: relative;
-    }
-
-    .tree ul {
-        margin-left: .5em
-    }
-
-    .tree:before,
-    .tree ul:before {
-        content: "";
-        display: block;
-        width: 0;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        border-left: 1px solid #369;
-    }
-
-    .tree li {
-        margin: 0;
-        padding: 0 1.5em;
-        line-height: 2em;
-        position: relative;
-    }
-
-    .tree li:before {
-        content: "";
-        display: block;
-        width: 10px;
-        height: 0;
-        border-top: 1px solid #369;
-        margin-top: -1px;
-        position: absolute;
-        top: 1em;
-        left: 0;
-    }
-
-    .tree li:last-child:before {
-        background: white;
-        height: auto;
-        top: 1em;
-        bottom: 0;
-    }
-    </style>
-{% endblock head_styles %}
+{% block title-content %}{% spaceless %}
+    <h2>{% translate "Tree" %}</h2>
+{% endspaceless %}{% endblock title-content %}
 
 {% block app_content %}{% spaceless %}
 <div class="recursive-tree-page">
-    <h1 class="mb-5">Arborescence des données</h1>
-
-    <hr>
     <div class="mb-5">
         <h2 class="fs-4">Légende</h2>
         <p>
-            <span class="badge text-bg-dark fs-4">Consommable</span>&nbsp;-
-            <span class="badge rounded-pill text-bg-secondary fs-5">Gamme</span>&nbsp;-
-            <span class="badge text-bg-light fs-6">Categorie</span>&nbsp;-
-            <span>Produit</span>
+            <span class="badge text-bg-dark fs-4">
+                <i class="bi bi-boxes"></i> Consommable
+            </span>&nbsp;-
+            <span class="badge rounded-pill text-bg-secondary fs-5">
+                <i class="bi bi-stack"></i> Gamme
+            </span>&nbsp;-
+            <span class="badge text-bg-light fs-6">
+                <i class="bi bi-tags"></i> Categorie
+            </span>&nbsp;-
+            <span>
+                <i class="bi bi-archive"></i> Produit
+            </span>
         </p>
     </div>
 

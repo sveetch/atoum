@@ -1,8 +1,12 @@
 {% extends "atoum/base.html" %}
-{% load i18n %}
+{% block header-title %}{% translate "Todo" %} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <h2>{% translate "Todo" %}</h2>
+{% endspaceless %}{% endblock title-content %}
 
 {% block app_content %}{% spaceless %}
-<div class="recursive-tree-page">
-    <h1 class="mb-5">Todo</h1>
+<div>
+    <p>Nothing here.</p>
 </div>
 {% endspaceless %}{% endblock app_content %}

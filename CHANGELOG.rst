@@ -8,6 +8,9 @@ Development
 
 * Added ``django-view-breadcrumbs`` requirement and configuration;
 * Added catalog views to browse into Consumables, Assortments, Categories and Products;
+* Added major improvement to the sandbox for a proper layout;
+* Added styleguide app to sandbox;
+* Added export command which gather atoum model resources into a XSLX file;
 
 
 Version 0.2.0 - 2025/01/05

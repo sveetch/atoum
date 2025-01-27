@@ -1,63 +1,141 @@
 {% load i18n static view_breadcrumbs %}<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-    <head>{% spaceless %}
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block head_title %}Atoum{% endblock head_title %}</title>
-        {% block head_metas %}{% endblock head_metas %}
-        {% block head_styles %}
-            <link rel="stylesheet" href="{% static "css/main.css" %}">
-        {% endblock head_styles %}
-    {% endspaceless %}
+<html lang="{{ LANGUAGE_CODE }}"{% block html-attrs %}{% endblock html-attrs %}>
+    <head>
+        {% spaceless %}
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            {% comment %}<meta name="generator" content="">{% endcomment %}
+            {# djlint:off #}<title>{% block header-title %}Atoum{% endblock header-title %}</title>{# djlint:on #}
+            {% block metas %}
+                {% block metas-robot %}
+                    <meta name="robots" content="noindex, nofollow">
+                {% endblock metas-robot %}
+                {% block metas-generic %}
+                {% endblock metas-generic %}
+            {% endblock metas %}
+            {% block header-manifest %}
+                {% include "partials/site_manifest.html" %}
+            {% endblock header-manifest %}
+            {% block header-javascript %}
+            {% endblock header-javascript %}
+            {% block header-resource %}
+                <link rel="stylesheet" href="{% static "css/main.css" %}">
+            {% endblock header-resource %}
+            {% block header-resource-extra %}
+            {% endblock header-resource-extra %}
+        {% endspaceless %}
     </head>
 
     <body>
-    {% spaceless %}
-        <div id="page-body" class="d-grid gap-3 p-3">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="/">Atoum</a>
+        {% block body-container %}
+            {% spaceless %}
+                <div class="page-body">
+                    <div class="page-menu">
+                        <a href="/" class="page-brand">
+                            <img src="{% static "images/logo.svg" %}" alt="">
+                            Atoum
+                        </a>
 
-                    <button class="navbar-toggler" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#main-navbar-toggler"
-                        aria-controls="main-navbar-toggler" aria-expanded="false"
-                        aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                        <ul class="menu-apps">
+                            {% comment %}{% include "partials/menu-apps_sample.html" %}{% endcomment %}
 
-                    <div class="collapse navbar-collapse" id="main-navbar-toggler">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        {% if request.user and request.user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url "atoum:dashboard" %}">{% trans "Dashboard" %}</a>
+                            <li class="section">
+                                <button class="title"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#menu-catalog-collapse"
+                                    aria-expanded="false">
+                                    {% translate "Catalog" %}
+                                </button>
+
+                                <div class="collapse show" id="menu-catalog-collapse">
+                                    <ul>
+                                        <li>
+                                            <a href="{% url "atoum:dashboard" %}">{% trans "Dashboard" %}</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url "atoum:consumable-index" %}">{% translate "All consummables" %}</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">{% translate "All assortments" %}</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">{% translate "All categories" %}</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">{% translate "All products" %}</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url "atoum:tree" %}">{% trans "Tree" %}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url "atoum:tree" %}">{% trans "Tree" %}</a>
+
+                            <li class="section">
+                                <button class="title collapsed"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#menu-account-collapse"
+                                    aria-expanded="false">
+                                    {% translate "Account" %}
+                                </button>
+
+                                <div class="collapse" id="menu-account-collapse">
+                                    <ul>
+                                        {% if request.user and request.user.is_authenticated %}
+                                            {% if request.user and request.user.is_authenticated %}
+                                                <li>
+                                                    <a href="{% url "admin:index" %}" target="_blank">{% trans "Administration" %}</a>
+                                                </li>
+                                            {% endif %}
+                                            <li>
+                                                <a href="{% url "admin:logout" %}">{% trans "Sign out" %}</a>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <a href="{% url "admin:login" %}">{% trans "Login" %}</a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url "admin:index" %}" target="_blank">{% trans "Admin" %}</a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url "admin:login" %}">{% trans "Login" %}</a>
-                            </li>
-                        {% endif %}
                         </ul>
+
+                        {% include "partials/color_mode_toggler.html" %}
+                    </div>
+
+                    {% block page-context %}
+                        <div class="page-context">
+                            {% block page-title %}
+                                <div class="page-title">
+                                    {% block title-content %}{% endblock title-content %}
+                                </div>
+                            {% endblock page-title %}
+                            {% block page-submenu %}
+                                {% comment %}<div class="page-submenu">
+                                    {% block submenu-content %}{% endblock submenu-content %}
+                                </div>{% endcomment %}
+                            {% endblock page-submenu %}
+                        </div>
+                    {% endblock page-context %}
+
+                    <div class="page-content">
+                        {% block breadcrumbs %}
+                            {% render_breadcrumbs "view_breadcrumbs/bootstrap5.html" %}
+                        {% endblock %}
+
+                        <div class="main-content container-xxl">
+                            {% block content %}{% endblock %}
+                        </div>
                     </div>
                 </div>
-            </nav>
-            <div id="page-content" class="container-xxl">
-                {% block breadcrumbs %}
-                    {% render_breadcrumbs "view_breadcrumbs/bootstrap5.html" %}
-                {% endblock %}
-
-                {% block content %}{% endblock %}
-            </div>
-        </div>
-        
-        {% block javascript %}
-            <script src="{% static "js/main.js" %}"></script>
-        {% endblock javascript %}
-    {% endspaceless %}
+            {% endspaceless %}
+        {% endblock body-container %}
+        {% spaceless %}
+            {% block body-javascript %}
+                <script src="{% static "js/main.js" %}"></script>
+            {% endblock body-javascript %}
+            {% block body-javascript-extra %}
+            {% endblock body-javascript-extra %}
+        {% endspaceless %}
     </body>
 </html>

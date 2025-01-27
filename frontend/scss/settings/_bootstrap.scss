@@ -1,11 +1,39 @@
 ///
-/// Bootstrap setting variable override
+/// Bootstrap settings customization
 ///
-/// This must be loaded before Bootstrap variables
-///
+
+// Include functions first
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+// Define the right relative path to the icon font
+$bootstrap-icons-font-dir: "../fonts/icons";
 
 // Custom bread crumb divider
 $breadcrumb-divider: ">";
 
 // Enable CSS Grid classes
 $enable-cssgrid: true;
+
+// Redefine spacing map to include more named size
+// We keep the legacy bootstrap ones for compatibility
+$spacers: (
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  "thin": 0.1rem,
+  "tiny": 0.25rem,
+  "shorter": 0.5rem,
+  "short": 0.75rem,
+  "normal": 1rem,
+  "large": 1.5rem,
+  "larger": 2rem,
+  "wide": 3rem,
+  "wider": 5rem,
+);
+
+// Enabled callout object variants
+$callout-variants: info, warning, danger !default;

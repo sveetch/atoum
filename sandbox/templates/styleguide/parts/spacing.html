@@ -1,0 +1,26 @@
+<div class="spacing-sample container-xl mb-5">
+    <h2 class="section-title sg-anchor" id="spacing">Spacing</h2>
+    <p class="lead">Available space sizes from Bootstrap <code>$spacers</code> map.</p>
+    {% for name, value in styleguide.bt_spacers.items %}
+        {% comment %}
+        NOTE: We use a hack on name to check if it is an number or not. We don't want
+        to list about Bootstrap legacy names that are just numbers.
+        {% endcomment %}
+        {% if name|get_digit:"2" != 0 %}
+        <div class="sg-spec-item">
+            <div class="sg-spec-tabs">
+                <span class="sg-spec-tab">{{ name }}</span>
+                <span class="sg-spec-tab">Value: {{ value }}</span>
+                <span class="sg-spec-tab sass">map-get($spacers, "{{ name }}")</span>
+                <span class="sg-spec-tab sass">space("{{ name }}")</span>
+            </div>
+            <div class="sg-spec-content">
+                <div class=" align-items-start p-4">
+                    <div class="px-2 py-2 border bg-secondary cell-class font-monospace"></div>
+                    <div class="px-2 py-2 border bg-secondary cell-class font-monospace" style="margin-top:{{ value }}"></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>

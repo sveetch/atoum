@@ -10,8 +10,8 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("styleguide/", include("styleguide.urls")),
     path("", include("atoum.urls")),
-    
 ]
 
 # This is only needed when using runserver with settings "DEBUG" enabled

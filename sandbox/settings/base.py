@@ -193,6 +193,37 @@ INSTALLED_APPS[0:0] = [
 
 
 """
+Styleguide part
+"""
+
+INSTALLED_APPS.extend([
+    "sandbox.styleguide",
+])
+
+# Built CSS manifest relative path to static directory
+STYLEGUIDE_MANIFEST_PATH = (
+    Path("css") / "components" / "styleguide" / "manifest.css"
+)
+
+# JSON manifest dump destination as an absolute path
+STYLEGUIDE_DUMP_PATH = (
+    PROJECT_PATH / "templates" / "styleguide" / "manifest.json"
+)
+
+STYLEGUIDE_SAVE_DUMP = False
+
+
+"""
+django-import-export part
+"""
+
+INSTALLED_APPS.append("import_export")
+
+from import_export.formats.base_formats import CSV, HTML, JSON, XLSX, YAML
+IMPORT_EXPORT_FORMATS = [CSV, HTML, JSON, XLSX, YAML]
+
+
+"""
 Atoum settings
 """
 from atoum.settings import *  # noqa: E402,F401,F403

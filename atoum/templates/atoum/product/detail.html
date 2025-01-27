@@ -1,17 +1,19 @@
 {% extends "atoum/base.html" %}
 {% load i18n smart_image %}
-{% block head_title %}{{ product_object.title }} - {{ block.super }}{% endblock head_title %}
+{% block header-title %}{{ product_object.title }} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <p class="mb-0">
+        <small class="text-body-secondary">{% translate "Product" %}</small>
+    </p>
+
+    <h2>
+        {{ product_object.title }}
+    </h2>
+{% endspaceless %}{% endblock title-content %}
 
 {% block app_content %}{% spaceless %}
     <div class="product-detail">
-        <p class="mb-0">
-            <small class="text-body-secondary">{% translate "Product" %}</small>
-        </p>
-
-        <h2>
-            {{ product_object.title }}
-        </h2>
-
         <div class="grid">
             <div class="g-col-8">
                 <div class="cover text-bg-light p-3">

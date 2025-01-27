@@ -8,15 +8,18 @@ from .mixins import AtoumBreadcrumMixin
 
 class DashboardView(AtoumBreadcrumMixin, TemplateView):
     """
-    Dashboard view should list:
+    Catalog dashboard view
 
-    * Consumable
-    * open shopping lists
-    * stock resume
+    .. todo::
+        This should list:
+
+        * Consumables
+        * open shopping lists
+        * stock resume
 
     """
     template_name = "atoum/dashboard.html"
-    crumb_title = _("Dashboard")
+    crumb_title = _("Catalog dashboard")
     crumb_urlname = "atoum:dashboard"
 
     @property

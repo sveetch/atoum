@@ -1,12 +1,36 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from ..models import Assortment
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
+from import_export import fields
+from import_export.widgets import ForeignKeyWidget
+
+from ..models import Assortment, Consumable
 from .category import CategoryInline
 
 
+class AssortmentResource(resources.ModelResource):
+    """
+    Data resource configuration for 'django-import-export'.
+    """
+    consumable = fields.Field(
+        column_name="consumable",
+        attribute="consumable",
+        widget=ForeignKeyWidget(Consumable, field="title")
+    )
+
+    class Meta:
+        model = "atoum.Assortment"
+        fields = ("title", "slug", "consumable")
+        import_id_fields = ("slug",)
+
+
 @admin.register(Assortment)
-class AssortmentAdmin(admin.ModelAdmin):
+class AssortmentAdmin(ImportExportModelAdmin):
+    """
+    Model admin controller.
+    """
     list_select_related = ["consumable"]
     readonly_fields = ["created", "modified"]
     prepopulated_fields = {
@@ -29,6 +53,7 @@ class AssortmentAdmin(admin.ModelAdmin):
     inlines = [
         CategoryInline,
     ]
+    resource_classes = [AssortmentResource]
 
     def count_categories(self, obj):
         """
@@ -39,6 +64,9 @@ class AssortmentAdmin(admin.ModelAdmin):
 
 
 class AssortmentInline(admin.StackedInline):
+    """
+    Inline model admin controller to be used in other model admin controllers.
+    """
     model = Assortment
     exclude = ["created", "modified"]
     prepopulated_fields = {

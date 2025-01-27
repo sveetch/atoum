@@ -1,0 +1,15 @@
+///
+/// Page breadcrumb container
+///
+
+.breadcrumb-container {
+    background-color: var(--site-context-bg);
+    border-bottom: var(--site-context-subtle) solid $onepixel;
+    color: var(--site-context-color);
+    padding: space("normal") space("large");
+
+    .breadcrumb {
+        width: 100%;
+        margin: 0 auto;
+    }
+}

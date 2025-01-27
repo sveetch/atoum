@@ -7,7 +7,7 @@ from sandbox.settings.base import *  # noqa: F403
 
 DEBUG = True
 
-TEMPLATES[0]['OPTIONS']['debug'] = DEBUG  # noqa: F405
+TEMPLATES[0]["OPTIONS"]["debug"] = DEBUG  # noqa: F405
 
 DATABASES = {
     "default": {
@@ -26,6 +26,8 @@ else:
         "192.168.0.115",
     ]
 
+    # # NOTE: Djdt brings some performance issues with some third party libraries like
+    # # 'django-import-export' or 'htmx'
     DEBUG_TOOLBAR_PANELS = [
         # "debug_toolbar.panels.history.HistoryPanel",
         "debug_toolbar.panels.versions.VersionsPanel",
@@ -45,6 +47,11 @@ else:
     MIDDLEWARE = [
         "debug_toolbar.middleware.DebugToolbarMiddleware",
     ] + MIDDLEWARE
+
+    # # In provision of possible futur htmx usage
+    DEBUG_TOOLBAR_CONFIG = {
+        "ROOT_TAG_EXTRA_ATTRS": "hx-preserve"
+    }
 
     INSTALLED_APPS.append("debug_toolbar")
 

@@ -1,32 +1,36 @@
 ///
 /// Main frontend layout styles
 ///
+/// - Sass sources adopt the ITCSS structure convention;
+/// - Includes Buckle library, a Bootstrap addon for some sugar;
+/// - Bootstrap variables and utilities structure require pre/post settings way to avoid
+///   overriding too many variables when you just want to set a top level variable;
+///
+/// WARNING: DO NOT ADD ANY STYLE RULE HERE, instead add them in an accurate module to
+/// import
+///
 
-@charset "utf-8";
-
+// Bootstrap and Buckle defaults and base functions
 @import "bootstrap/scss/functions";
+@import "./buckle/defaults";
+@import "./buckle/functions";
 
-// Load every site settings
-@import "./settings/colors";
+// All project settings including icon vars
 @import "./settings/site";
-@import "./settings/icons";
 @import "./settings/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons.scss";
+@import "./settings/buckle";
 
-// Bootstrap functions and mixins
+// Bootstrap foundation
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/variables-dark";
 @import "bootstrap/scss/maps";
 @import "bootstrap/scss/mixins";
-@import "bootstrap/scss/utilities";
 @import "bootstrap/scss/root";
+@import "bootstrap/scss/utilities";
 @import "bootstrap/scss/reboot";
 
-// Icon map
-/* stylelint-disable */
-@import "bootstrap-icons/font/bootstrap-icons.scss";
-/* stylelint-enable */
-
-// Bootstrap layout & components
+// Bootstrap components
 @import "bootstrap/scss/type";
 @import "bootstrap/scss/images";
 @import "bootstrap/scss/containers";
@@ -38,32 +42,60 @@
 @import "bootstrap/scss/dropdown";
 @import "bootstrap/scss/button-group";
 @import "bootstrap/scss/nav";
-@import "bootstrap/scss/navbar"; // Requires nav
+@import "bootstrap/scss/navbar";
 @import "bootstrap/scss/card";
 @import "bootstrap/scss/breadcrumb";
-@import "bootstrap/scss/accordion";
+// @import "bootstrap/scss/accordion";
 @import "bootstrap/scss/pagination";
 @import "bootstrap/scss/badge";
 @import "bootstrap/scss/alert";
-@import "bootstrap/scss/progress";
+// @import "bootstrap/scss/progress";
 @import "bootstrap/scss/list-group";
 @import "bootstrap/scss/close";
-@import "bootstrap/scss/toasts";
-@import "bootstrap/scss/modal"; // Requires transitions
-@import "bootstrap/scss/tooltip";
-@import "bootstrap/scss/popover";
+// @import "bootstrap/scss/toasts";
+@import "bootstrap/scss/modal";
+// @import "bootstrap/scss/tooltip";
+// @import "bootstrap/scss/popover";
 @import "bootstrap/scss/carousel";
-@import "bootstrap/scss/spinners";
-@import "bootstrap/scss/offcanvas"; // Requires transitions
+// @import "bootstrap/scss/spinners";
+@import "bootstrap/scss/offcanvas";
 @import "bootstrap/scss/placeholders";
 
 // Bootstrap helpers
 @import "bootstrap/scss/helpers";
 
-// Bootstrap utilities
+// Bootstrap utility classes build
 @import "bootstrap/scss/utilities/api";
 
-// @import "./generic/...";
+// All Buckle parts
+@import "./buckle/tools/index";
+@import "./buckle/generic/index";
+@import "./buckle/elements/index";
+@import "./buckle/objects/index";
+
+// Generic rules
+@import "./generic/html";
+@import "./generic/body";
+@import "./generic/typography";
+
+// Elements rules
 // @import "./elements/...";
-// @import "./objects/...";
+
+// Objects
+@import "./objects/color-mode";
+@import "./objects/theming";
+@import "./objects/callout";
+@import "./objects/tree";
+
+// Components
+@import "./components/layout";
+@import "./components/menu";
+@import "./components/context";
+@import "./components/breadcrumb";
+@import "./components/content";
+
+// Variations for light/dark themes
+@import "./components/themes";
+
+// Trumps patchs
 // @import "./trumps/...";

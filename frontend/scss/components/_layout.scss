@@ -1,0 +1,43 @@
+///
+/// Base layout structures
+///
+
+$layout-menu-width: rem-calc(260px);
+$layout-context-height: rem-calc(95px);
+
+body {
+    height: 100%;
+
+    // Main grid container
+    .page-body {
+        display: grid;
+        height: 100%;
+        grid-template-columns: $layout-menu-width auto;
+        grid-template-rows: $layout-context-height auto;
+        grid-template-areas:
+            "menu context"
+            "menu main";
+        column-gap: 0;
+        row-gap: 0;
+    }
+
+    // Main menu
+    .page-menu {
+        grid-area: menu;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    // Sub menu
+    .page-context {
+        grid-area: context;
+    }
+
+    // Main content container
+    .page-content {
+        grid-area: main;
+        overflow-y: auto;
+        color: var(--bs-secondary-color);
+        background-color: var(--bs-light);
+    }
+}

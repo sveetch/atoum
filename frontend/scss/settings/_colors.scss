@@ -1,6 +1,48 @@
 ///
-/// Site color setting variables
+/// Site colors settings
 ///
-/// Here you may define your layout color settings that could drive both Bootstrap and
-///  your custom components
+
 ///
+// Color variables
+// NOTE: This is the only place where Hex colors are allowed
+///
+/* stylelint-disable color-no-hex */
+$white: #ffffff;
+$black: #000000;
+$darkest: #1b1f22;
+$white-cloud: #dee2e6;
+/* stylelint-enable color-no-hex */
+
+///
+// Colors map
+///
+$site-colors: (
+    "black": $black,
+    "white": $white,
+    "white-cloud": $white-cloud,
+    "darkest": $darkest,
+);
+
+///
+// Theme colors to merge in Bootstrap theme colors
+///
+$site-theme: $site-colors;
+
+///
+// Site color themes to merge in Bootstrap theme colors
+///
+$bb-schemes: (
+    "black": (
+        "font-color": $white,
+        "background": $black,
+    ),
+    "white": (
+        "font-color": $black,
+        "background": $white,
+    ),
+);
+
+///
+// Default scheme to apply on objects which implement schemes
+///
+$bb-schemes-default: null;

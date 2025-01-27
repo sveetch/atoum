@@ -171,11 +171,21 @@ install-backend:
 	$(PIP_BIN) install -e .[breadcrumbs,sandbox,dev,quality,doc,doc-live,release]
 .PHONY: install-backend
 
+install-icon-font:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Copying bootstrap-icons to staticfiles directory <---$(FORMATRESET)\n"
+	@echo ""
+	rm -Rf $(STATICFILES_DIR)/fonts/icons
+	mkdir -p $(STATICFILES_DIR)/fonts
+	cp -r $(FRONTEND_DIR)/node_modules/bootstrap-icons/font/fonts $(STATICFILES_DIR)/fonts/icons
+.PHONY: install-icon-font
+
 install-frontend:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Installing frontend requirements <---$(FORMATRESET)\n"
 	@echo ""
 	cd $(FRONTEND_DIR) && npm install
+	${MAKE} install-icon-font
 .PHONY: install-frontend
 
 install: venv create-var-dirs install-backend migrate install-frontend frontend
@@ -244,12 +254,12 @@ css:
 	cd $(FRONTEND_DIR) && npm run-script css
 .PHONY: css
 
-watch-sass:
+watch-css:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Watching Sass sources for development environment <---$(FORMATRESET)\n"
 	@echo ""
 	cd $(FRONTEND_DIR) && npm run-script watch-css
-.PHONY: watch-sass
+.PHONY: watch-css
 
 css-prod:
 	@echo ""

@@ -1,8 +1,11 @@
 ///
-/// Site setting variables
+/// Customized setting variables
 ///
 /// This must be loaded before Bootstrap variables
 ///
+
+// Load sub setting files
+@import "./colors";
 
 // One pixel shortcut
 $onepixel: 0.0625rem; // For 1rem = 16px
