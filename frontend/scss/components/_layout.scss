@@ -1,6 +1,8 @@
 ///
 /// Base layout structures
 ///
+/// No color, font properties, etc.. should be there, only layout structure properties.
+///
 
 $layout-menu-width: rem-calc(260px);
 $layout-context-height: rem-calc(95px);
@@ -37,7 +39,5 @@ body {
     .page-content {
         grid-area: main;
         overflow-y: auto;
-        color: var(--bs-secondary-color);
-        background-color: var(--bs-light);
     }
 }

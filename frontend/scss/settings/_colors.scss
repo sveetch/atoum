@@ -7,8 +7,6 @@
 // NOTE: This is the only place where Hex colors are allowed
 ///
 /* stylelint-disable color-no-hex */
-$white: #ffffff;
-$black: #000000;
 $darkest: #1b1f22;
 $white-cloud: #dee2e6;
 /* stylelint-enable color-no-hex */
@@ -17,32 +15,15 @@ $white-cloud: #dee2e6;
 // Colors map
 ///
 $site-colors: (
-    "black": $black,
-    "white": $white,
-    "white-cloud": $white-cloud,
     "darkest": $darkest,
+    "white-cloud": $white-cloud,
+    "consumable": $green,
+    "assortment": $blue,
+    "category": $pink,
+    "product": $light,
 );
 
 ///
 // Theme colors to merge in Bootstrap theme colors
 ///
-$site-theme: $site-colors;
-
-///
-// Site color themes to merge in Bootstrap theme colors
-///
-$bb-schemes: (
-    "black": (
-        "font-color": $white,
-        "background": $black,
-    ),
-    "white": (
-        "font-color": $black,
-        "background": $white,
-    ),
-);
-
-///
-// Default scheme to apply on objects which implement schemes
-///
-$bb-schemes-default: null;
+$theme-colors: map-merge($theme-colors, $site-colors);

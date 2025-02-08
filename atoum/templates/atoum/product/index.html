@@ -1,0 +1,27 @@
+{% extends "atoum/base.html" %}
+{% load i18n %}
+{% block header-title %}{% translate "Products" %} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <h1>
+        <i class="bi bi-archive"></i>
+        {% translate "Products" %}
+    </h1>
+{% endspaceless %}{% endblock title-content %}
+
+{% block app_content %}{% spaceless %}
+    <div class="product-index mt-3">
+        <div class="products stacks">
+            {% for product in object_list %}
+                <a href="{{ product.get_absolute_url }}" class="item">
+                    {{ product.title }}
+                    <br><small>{{ product.category.title }}</small>
+                </a>
+            {% empty %}
+                <p class="item empty">{% translate "No products yet." %}</p>
+            {% endfor %}
+        </div>
+
+        {% include "atoum/pagination.html" %}
+    </div>
+{% endspaceless %}{% endblock app_content %}

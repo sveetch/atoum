@@ -38,6 +38,9 @@
 
                         <ul class="menu-apps">
                             {% comment %}{% include "partials/menu-apps_sample.html" %}{% endcomment %}
+                            <li>
+                                <a href="{% url "atoum:dashboard" %}"><i class="bi bi-bar-chart"></i> {% trans "Dashboard" %}</a>
+                            </li>
 
                             <li class="section">
                                 <button class="title"
@@ -50,49 +53,51 @@
                                 <div class="collapse show" id="menu-catalog-collapse">
                                     <ul>
                                         <li>
-                                            <a href="{% url "atoum:dashboard" %}">{% trans "Dashboard" %}</a>
+                                            <a href="{% url "atoum:consumable-index" %}"><i class="bi bi-boxes"></i> {% translate "Consumables" %}</a>
                                         </li>
                                         <li>
-                                            <a href="{% url "atoum:consumable-index" %}">{% translate "All consummables" %}</a>
+                                            <a href="{% url "atoum:assortment-index" %}"><i class="bi bi-stack"></i> {% translate "Assortments" %}</a>
                                         </li>
                                         <li>
-                                            <a href="#">{% translate "All assortments" %}</a>
+                                            <a href="{% url "atoum:category-index" %}"><i class="bi bi-tags"></i> {% translate "Categories" %}</a>
                                         </li>
                                         <li>
-                                            <a href="#">{% translate "All categories" %}</a>
+                                            <a href="{% url "atoum:product-index" %}"><i class="bi bi-archive"></i> {% translate "Products" %}</a>
                                         </li>
-                                        <li>
-                                            <a href="#">{% translate "All products" %}</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url "atoum:tree" %}">{% trans "Tree" %}</a>
-                                        </li>
+                                        {% if request.user.is_authenticated and request.user.is_staff %}
+                                            <li>
+                                                <a href="{% url "atoum:tree" %}"><i class="bi bi-diagram-3"></i> {% trans "Tree" %}</a>
+                                            </li>
+                                        {% endif %}
                                     </ul>
                                 </div>
                             </li>
 
                             <li class="section">
-                                <button class="title collapsed"
+                                <button class="title"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#menu-account-collapse"
                                     aria-expanded="false">
                                     {% translate "Account" %}
                                 </button>
 
-                                <div class="collapse" id="menu-account-collapse">
+                                <div class="collapse show" id="menu-account-collapse">
                                     <ul>
-                                        {% if request.user and request.user.is_authenticated %}
-                                            {% if request.user and request.user.is_authenticated %}
+                                        {% if request.user.is_authenticated %}
+                                            {% if request.user.is_staff %}
                                                 <li>
-                                                    <a href="{% url "admin:index" %}" target="_blank">{% trans "Administration" %}</a>
+                                                    <a href="{% url "admin:index" %}" target="_blank"><i class="bi bi-wrench-adjustable-circle"></i> {% trans "Administration" %}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url "styleguide:index" %}" target="_blank"><i class="bi bi-layout-wtf"></i> {% trans "Styleguide" %}</a>
                                                 </li>
                                             {% endif %}
                                             <li>
-                                                <a href="{% url "admin:logout" %}">{% trans "Sign out" %}</a>
+                                                <a href="{% url "admin:logout" %}"><i class="bi bi-box-arrow-right"></i> {% trans "Sign out" %}</a>
                                             </li>
                                         {% else %}
                                             <li>
-                                                <a href="{% url "admin:login" %}">{% trans "Login" %}</a>
+                                                <a href="{% url "admin:login" %}"><i class="bi bi-box-arrow-in-left"></i> {% trans "Login" %}</a>
                                             </li>
                                         {% endif %}
                                     </ul>

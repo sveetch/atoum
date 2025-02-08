@@ -2,24 +2,24 @@
 {% load i18n %}
 
 {% block title-content %}{% spaceless %}
-    <h2>{% translate "Tree" %}</h2>
+    <h1>{% translate "Tree" %}</h1>
 {% endspaceless %}{% endblock title-content %}
 
 {% block app_content %}{% spaceless %}
 <div class="recursive-tree-page">
     <div class="mb-5">
-        <h2 class="fs-4">Légende</h2>
+        <h2 class="fs-5">Légende</h2>
         <p>
-            <span class="badge text-bg-dark fs-4">
+            <span class="badge text-bg-success fs-4">
                 <i class="bi bi-boxes"></i> Consommable
             </span>&nbsp;-
-            <span class="badge rounded-pill text-bg-secondary fs-5">
+            <span class="badge text-bg-primary rounded-pill fs-5">
                 <i class="bi bi-stack"></i> Gamme
             </span>&nbsp;-
-            <span class="badge text-bg-light fs-6">
+            <span class="badge text-bg-warning fs-6">
                 <i class="bi bi-tags"></i> Categorie
             </span>&nbsp;-
-            <span>
+            <span class="text-bg-light">
                 <i class="bi bi-archive"></i> Produit
             </span>
         </p>
@@ -31,21 +31,21 @@
         <ul class="tree consumable-list">
             {% for consumable in object_list %}
                 <li>
-                    <span class="badge text-bg-dark fs-4">{{ consumable.title }}</span>
+                    <span class="badge text-bg-success fs-4">{{ consumable.title }}</span>
 
                     {% with assortments=consumable.get_assortments %}
                         {% if assortments %}
                         <ul class="assortment-list my-2">
                             {% for assortment in assortments %}
                             <li class="mb-2">
-                                <span class="badge rounded-pill text-bg-secondary fs-5">{{ assortment.title }}</span>
+                                <span class="badge rounded-pill text-bg-primary fs-5">{{ assortment.title }}</span>
 
                                 {% with categories=assortment.get_categories %}
                                     {% if categories %}
                                     <ul class="category-list my-1">
                                         {% for category in categories %}
                                         <li class="mb-1">
-                                            <span class="badge text-bg-light fs-6">{{ category.title }}</span>
+                                            <span class="badge text-bg-warning fs-6">{{ category.title }}</span>
 
                                             {% with products=category.get_products %}
                                                 {% if products %}

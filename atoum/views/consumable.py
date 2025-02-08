@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from ..models import Consumable
-from .dashboard import DashboardView
 from .mixins import AtoumBreadcrumMixin
 
 
@@ -14,7 +13,6 @@ class ConsumableIndexView(AtoumBreadcrumMixin, ListView):
     List of consumables
     """
     model = Consumable
-    queryset = Consumable.objects.order_by("title")
     template_name = "atoum/consumable/index.html"
     paginate_by = None
     crumb_title = _("Consumables")
@@ -24,14 +22,13 @@ class ConsumableIndexView(AtoumBreadcrumMixin, ListView):
     def crumbs(self):
         return [
             (
-                DashboardView.crumb_title,
-                reverse(DashboardView.crumb_urlname)
-            ),
-            (
                 ConsumableIndexView.crumb_title,
                 reverse(ConsumableIndexView.crumb_urlname)
             ),
         ]
+
+    def get_queryset(self):
+        return self.model.objects.order_by("title")
 
 
 class ConsumableDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
@@ -47,14 +44,6 @@ class ConsumableDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
     @property
     def crumbs(self):
         return [
-            (
-                DashboardView.crumb_title,
-                reverse(DashboardView.crumb_urlname)
-            ),
-            (
-                ConsumableIndexView.crumb_title,
-                reverse(ConsumableIndexView.crumb_urlname)
-            ),
             (
                 self.object.title,
                 reverse(self.crumb_urlname, kwargs={"slug": self.object.slug})

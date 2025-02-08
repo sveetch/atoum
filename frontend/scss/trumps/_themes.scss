@@ -8,8 +8,8 @@
   --callout-code-color: #{$pink-600};
 
   // Menu keeps the same colors in all color modes
-  --site-menu-bg: #{$gray-900};
-  --site-menu-color: #{$white-cloud};
+  --site-menu-bg: #{theme-color("dark")};
+  --site-menu-color: #{theme-color("white-cloud")};
   --site-menu-emphasis: #{$white};
   --site-menu-subtle: #{$gray-600};
   --site-menu-padding-x: #{space("normal")};
@@ -19,6 +19,8 @@
   --site-context-color: var(--bs-body-color);
   --site-context-emphasis: var(--bs-light-bg-subtle);
   --site-context-subtle: #{$gray-300};
+
+  --site-content-bg: #{theme-color("light")};
 }
 
 @include color-mode(dark, true) {
@@ -29,4 +31,6 @@
   --site-context-color: var(--site-menu-color);
   --site-context-emphasis: #{$gray-600};
   --site-context-subtle: var(--site-menu-subtle);
+
+  --site-content-bg: #{theme-color("darkest")};
 }

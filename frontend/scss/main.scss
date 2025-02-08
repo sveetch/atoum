@@ -16,10 +16,11 @@
 @import "./buckle/functions";
 
 // All project settings including icon vars
-@import "./settings/site";
 @import "./settings/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons.scss";
+@import "./settings/colors";
 @import "./settings/buckle";
+@import "./settings/site";
 
 // Bootstrap foundation
 @import "bootstrap/scss/variables";
@@ -75,7 +76,6 @@
 
 // Generic rules
 @import "./generic/html";
-@import "./generic/body";
 @import "./generic/typography";
 
 // Elements rules
@@ -85,6 +85,9 @@
 @import "./objects/color-mode";
 @import "./objects/theming";
 @import "./objects/callout";
+@import "./objects/features";
+@import "./objects/cartouches";
+@import "./objects/stacks";
 @import "./objects/tree";
 
 // Components
@@ -95,7 +98,4 @@
 @import "./components/content";
 
 // Variations for light/dark themes
-@import "./components/themes";
-
-// Trumps patchs
-// @import "./trumps/...";
+@import "./trumps/themes";

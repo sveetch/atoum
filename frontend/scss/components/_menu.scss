@@ -20,6 +20,7 @@
     border-right: var(--site-menu-subtle) solid $onepixel;
 
     .page-brand {
+        @include font-size(2rem);
         color: var(--site-menu-emphasis);
         display: flex;
         height: $layout-context-height;
@@ -27,7 +28,6 @@
         justify-content: flex-start;
         align-items: center;
         font-weight: $font-weight-bold;
-        font-size: 2rem;
         text-decoration: none;
         border-bottom: var(--site-menu-subtle) solid $onepixel;
         text-transform: uppercase;
@@ -49,9 +49,21 @@
             display: block;
             color: inherit;
 
+            .bi,
+            .icon {
+                margin-right: space("tiny");
+                color: var(--site-menu-subtle);
+            }
+
             &:hover {
+                color: var(--site-menu-emphasis);
                 background-color: var(--site-menu-hover-bg);
                 border-radius: $btn-border-radius-lg;
+
+                .bi,
+                .icon {
+                    color: inherit;
+                }
             }
         }
 
@@ -64,17 +76,17 @@
 
         // Menu section allow for a title or collapse toggler button
         .section {
-            margin-top: space("large");
+            margin-top: space("normal");
 
             & + *:not(.section) {
-                margin-top: space("large");
+                margin-top: space("normal");
             }
 
             // First possible section paragraph is assumed as a title
             .title {
                 @include menu-item-base();
+                @include font-size($small2-font-size);
                 margin: 0;
-                font-size: $small2-font-size;
                 font-weight: $font-weight-semibold;
                 text-transform: uppercase;
                 color: var(--site-menu-subtle);
@@ -124,8 +136,14 @@
                 }
 
                 &:hover {
+                    color: var(--site-menu-emphasis);
                     background-color: var(--site-menu-hover-bg);
                     border-radius: $btn-border-radius-lg;
+
+                    .bi,
+                    .icon {
+                        color: inherit;
+                    }
                 }
             }
         }

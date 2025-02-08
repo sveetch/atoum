@@ -1,0 +1,30 @@
+{% extends "atoum/base.html" %}
+{% load i18n %}
+{% block header-title %}{% translate "Assortments" %} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <h1>
+        <i class="bi bi-stack"></i>
+        {% translate "Assortments" %}
+    </h1>
+{% endspaceless %}{% endblock title-content %}
+
+{% block app_content %}{% spaceless %}
+    <div class="assortment-index mt-3">
+        <div class="assortments cartouches">
+            {% for assortment in object_list %}
+                <a class="item item--assortment" href="{{ assortment.get_absolute_url }}">
+                    <div class="cover"></div>
+                    <div class="body">
+                        <small class="parent">{{ assortment.consumable.title }}</small>
+                        <span class="title">{{ assortment.title }}</span>
+                    </div>
+                </a>
+            {% empty %}
+                <div class="empty">
+                    <p><em>{% translate "No assortment yet." %}</em></p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endspaceless %}{% endblock app_content %}

@@ -7,13 +7,13 @@
 @import "../../buckle/functions";
 @import "../../buckle/defaults";
 
-// Load site settings before Bootstrap so it can adopts cascaded variables but after
-// after Buckle defaults and functions so we can use it in settings
-@import "../../settings/site";
-
-// Import Bootstrap base before site settings
+// Import Bootstrap base then site settings before utilities
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
+@import "../../settings/colors";
+@import "../../settings/site";
+
+// Utilities
 @import "bootstrap/scss/maps";
 @import "bootstrap/scss/utilities";
 

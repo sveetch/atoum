@@ -282,3 +282,17 @@
         }
     }
 }
+
+/// Shortcut to get color value from Bootstrap '$theme-colors' map
+///
+/// @arg {String} $name [null]
+///     Item name to get from '$theme-colors'
+///
+/// @return {String} - Item value.
+///
+@function theme-color($name) {
+    @if map-has-key($theme-colors, $name) == false {
+        @error "theme-color() was given an unknow color name: #{$name}";
+    }
+    @return map-get($theme-colors, $name);
+}

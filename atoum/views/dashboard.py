@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from ..models import Consumable
+from ..models import Assortment, Category, Consumable, Product
 from .mixins import AtoumBreadcrumMixin
 
 
@@ -13,7 +13,7 @@ class DashboardView(AtoumBreadcrumMixin, TemplateView):
     .. todo::
         This should list:
 
-        * Consumables
+        * Catalog models
         * open shopping lists
         * stock resume
 
@@ -40,7 +40,10 @@ class DashboardView(AtoumBreadcrumMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         context.update({
-            "consumables": self.get_consumable_queryset(),
+            "consumable_count": Consumable.objects.all().count(),
+            "assortment_count": Assortment.objects.all().count(),
+            "category_count": Category.objects.all().count(),
+            "product_count": Product.objects.all().count(),
         })
 
         return context

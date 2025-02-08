@@ -4,11 +4,11 @@
 /// This must be loaded before Bootstrap variables
 ///
 
-// Load sub setting files
-@import "./colors";
-
 // One pixel shortcut
 $onepixel: 0.0625rem; // For 1rem = 16px
 // Debug line to possibly calibrate it again when default Bootstrap base size has been
 // changed
 // @debug "One pixel is " + rem-calc(1px);
+
+// Name of theme colors related to Atoum sections
+$atoum-sections: "consumable", "assortment", "category", "product";

@@ -10,9 +10,31 @@ from django.utils.translation import gettext_lazy as _
 from dal import autocomplete
 
 from ..models import Assortment
-from .dashboard import DashboardView
 from .consumable import ConsumableIndexView, ConsumableDetailView
 from .mixins import AtoumBreadcrumMixin
+
+
+class AssortmentIndexView(AtoumBreadcrumMixin, ListView):
+    """
+    List of assortments
+    """
+    model = Assortment
+    template_name = "atoum/assortment/index.html"
+    paginate_by = settings.ASSORTMENT_PAGINATION
+    crumb_title = _("Assortments")
+    crumb_urlname = "atoum:assortment-index"
+
+    def get_queryset(self):
+        return self.model.objects.order_by("title").select_related("consumable")
+
+    @property
+    def crumbs(self):
+        return [
+            (
+                AssortmentIndexView.crumb_title,
+                reverse(AssortmentIndexView.crumb_urlname)
+            ),
+        ]
 
 
 class AssortmentDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
@@ -28,14 +50,6 @@ class AssortmentDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
     @property
     def crumbs(self):
         return [
-            (
-                DashboardView.crumb_title,
-                reverse(DashboardView.crumb_urlname)
-            ),
-            (
-                ConsumableIndexView.crumb_title,
-                reverse(ConsumableIndexView.crumb_urlname)
-            ),
             (
                 self.object.consumable.title,
                 reverse(ConsumableDetailView.crumb_urlname, kwargs={

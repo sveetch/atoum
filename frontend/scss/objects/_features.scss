@@ -1,0 +1,55 @@
+$bb-features-item-padding-x: space("normal") !default;
+$bb-features-item-padding-y: space("normal") !default;
+
+
+.features {
+    display: grid;
+    grid-template-rows: repeat(var(--bs-rows, 1), 1fr);
+    grid-template-columns: repeat(var(--bs-columns, 12), 1fr);
+    gap: var(--bs-gap, 1rem);
+
+    .item {
+        grid-column: auto/span 3;
+        text-decoration: none;
+        text-align: center;
+        border: $onepixel solid $gray-300;
+        border-radius: $border-radius-sm;
+
+        .cover {
+            padding: $bb-features-item-padding-x $bb-features-item-padding-y;
+            border-bottom: $onepixel solid $gray-300;
+            border-radius: $border-radius-sm $border-radius-sm 0 0;
+
+            .icon {
+                display: block;
+                margin: 0 auto;
+                @include font-size(3rem);
+
+                &::before {
+                    font-size: inherit;
+                }
+            }
+        }
+
+        .body {
+            padding: $bb-features-item-padding-x $bb-features-item-padding-y;
+            color: $gray-800;
+            background-color: $white;
+            border-radius: 0 0 $border-radius-sm $border-radius-sm;
+
+            .number {
+                @include font-size($h4-font-size);
+                display: block;
+                font-weight: $font-weight-semibold;
+                line-height: 1;
+            }
+
+            .text {
+                @include font-size($small1-font-size);
+                display: block;
+                text-transform: uppercase;
+                color: $gray-700;
+            }
+        }
+    }
+}

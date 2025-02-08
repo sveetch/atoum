@@ -4,31 +4,32 @@
 
 {% block title-content %}{% spaceless %}
     <p class="mb-0">
-        <small class="text-body-secondary">{% translate "Consumable" %}&nbsp;:</small>
+        <small class="text-body-secondary"><i class="bi bi-boxes"></i> {% translate "Consumable" %}&nbsp;:</small>
     </p>
 
-    <h2>{{ consumable_object.title }}</h2>
+    <h1>{{ consumable_object.title }}</h1>
 {% endspaceless %}{% endblock title-content %}
 
 {% block app_content %}{% spaceless %}
-    <div class="consumable-detail">
+    <div class="consumable-detail mt-3">
         <div class="consumable-assortments">
-            <h3>
+            <h3 class="h4 mb-4">
                 <i class="bi bi-stack"></i>
                 {% translate "Assortments" %}
             </h3>
-            <div class="assortment-list grid" style="--bs-gap: 1rem;">
+
+            <div class="assortments cartouches">
                 {% for assortment in object_list %}
-                    <div class="card text-bg-primary text-center g-col-12 g-col-md-6 g-col-lg-3">
-                        <div class="card-body">
-                            <a href="{{ assortment.get_absolute_url }}"
-                                class="btn btn-primary stretched-link">
-                                {{ assortment.title }}
-                            </a>
+                    <a class="item item--assortment" href="{{ assortment.get_absolute_url }}">
+                        <div class="cover"></div>
+                        <div class="body">
+                            <span class="title">{{ assortment.title }}</span>
                         </div>
-                    </div>
+                    </a>
                 {% empty %}
-                    <div class="empty g-col-12"><p><em>{% translate "No assortment yet." %}</em></p></div>
+                    <div class="empty">
+                        <p><em>{% translate "No assortment yet." %}</em></p>
+                    </div>
                 {% endfor %}
             </div>
 

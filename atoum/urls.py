@@ -3,14 +3,17 @@ from django.urls import path
 from .views import (
     AssortmentAutocompleteView,
     AssortmentDetailView,
+    AssortmentIndexView,
     CategoryAutocompleteView,
     CategoryDetailView,
-    ConsumableIndexView,
+    CategoryIndexView,
     ConsumableDetailView,
+    ConsumableIndexView,
     DashboardView,
     DummyView,
     ProductAutocompleteView,
     ProductDetailView,
+    ProductIndexView,
     RecursiveTreeView,
 )
 
@@ -28,6 +31,21 @@ urlpatterns = [
         "consumables/",
         ConsumableIndexView.as_view(),
         name="consumable-index"
+    ),
+    path(
+        "assortments/",
+        AssortmentIndexView.as_view(),
+        name="assortment-index"
+    ),
+    path(
+        "categories/",
+        CategoryIndexView.as_view(),
+        name="category-index"
+    ),
+    path(
+        "products/",
+        ProductIndexView.as_view(),
+        name="product-index"
     ),
     path(
         "consumables/<slug:slug>/",

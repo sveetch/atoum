@@ -1,5 +1,6 @@
 """
-TODO
+DEPRECATED: It was nice at beginning but the way of django-import-export is preferred
+instead.
 """
 import json
 from pathlib import Path
@@ -14,7 +15,7 @@ from atoum.models import Assortment, Category, Consumable, Product
 
 class Command(BaseCommand):
     """
-    TODO:
+    DEPRECATED: Command to load consumable, category and assortment from a YAML file.
     """
     def add_arguments(self, parser):
         pass

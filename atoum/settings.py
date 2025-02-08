@@ -25,7 +25,7 @@ Product per page limit for pagination, set it to ``None`` to disable
 pagination.
 """
 
-ATOUM_BREADCRUMBS_SHOW_HOME = False
+ATOUM_BREADCRUMBS_SHOW_HOME = True
 """
 If breadcrumbs should include the site homepage entry or not. This is only working
 in Atoum views.

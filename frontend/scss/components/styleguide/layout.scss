@@ -12,9 +12,13 @@
 // Load site settings before Bootstrap so it can adopts in cascaded variables
 @import "../../settings/site";
 
-// Import Bootstrap base before site settings
+// Import Bootstrap base then site settings before utilities
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
+@import "../../settings/colors";
+@import "../../settings/site";
+
+// Utilities
 @import "bootstrap/scss/maps";
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";

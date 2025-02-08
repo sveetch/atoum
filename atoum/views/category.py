@@ -10,15 +10,40 @@ from django.utils.translation import gettext_lazy as _
 from dal import autocomplete
 
 from ..models import Category
-from .dashboard import DashboardView
 from .consumable import ConsumableIndexView, ConsumableDetailView
 from .assortment import AssortmentDetailView
 from .mixins import AtoumBreadcrumMixin
 
 
+class CategoryIndexView(AtoumBreadcrumMixin, ListView):
+    """
+    List of categories
+    """
+    model = Category
+    template_name = "atoum/category/index.html"
+    paginate_by = settings.CATEGORY_PAGINATION
+    crumb_title = _("Categories")
+    crumb_urlname = "atoum:category-index"
+
+    def get_queryset(self):
+        return self.model.objects.order_by("title").select_related(
+            "assortment",
+            "assortment__consumable",
+        )
+
+    @property
+    def crumbs(self):
+        return [
+            (
+                CategoryIndexView.crumb_title,
+                reverse(CategoryIndexView.crumb_urlname)
+            ),
+        ]
+
+
 class CategoryDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
     """
-    Assortment detail and its related category list
+    Category detail and its related category list
     """
     template_name = "atoum/category/detail.html"
     paginate_by = settings.PRODUCT_PAGINATION
@@ -29,14 +54,6 @@ class CategoryDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
     @property
     def crumbs(self):
         return [
-            (
-                DashboardView.crumb_title,
-                reverse(DashboardView.crumb_urlname)
-            ),
-            (
-                ConsumableIndexView.crumb_title,
-                reverse(ConsumableIndexView.crumb_urlname)
-            ),
             (
                 self.object.assortment.consumable.title,
                 reverse(ConsumableDetailView.crumb_urlname, kwargs={

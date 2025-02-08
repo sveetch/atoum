@@ -4,12 +4,12 @@
 
 {% block title-content %}{% spaceless %}
     <p class="mb-0">
-        <small class="text-body-secondary">{% translate "Product" %}</small>
+        <small class="text-body-secondary"><i class="bi bi-archive"></i> {% translate "Product" %}</small>
     </p>
 
-    <h2>
+    <h1>
         {{ product_object.title }}
-    </h2>
+    </h1>
 {% endspaceless %}{% endblock title-content %}
 
 {% block app_content %}{% spaceless %}

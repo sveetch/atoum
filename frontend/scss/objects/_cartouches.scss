@@ -1,0 +1,78 @@
+@use "sass:color";
+
+$bb-cartouches-item-padding-x: space("normal") !default;
+$bb-cartouches-item-padding-y: space("normal") !default;
+
+
+.cartouches {
+    display: grid;
+    grid-template-rows: repeat(1, 1fr);
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+
+    .item {
+        // Context variables that can be easily switched from section variations
+        --cartouches-item-color: #{$dark};
+        --cartouches-item-hover-color: #{theme-color("darkest")};
+
+        display: flex;
+        grid-column: auto/span 3;
+        text-decoration: none;
+        text-align: left;
+        border: $onepixel solid $gray-300;
+        border-radius: $border-radius-sm;
+
+        .cover {
+            @include bb-flex(1, 0, 2rem);
+            padding: $bb-cartouches-item-padding-x $bb-cartouches-item-padding-y;
+            border-radius: $border-radius-sm 0 0 $border-radius-sm;
+            background-color: var(--cartouches-item-color);
+        }
+
+        .body {
+            @include bb-flex(1, 1, auto);
+            padding: $bb-cartouches-item-padding-x $bb-cartouches-item-padding-y;
+            color: var(--cartouches-item-color);
+            font-weight: $font-weight-semibold;
+            background-color: $white;
+            border-radius: 0 $border-radius-sm $border-radius-sm 0;
+            border: $onepixel solid $white;
+
+            .parent {
+                @include font-size($small3-font-size);
+                display: block;
+                margin: 0;
+                font-weight: $font-weight-semibold;
+                text-transform: uppercase;
+                color: var(--site-menu-subtle);
+            }
+
+            .title {
+
+            }
+        }
+
+        &:hover {
+            box-shadow: var(--bs-box-shadow-sm);
+
+            .cover {
+                background-color: var(--cartouches-item-hover-color);
+            }
+            .body {
+                color: var(--cartouches-item-hover-color);
+            }
+        }
+
+        // Support of atoum section colors per item
+        @each $name in $atoum-sections {
+            &--#{$name} {
+                --cartouches-item-color: #{theme-color($name)};
+                --cartouches-item-hover-color: #{color.scale(theme-color($name), $lightness: -20%)};
+            }
+        }
+    }
+
+    .empty {
+        grid-column: auto/span 12;
+    }
+}

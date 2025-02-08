@@ -1,0 +1,30 @@
+{% extends "atoum/base.html" %}
+{% load i18n %}
+{% block header-title %}{% translate "Categories" %} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <h1>
+        <i class="bi bi-tags"></i>
+        {% translate "Categories" %}
+    </h1>
+{% endspaceless %}{% endblock title-content %}
+
+{% block app_content %}{% spaceless %}
+    <div class="category-index mt-3">
+        <div class="categories cartouches">
+            {% for category in object_list %}
+                <a class="item item--category" href="{{ category.get_absolute_url }}">
+                    <div class="cover"></div>
+                    <div class="body">
+                        <small class="parent">{{ category.assortment.title }}</small>
+                        <span class="title">{{ category.title }}</span>
+                    </div>
+                </a>
+            {% empty %}
+                <div class="empty">
+                    <p><em>{% translate "No category yet." %}</em></p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endspaceless %}{% endblock app_content %}

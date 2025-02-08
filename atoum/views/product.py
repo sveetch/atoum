@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import Http404, HttpResponseBadRequest
-from django.views.generic import TemplateView
+from django.views.generic import ListView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
 from django.utils.html import format_html
@@ -9,11 +10,37 @@ from django.utils.translation import gettext_lazy as _
 from dal import autocomplete
 
 from ..models import Product
-from .dashboard import DashboardView
 from .category import CategoryDetailView
 from .consumable import ConsumableIndexView, ConsumableDetailView
 from .assortment import AssortmentDetailView
 from .mixins import AtoumBreadcrumMixin
+
+
+class ProductIndexView(AtoumBreadcrumMixin, ListView):
+    """
+    List of products
+    """
+    model = Product
+    template_name = "atoum/product/index.html"
+    paginate_by = settings.PRODUCT_PAGINATION
+    crumb_title = _("Products")
+    crumb_urlname = "atoum:product-index"
+
+    def get_queryset(self):
+        return self.model.objects.order_by("title").select_related(
+            "category",
+            "category__assortment",
+            "category__assortment__consumable",
+        )
+
+    @property
+    def crumbs(self):
+        return [
+            (
+                ProductIndexView.crumb_title,
+                reverse(ProductIndexView.crumb_urlname)
+            ),
+        ]
 
 
 class ProductDetailView(AtoumBreadcrumMixin, SingleObjectMixin, TemplateView):
@@ -28,14 +55,6 @@ class ProductDetailView(AtoumBreadcrumMixin, SingleObjectMixin, TemplateView):
     @property
     def crumbs(self):
         return [
-            (
-                DashboardView.crumb_title,
-                reverse(DashboardView.crumb_urlname)
-            ),
-            (
-                ConsumableIndexView.crumb_title,
-                reverse(ConsumableIndexView.crumb_urlname)
-            ),
             (
                 self.object.category.assortment.consumable.title,
                 reverse(ConsumableDetailView.crumb_urlname, kwargs={

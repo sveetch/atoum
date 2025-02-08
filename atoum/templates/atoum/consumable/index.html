@@ -3,29 +3,27 @@
 {% block header-title %}{% translate "Consumables" %} - {{ block.super }}{% endblock header-title %}
 
 {% block title-content %}{% spaceless %}
-    <h2>
+    <h1>
         <i class="bi bi-boxes"></i>
         {% translate "Consumables" %}
-    </h2>
+    </h1>
 {% endspaceless %}{% endblock title-content %}
 
 {% block app_content %}{% spaceless %}
-    <div class="consumable-index">
-        <div class="consumables">
-            <div class="consumable-list grid">
-                {% for consumable in object_list %}
-                    <div class="card text-center text-bg-success g-col-12 g-col-md-6 g-col-lg-4">
-                        <div class="card-body">
-                            <a href="{{ consumable.get_absolute_url }}"
-                                class="directory-list__title btn btn-success stretched-link">
-                                {{ consumable.title }}
-                            </a>
-                        </div>
+    <div class="consumable-index mt-3">
+        <div class="consumables cartouches">
+            {% for consumable in object_list %}
+                <a class="item item--consumable" href="{{ consumable.get_absolute_url }}">
+                    <div class="cover"></div>
+                    <div class="body">
+                        <span class="title">{{ consumable.title }}</span>
                     </div>
-                {% empty %}
-                    <div class="empty g-col-12"><p><em>{% translate "No consumable yet." %}</em></p></div>
-                {% endfor %}
-            </div>
+                </a>
+            {% empty %}
+                <div class="empty">
+                    <p><em>{% translate "No consumable yet." %}</em></p>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endspaceless %}{% endblock app_content %}
