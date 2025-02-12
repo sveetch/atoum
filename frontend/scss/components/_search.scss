@@ -1,0 +1,16 @@
+///
+/// Page context container
+///
+
+.search-results {
+    .empty {
+        @include font-size($h3-font-size);
+        padding: space("large") space("normal");
+        font-style: italic;
+        text-align: center;
+    }
+
+    .form-check-label {
+        @include font-size($small1-font-size);
+    }
+}

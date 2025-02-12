@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from .views import (
     AssortmentAutocompleteView,
@@ -11,6 +11,7 @@ from .views import (
     ConsumableIndexView,
     DashboardView,
     DummyView,
+    GlobalSearchView,
     ProductAutocompleteView,
     ProductDetailView,
     ProductIndexView,
@@ -98,4 +99,6 @@ urlpatterns = [
         ProductAutocompleteView.as_view(),
         name="autocomplete-products",
     ),
+
+    path("search/", GlobalSearchView.as_view(), name="search-results"),
 ]

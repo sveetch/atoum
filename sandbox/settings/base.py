@@ -186,6 +186,19 @@ else:
 """
 django-autocomplete-light part
 """
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+INSTALLED_APPS.extend([
+    "crispy_forms",
+    "crispy_bootstrap5",
+])
+
+
+"""
+django-autocomplete-light part
+"""
 INSTALLED_APPS[0:0] = [
     "dal",
     "dal_select2",
@@ -196,9 +209,7 @@ INSTALLED_APPS[0:0] = [
 Styleguide part
 """
 
-INSTALLED_APPS.extend([
-    "sandbox.styleguide",
-])
+INSTALLED_APPS.append("sandbox.styleguide")
 
 # Built CSS manifest relative path to static directory
 STYLEGUIDE_MANIFEST_PATH = (
@@ -221,6 +232,21 @@ INSTALLED_APPS.append("import_export")
 
 from import_export.formats.base_formats import CSV, HTML, JSON, XLSX, YAML
 IMPORT_EXPORT_FORMATS = [CSV, HTML, JSON, XLSX, YAML]
+
+
+"""
+Search engine with django-haystack settings
+"""
+INSTALLED_APPS.append("haystack")
+
+HAYSTACK_CONNECTIONS = {
+    "default": {
+        "ENGINE": "haystack.backends.whoosh_backend.WhooshEngine",
+        "PATH": VAR_PATH / "whoosh_index",
+    },
+}
+
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 20
 
 
 """

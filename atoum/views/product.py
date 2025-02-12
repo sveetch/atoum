@@ -28,9 +28,7 @@ class ProductIndexView(AtoumBreadcrumMixin, ListView):
 
     def get_queryset(self):
         return self.model.objects.order_by("title").select_related(
-            "category",
-            "category__assortment",
-            "category__assortment__consumable",
+            *Product.HIERARCHY_SELECT_RELATED
         )
 
     @property
@@ -103,9 +101,7 @@ class ProductDetailView(AtoumBreadcrumMixin, SingleObjectMixin, TemplateView):
                 "category__slug": category_slug,
                 "slug": product_slug,
             }).select_related(
-                "category",
-                "category__assortment",
-                "category__assortment__consumable",
+                *Product.HIERARCHY_SELECT_RELATED
             ).get()
         except Product.DoesNotExist:
             raise Http404(
@@ -145,17 +141,10 @@ class ProductAutocompleteView(UserPassesTestMixin, autocomplete.Select2QuerySetV
 
         if self.q:
             qs = qs.filter(title__istartswith=self.q).select_related(
-                "category",
-                "category_assortment",
-                "category_assortment__consumable"
+                *Product.HIERARCHY_SELECT_RELATED
             )
 
-        return qs.order_by(
-            "category__assortment__consumable__title",
-            "category__assortment__title",
-            "category__title",
-            "title"
-        )
+        return qs.order_by(*Product.HIERARCHY_ORDER)
 
     def get_result_label(self, result):
         """

@@ -14,6 +14,10 @@ class Product(SmartFormatMixin, models.Model):
     """
     Product of a Category.
 
+    TODO: We should add a new field 'unit' that would be a choice of free(?), volume,
+    weight. So shopping item can choose a proper quantity like 50L for a volume or
+    2Kg for a weight and finally a free quantity amount for a free input.
+
     Attributes:
         category (models.ForeignKey): Required Assortment object.
         brand (models.ForeignKey): Optional Brand object.
@@ -78,7 +82,28 @@ class Product(SmartFormatMixin, models.Model):
 
     COMMON_ORDER_BY = ["title"]
     """
-    List of field order commonly used in frontend view/api
+    List of field names for ordering queryset related to the same assortment.
+    """
+
+    HIERARCHY_SELECT_RELATED = [
+        "category",
+        "category__assortment",
+        "category__assortment__consumable",
+    ]
+    """
+    List of foreign-key relationships field names to "follow" in queryset to avoid
+    multiple queries. Commonly used in ``Queryset.select_related()``.
+    """
+
+    HIERARCHY_ORDER = [
+        "category__assortment__consumable__title",
+        "category__assortment__title",
+        "category__title",
+        "title"
+    ]
+    """
+    List of field names for ordering queryset respecting relationships. This is to be
+    used when listing assortments related to mixed consumables.
     """
 
     class Meta:

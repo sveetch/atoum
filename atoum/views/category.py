@@ -27,9 +27,8 @@ class CategoryIndexView(AtoumBreadcrumMixin, ListView):
 
     def get_queryset(self):
         return self.model.objects.order_by("title").select_related(
-            "assortment",
-            "assortment__consumable",
-        )
+                *Category.HIERARCHY_SELECT_RELATED
+            )
 
     @property
     def crumbs(self):
@@ -96,7 +95,9 @@ class CategoryDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
                 "assortment__consumable__slug": consumable_slug,
                 "assortment__slug": assortment_slug,
                 "slug": category_slug,
-            }).select_related("assortment__consumable", "assortment").get()
+            }).select_related(
+                *Category.HIERARCHY_SELECT_RELATED
+            ).get()
         except Category.DoesNotExist:
             raise Http404(
                 _("No {} found matching the query").format(
@@ -136,15 +137,10 @@ class CategoryAutocompleteView(UserPassesTestMixin, autocomplete.Select2QuerySet
 
         if self.q:
             qs = qs.filter(title__istartswith=self.q).select_related(
-                "assortment",
-                "assortment__consumable"
+                *Category.HIERARCHY_SELECT_RELATED
             )
 
-        return qs.order_by(
-            "assortment__consumable__title",
-            "assortment__title",
-            "title"
-        )
+        return qs.order_by(*Category.HIERARCHY_ORDER)
 
     def get_result_label(self, result):
         """

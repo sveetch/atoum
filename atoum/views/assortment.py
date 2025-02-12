@@ -25,7 +25,9 @@ class AssortmentIndexView(AtoumBreadcrumMixin, ListView):
     crumb_urlname = "atoum:assortment-index"
 
     def get_queryset(self):
-        return self.model.objects.order_by("title").select_related("consumable")
+        return self.model.objects.order_by("title").select_related(
+            *Assortment.HIERARCHY_SELECT_RELATED
+        )
 
     @property
     def crumbs(self):
@@ -82,7 +84,7 @@ class AssortmentDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
             obj = Assortment.objects.filter(**{
                 "consumable__slug": consumable_slug,
                 "slug": assortment_slug,
-            }).select_related("consumable").get()
+            }).select_related(*Assortment.HIERARCHY_SELECT_RELATED).get()
         except Assortment.DoesNotExist:
             raise Http404(
                 _("No {} found matching the query").format(
@@ -121,12 +123,11 @@ class AssortmentAutocompleteView(UserPassesTestMixin, autocomplete.Select2QueryS
         qs = Assortment.objects.all()
 
         if self.q:
-            qs = qs.filter(title__istartswith=self.q).select_related("consumable")
+            qs = qs.filter(title__istartswith=self.q).select_related(
+                *Assortment.HIERARCHY_SELECT_RELATED
+            )
 
-        return qs.order_by(
-            "consumable__title",
-            "title"
-        )
+        return qs.order_by(*Assortment.HIERARCHY_ORDER)
 
     def get_result_label(self, result):
         """

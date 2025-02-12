@@ -50,7 +50,22 @@ class Assortment(models.Model):
 
     COMMON_ORDER_BY = ["title"]
     """
-    List of field order commonly used in frontend view/api
+    List of field names for ordering queryset related to the same consumable.
+    """
+
+    HIERARCHY_SELECT_RELATED = ["consumable"]
+    """
+    List of foreign-key relationships field names to "follow" in queryset to avoid
+    multiple queries. Commonly used in ``Queryset.select_related()``.
+    """
+
+    HIERARCHY_ORDER = [
+        "consumable__title",
+        "title"
+    ]
+    """
+    List of field names for ordering queryset respecting relationships. This is to be
+    used when listing objects related to mixed consumables.
     """
 
     class Meta:

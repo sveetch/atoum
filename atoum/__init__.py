@@ -1,4 +1,4 @@
-"""A Django application to manage stock and further"""
+"""A Django application to manage shopping list and stock of consumables"""
 from importlib.metadata import version
 
 
