@@ -14,8 +14,8 @@
         <div class="products stacks">
             {% for product in object_list %}
                 <a href="{{ product.get_absolute_url }}" class="item">
-                    {{ product.title }}
-                    <br><small>{{ product.category.title }}</small>
+                    <span class="title">{{ product.title }}</span>
+                    <br><small class="parent">{{ product.category.title }}</small>
                 </a>
             {% empty %}
                 <p class="item empty">{% translate "No products yet." %}</p>

@@ -5,6 +5,33 @@ from atoum.factories import (
     ConsumableFactory,
     UserFactory,
 )
+from atoum.utils.tests import html_pyquery
+
+from tests.initial import initial_catalog
+
+
+def test_index(client, db, initial_catalog, settings):
+    """
+    Assortment index should list available assortments with pagination.
+    """
+    url = reverse("atoum:assortment-index")
+
+    # Entries from first page
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == []
+    assert response.status_code == 200
+
+    dom = html_pyquery(response)
+    titles = [
+        v.cssselect(".parent")[0].text + ":" + v.cssselect(".title")[0].text
+        for v in dom.find(".assortment-index .assortments .item .body")
+    ]
+    assert titles == [
+        "Pets:Croquettes",
+        "Food:Meat",
+        "Food:Sweat treats",
+        "Food:Vegetables",
+    ]
 
 
 def test_autocomplete_authentication(client, db, settings):
