@@ -10,13 +10,24 @@ from atoum.utils.tests import html_pyquery
 from tests.initial import initial_catalog
 
 
-def test_index(client, db, initial_catalog, settings):
+def test_index_empty(client, db):
+    """
+    Assortment index should just respond with an empty list.
+    """
+    url = reverse("atoum:assortment-index")
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == []
+    assert response.status_code == 200
+
+    dom = html_pyquery(response)
+    assert len(dom.find(".assortment-index .assortments .item")) == 0
+
+
+def test_index_filled(client, db, initial_catalog):
     """
     Assortment index should list available assortments with pagination.
     """
     url = reverse("atoum:assortment-index")
-
-    # Entries from first page
     response = client.get(url, follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 200
@@ -63,7 +74,7 @@ def test_autocomplete_authentication(client, db, settings):
     assert response.status_code == 200
 
 
-def test_autocomplete_post(admin_client, db, settings):
+def test_autocomplete_post(admin_client, db):
     """
     Autocompletion backend view does not allow POST request.
     """
@@ -74,7 +85,7 @@ def test_autocomplete_post(admin_client, db, settings):
     assert response.status_code == 400
 
 
-def test_autocomplete_backend(admin_client, db, settings):
+def test_autocomplete_backend(admin_client, db):
     """
     Autocompletion backend view should return expected JSON payload
     """
