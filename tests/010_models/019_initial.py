@@ -4,10 +4,13 @@ from tests.initial import initial_catalog
 def test_factory_creation(db, initial_catalog):
     """
     Initial catalog should correctly create a catalog structure as expected.
+
+    .. Todo::
+        We should check also the Brands that are in their own tree.
     """
     assert initial_catalog.get_ascii_tree() == (
         "───<Consumable: Food>\n"
-        "   └─<Assortment: Meat>\n"
+        "   └─<Assortment: Meats>\n"
         "      └─<Category: Beef>\n"
         "         └─<Product: Steack>\n"
         "         └─<Product: T-Bone>\n"

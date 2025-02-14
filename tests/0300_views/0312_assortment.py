@@ -39,10 +39,34 @@ def test_index_filled(client, db, initial_catalog):
     ]
     assert titles == [
         "Pets:Croquettes",
-        "Food:Meat",
+        "Food:Meats",
         "Food:Sweat treats",
         "Food:Vegetables",
     ]
+
+
+def test_detail_filled(client, db, initial_catalog):
+    """
+    Assortment detail should list its related categories.
+    """
+    meats = initial_catalog.assortments["meats"]
+    url = reverse(
+        "atoum:assortment-detail",
+        kwargs={
+            "consumable_slug": meats.consumable.slug,
+            "assortment_slug": meats.slug,
+        }
+    )
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == []
+    assert response.status_code == 200
+
+    dom = html_pyquery(response)
+    titles = [
+        v.text
+        for v in dom.find(".assortment-detail .assortment-categories .item .title")
+    ]
+    assert titles == ["Beef", "Chicken", "Pig"]
 
 
 def test_autocomplete_authentication(client, db, settings):

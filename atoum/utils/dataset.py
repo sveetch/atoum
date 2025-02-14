@@ -1,6 +1,6 @@
 import json
 
-from atoum.models import Assortment, Category, Consumable, Product
+from atoum.models import Assortment, Brand, Category, Consumable, Product
 
 from dataclasses import dataclass, field
 
@@ -17,6 +17,7 @@ class InitialCatalog:
         difficult from store than from db.
     """
     assortments: dict[Assortment] = field(default_factory=dict)
+    brands: dict[Brand] = field(default_factory=dict)
     consumables: dict[Consumable] = field(default_factory=dict)
     categories: dict[Category] = field(default_factory=dict)
     products: dict[Product] = field(default_factory=dict)
@@ -134,6 +135,32 @@ class InitialCatalog:
             for v in self.consumables.values()
         ]
 
+    def get_brand_tree(self, attr=None):
+        """
+        Get recursive tree of all stored Brand objects.
+
+        .. Note::
+            Opposed to other model objects, Brand is out the consumable tree and live
+            along so it is not included in every "full tree" methods.
+
+        .. Todo::
+            Each brand should list its related products.
+
+        Keyword Arguments:
+            attr (string): If given it will get representation from given attribute
+                from given object. Else on default it uses the ``repr()`` function.
+                The representation attribute is given to all recursive method so it
+                must exists on all models.
+
+        Returns:
+            list: List of tuples, each tuple contains the object slug and a null value
+            to be consistant with other tree structure.
+        """
+        return [
+            (self.get_repr(v, attr=attr), None)
+            for v in self.brands.values()
+        ]
+
     def get_json_tree(self, attr=None):
         """
         Return a JSON payload of the full tree starting from consumables.
@@ -158,7 +185,7 @@ class InitialCatalog:
 
     def get_ascii_tree(self, attr=None):
         """
-        Build a basic recursive ascii tree.
+        Build a basic recursive ascii tree starting from consumables.
 
         Keyword Arguments:
             attr (string): If given it will get representation from given attribute

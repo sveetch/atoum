@@ -52,7 +52,7 @@
 
             {% include "atoum/pagination.html" with page=page_obj query=query %}
         {% else %}
-            <p class="empty">{% translate "No search pattern was submitted." %}</p>
+            <p class="empty text-secondary">{% translate "No search pattern was submitted." %}</p>
         {% endif %}
    </div>
 {% endblock app_content %}

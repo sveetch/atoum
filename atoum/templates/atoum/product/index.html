@@ -9,6 +9,27 @@
     </h1>
 {% endspaceless %}{% endblock title-content %}
 
+{% block page-submenu %}
+    <div class="page-submenu">
+        {% if request.user.is_staff %}
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-gear"></i> {% translate "Manage" %}
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{% url "admin:atoum_product_add" %}"
+                            class="dropdown-item">
+                            <small class="me-3"><i class="bi bi-plus-circle text-success"></i> {% translate "Add a new Product" %}</small>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+{% endblock page-submenu %}
+
 {% block app_content %}{% spaceless %}
     <div class="product-index mt-3">
         <div class="products stacks">

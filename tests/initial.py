@@ -1,7 +1,7 @@
 import pytest
 
 from atoum.factories import (
-    AssortmentFactory, CategoryFactory, ConsumableFactory, ProductFactory
+    AssortmentFactory, BrandFactory, CategoryFactory, ConsumableFactory, ProductFactory
 )
 from atoum.utils.dataset import InitialCatalog
 
@@ -20,8 +20,8 @@ def initial_catalog(db):
 
     meats = AssortmentFactory(
         consumable=foods,
-        title="Meat",
-        slug="meat"
+        title="Meats",
+        slug="meats"
     )
     vegetables = AssortmentFactory(
         consumable=foods,
@@ -46,13 +46,50 @@ def initial_catalog(db):
     yellows = CategoryFactory(assortment=vegetables, title="Yellows", slug="yellows")
     reds = CategoryFactory(assortment=vegetables, title="Reds", slug="reds")
 
-    steack = ProductFactory(category=beeffoods, title="Steack", slug="steack")
-    tongue = ProductFactory(category=beeffoods, title="Tongue", slug="tongue")
-    tbone = ProductFactory(category=beeffoods, title="T-Bone", slug="tbone")
-    wing = ProductFactory(category=chicken, title="Wing", slug="wing")
-    tomatoe = ProductFactory(category=reds, title="Tomatoe", slug="tomatoe")
-    corn = ProductFactory(category=yellows, title="Corn", slug="corn")
-    sensitive = ProductFactory(category=beefpets, title="Sensitive", slug="sensitive")
+    meowmax = BrandFactory(title="Meow MAX", slug="meow-max")
+
+    steack = ProductFactory(
+        category=beeffoods,
+        title="Steack",
+        slug="steack",
+        brand=None
+    )
+    tongue = ProductFactory(
+        category=beeffoods,
+        title="Tongue",
+        slug="tongue",
+        brand=None
+    )
+    tbone = ProductFactory(
+        category=beeffoods,
+        title="T-Bone",
+        slug="tbone",
+        brand=None
+    )
+    wing = ProductFactory(
+        category=chicken,
+        title="Wing",
+        slug="wing",
+        brand=None
+    )
+    tomatoe = ProductFactory(
+        category=reds,
+        title="Tomatoe",
+        slug="tomatoe",
+        brand=None
+    )
+    corn = ProductFactory(
+        category=yellows,
+        title="Corn",
+        slug="corn",
+        brand=None
+    )
+    sensitive = ProductFactory(
+        category=beefpets,
+        title="Sensitive",
+        slug="sensitive",
+        brand=meowmax
+    )
 
     return InitialCatalog(
         consumables={
@@ -65,6 +102,9 @@ def initial_catalog(db):
             "vegetables": vegetables,
             "sweettreats": sweettreats,
             "croquettes": croquettes,
+        },
+        brands={
+            "meowmax": meowmax,
         },
         categories={
             "beeffoods": beeffoods,

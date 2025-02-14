@@ -50,6 +50,32 @@ def test_index_filled(client, db, initial_catalog):
     ]
 
 
+def test_detail_filled(client, db, initial_catalog):
+    """
+    Product detail view should contain product detail informations.
+    """
+    tomatoe = initial_catalog.products["tomatoe"]
+    url = reverse(
+        "atoum:product-detail",
+        kwargs={
+            "consumable_slug": tomatoe.category.assortment.consumable.slug,
+            "assortment_slug": tomatoe.category.assortment.slug,
+            "category_slug": tomatoe.category.slug,
+            "product_slug": tomatoe.slug,
+        }
+    )
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == []
+    assert response.status_code == 200
+
+    dom = html_pyquery(response)
+    titles = [
+        v.text
+        for v in dom.find(".category-detail .category-products .item")
+    ]
+    assert titles == []
+
+
 def test_autocomplete_authentication(client, db, settings):
     """
     Autocompletion backend view requires user to have staff level.
