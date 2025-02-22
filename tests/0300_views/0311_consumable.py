@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from atoum.utils.tests import html_pyquery
 
-from tests.initial import initial_catalog
+from tests.initial import initial_catalog  # noqa: F401
 
 
 def test_index_empty(client, db):
@@ -18,7 +18,7 @@ def test_index_empty(client, db):
     assert len(dom.find(".consumable-index .consumables .item")) == 0
 
 
-def test_index_filled(client, db, initial_catalog):
+def test_index_filled(client, db, initial_catalog):  # noqa: F811
     """
     Consumable index should list all available consumables.
     """
@@ -32,7 +32,7 @@ def test_index_filled(client, db, initial_catalog):
     assert titles == ["Food", "Hygiene", "Pets"]
 
 
-def test_detail_filled(client, db, initial_catalog):
+def test_detail_filled(client, db, initial_catalog):  # noqa: F811
     """
     Consumable detail should list its related assortments.
     """

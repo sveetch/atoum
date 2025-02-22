@@ -1,5 +1,3 @@
-from datetime import date
-
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from haystack.query import RelatedSearchQuerySet

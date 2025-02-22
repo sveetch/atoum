@@ -3,6 +3,6 @@ from .search import AdvancedSearchFormHelper
 
 
 __all__ = [
-    "AdvancedSearchFormLayout",
+    "AdvancedSearchFormHelper",
     "DefaultFormHelper",
 ]

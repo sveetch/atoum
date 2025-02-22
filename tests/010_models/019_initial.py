@@ -1,7 +1,7 @@
-from tests.initial import initial_catalog
+from tests.initial import initial_catalog  # noqa: F401
 
 
-def test_factory_creation(db, initial_catalog):
+def test_factory_creation(db, initial_catalog):  # noqa: F811
     """
     Initial catalog should correctly create a catalog structure as expected.
 

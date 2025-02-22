@@ -1,6 +1,6 @@
 from haystack.forms import ModelSearchForm
 
-from ..models import Assortment, Category, Consumable, Product
+from ..models import Assortment, Category, Product
 from ..form_helpers import AdvancedSearchFormHelper
 
 
@@ -31,6 +31,7 @@ class GlobalSearchForm(ModelSearchForm):
 
         sqs = self.searchqueryset.filter(title_partial=self.cleaned_data["q"])
 
+        # Enable all discovered model indexes from enabled applications
         sqs = sqs.models(*self.get_models())
 
         if self.load_all:

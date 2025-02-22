@@ -3,23 +3,17 @@ Command to export Atoum data into a XSLX file.
 """
 import csv
 import datetime
-import json
 import tempfile
 from pathlib import Path
 
 from django.core.management.base import BaseCommand
-from django.utils.text import slugify
 
-import tablib
-from import_export import resources
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.styles import Alignment
 from openpyxl.styles import Border, Side
 from openpyxl.styles import PatternFill
 from openpyxl.utils import get_column_letter
-from openpyxl.worksheet.formula import ArrayFormula
-from openpyxl.packaging.core import DocumentProperties
 
 from atoum.admin import (
     AssortmentResource, CategoryResource, ConsumableResource, ProductResource
@@ -75,7 +69,6 @@ class Command(BaseCommand):
         # Shared colors
         light_blue = "0099CCFF"
         black = "00000000"
-        white = "00FFFFFF"
 
         # Main border style
         thin_border = Side(border_style="thin", color=black)
@@ -104,7 +97,6 @@ class Command(BaseCommand):
             right=thin_border,
             bottom=thin_border
         )
-
 
     def export_model(self, item, csvdir):
         """
@@ -168,7 +160,9 @@ class Command(BaseCommand):
             tempdir = Path(tmpdirname)
             for i, item in enumerate(self.EXPORT_MODELS):
                 destination = self.export_model(item, tempdir)
-                self.stdout.write("  └─ Written to temporary file '{}'".format(destination))
+                self.stdout.write(
+                    "  └─ Written to temporary file '{}'".format(destination)
+                )
 
                 self.create_model_sheet(i, item[0], destination)
         xslx_filepath = "Atoum_{}.xlsx".format(self.now.isoformat().split("T")[0])

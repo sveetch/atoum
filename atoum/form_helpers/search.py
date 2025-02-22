@@ -1,15 +1,8 @@
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from crispy_forms.layout import Submit
-
-from .default import DefaultFormHelper
-
-
-from django.utils.translation import gettext_lazy as _
-
-from crispy_forms.layout import Div, Field, Layout, Submit
-from crispy_forms.bootstrap import FieldWithButtons, StrictButton, InlineCheckboxes
+from crispy_forms.layout import Field, Layout
+from crispy_forms.bootstrap import FieldWithButtons, StrictButton
 
 from .default import DefaultFormHelper
 from .layout_objects import ListGroupCheckboxes

@@ -118,5 +118,7 @@ def initial_catalog(db):
             "tbone": tbone,
             "tomatoe": tomatoe,
             "corn": corn,
+            "sensitive": sensitive,
+            "wing": wing,
         },
     )

@@ -11,7 +11,7 @@ from dal import autocomplete
 
 from ..models import Product
 from .category import CategoryDetailView
-from .consumable import ConsumableIndexView, ConsumableDetailView
+from .consumable import ConsumableDetailView
 from .assortment import AssortmentDetailView
 from .mixins import AtoumBreadcrumMixin
 

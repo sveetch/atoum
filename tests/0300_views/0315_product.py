@@ -9,7 +9,7 @@ from atoum.factories import (
 )
 from atoum.utils.tests import html_pyquery
 
-from tests.initial import initial_catalog
+from tests.initial import initial_catalog  # noqa: F401
 
 
 def test_index_empty(client, db):
@@ -25,7 +25,7 @@ def test_index_empty(client, db):
     assert len(dom.find(".product-index .products .item")) == 0
 
 
-def test_index_filled(client, db, initial_catalog):
+def test_index_filled(client, db, initial_catalog):  # noqa: F811
     """
     Product index should list available assortments with pagination.
     """
@@ -50,9 +50,13 @@ def test_index_filled(client, db, initial_catalog):
     ]
 
 
-def test_detail_filled(client, db, initial_catalog):
+def test_detail_filled(admin_client, db, initial_catalog):  # noqa: F811
     """
     Product detail view should contain product detail informations.
+
+    NOTE: We currently use admin_client since management links are restricted to
+    staff user but in fact the whole app should be restricted to staff so there is no
+    need to duplicate code to test with both lambda users and staff users.
     """
     tomatoe = initial_catalog.products["tomatoe"]
     url = reverse(
@@ -64,16 +68,20 @@ def test_detail_filled(client, db, initial_catalog):
             "product_slug": tomatoe.slug,
         }
     )
-    response = client.get(url, follow=True)
+    response = admin_client.get(url, follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 200
 
+    # There is currently no sensitive data on product detail so at least we check
+    # about management links
     dom = html_pyquery(response)
-    titles = [
-        v.text
-        for v in dom.find(".category-detail .category-products .item")
+    assert len(dom.find(".manage-object")) == 1
+
+    management_links = [v.get("href") for v in dom.find(".manage-object a")]
+    assert sorted(management_links) == [
+        reverse("admin:atoum_product_change", kwargs={"object_id": tomatoe.id}),
+        reverse("admin:atoum_product_delete", kwargs={"object_id": tomatoe.id}),
     ]
-    assert titles == []
 
 
 def test_autocomplete_authentication(client, db, settings):

@@ -1,10 +1,18 @@
-# Frozen requirement versions for 'atoum==0.2.0rc6' installation
+# Frozen requirement versions for 'atoum==0.3.0rc7' installation
 Django==5.0.9
 django-smart-media==0.3.1
 django-autocomplete-light==3.11.0
+django-import-export==4.3.4
+whoosh-reloaded==2.7.5
+django-haystack==3.3.0
+django-crispy-forms==2.3
+crispy-bootstrap5==2024.10
+# From extra requirements 'breadcrumbs'
+django-view-breadcrumbs==2.5.1
 # From extra requirements 'sandbox'
 diskette==0.3.6
 django-debug-toolbar==4.4.6
+py-css-styleguide==1.2.0
 # From extra requirements 'dev'
 pytest==8.3.3
 pytest-django==4.9.0

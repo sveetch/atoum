@@ -1,5 +1,3 @@
-import datetime
-
 from haystack import indexes
 
 from .models import Assortment, Category, Consumable, Product
