@@ -33,6 +33,22 @@ Then mount applications URLs: ::
 
 And finally apply database migrations.
 
+Search engine
+*************
+
+The search engine needs data indexes to work, it is not continuously updated when you
+are changing your data, at least you first need to start indexes: ::
+
+    make search-build
+
+And then when your data changes, you may update indexes: ::
+
+    make search-update
+
+This is probably something you will have to automatize with scheduling tasks like Cron
+or something else.
+
+
 Settings
 ********
 

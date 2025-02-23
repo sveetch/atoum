@@ -20,12 +20,8 @@ LANGUAGE_CODE = "en"
 if "en" not in [k for k, v in LANGUAGES]:
     LANGUAGES = LANGUAGES + (("en", "English"),)
 
-# Use the simple backend to avoid having to build index
-#HAYSTACK_CONNECTIONS = {
-    #"default": {
-        #"ENGINE": "haystack.backends.simple_backend.SimpleEngine",
-    #},
-#}
+# Test environment uses its own Whoosh indexes to not overwrite the ones use in
+# sandbox
 HAYSTACK_CONNECTIONS = {
     "default": {
         "ENGINE": "haystack.backends.whoosh_backend.WhooshEngine",

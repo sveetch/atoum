@@ -63,6 +63,12 @@ help:
 	@echo "  po                         -- to update every PO files from application for enabled languages"
 	@echo "  mo                         -- to build MO files from application PO files"
 	@echo
+	@echo "  Search indexes commands"
+	@echo "  ======================="
+	@echo
+	@echo "  search-rebuild             -- to (Re)Build search engine indexes"
+	@echo "  search-update              -- to update search engine indexes"
+	@echo
 	@echo "  Diskette commands"
 	@echo "  ================="
 	@echo
@@ -309,6 +315,20 @@ livedocs:
 	$(SPHINX_RELOAD_BIN)
 .PHONY: livedocs
 
+search-build:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> (Re)Build search indexes <---$(FORMATRESET)\n"
+	@echo ""
+	$(PYTHON_BIN) $(DJANGO_MANAGE) rebuild_index -v 3 --noinput
+.PHONY: search-build
+
+search-update:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> (Re)Build search indexes <---$(FORMATRESET)\n"
+	@echo ""
+	$(PYTHON_BIN) $(DJANGO_MANAGE) update_index -v 3
+.PHONY: search-update
+
 disk-dump:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Creating a Diskette archive <---$(FORMATRESET)\n"
@@ -394,10 +414,3 @@ quality: check-django check-migrations test-initial flake docs check-release fre
 	@echo ""
 	@echo ""
 .PHONY: quality
-
-import:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Import samples <---$(FORMATRESET)\n"
-	@echo ""
-	rm -Rf var && cp -r initial_var var && $(PYTHON_BIN) $(DJANGO_MANAGE) importer
-.PHONY: import

@@ -3,6 +3,12 @@
 Changelog
 =========
 
+Development
+***********
+
+* Added Makefile tasks to manage search engine indexes;
+
+
 Version 0.3.0 - 2025/02/23
 **************************
 
