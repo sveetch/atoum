@@ -67,14 +67,18 @@ def test_index_basic(client, db, index_initial_catalog):  # noqa: F811
     ]
 
 
-def test_index_models(client, db, index_initial_catalog):  # noqa: F811
+def test_index_models(client, db, index_initial_catalog,  # noqa: F811
+                      django_assert_num_queries):
     """
     Search engine can gather results from different models.
     """
     url = reverse("atoum:search-results")
 
     # With all model enabled (default)
-    response = client.get(url, data={"q": "other"})
+    # Use a queryset per model
+    with django_assert_num_queries(4):
+        response = client.get(url, data={"q": "other"})
+
     assert response.status_code == 200
     dom = html_pyquery(response)
     assert parse_result_items(dom.find(".search-results .results .item")) == [
@@ -85,10 +89,11 @@ def test_index_models(client, db, index_initial_catalog):  # noqa: F811
     ]
 
     # With a few set of models selected
-    response = client.get(url, data={
-        "q": "other",
-        "models": ["atoum.category", "atoum.product"]
-    })
+    with django_assert_num_queries(2):
+        response = client.get(url, data={
+            "q": "other",
+            "models": ["atoum.category", "atoum.product"]
+        })
     assert response.status_code == 200
     dom = html_pyquery(response)
     assert parse_result_items(dom.find(".search-results .results .item")) == [

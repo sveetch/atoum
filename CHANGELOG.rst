@@ -7,6 +7,8 @@ Development
 ***********
 
 * Added Makefile tasks to manage search engine indexes;
+* Improved some view tests to assert on amount of querysets to ensure we do not break
+  performances;
 
 
 Version 0.3.0 - 2025/02/23

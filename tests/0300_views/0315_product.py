@@ -25,12 +25,18 @@ def test_index_empty(client, db):
     assert len(dom.find(".product-index .products .item")) == 0
 
 
-def test_index_filled(client, db, initial_catalog):  # noqa: F811
+def test_index_filled(client, db, initial_catalog,  # noqa: F811
+                      django_assert_num_queries):
     """
     Product index should list available assortments with pagination.
     """
     url = reverse("atoum:product-index")
-    response = client.get(url, follow=True)
+
+    # Only a count queryset from pagination and the other one to list objects with
+    # their relation preloaded
+    with django_assert_num_queries(2):
+        response = client.get(url, follow=True)
+
     assert response.redirect_chain == []
     assert response.status_code == 200
 
@@ -69,7 +75,9 @@ def test_detail_filled(admin_client, db, initial_catalog):  # noqa: F811
             "product_slug": tomatoe.slug,
         }
     )
+
     response = admin_client.get(url, follow=True)
+
     assert response.redirect_chain == []
     assert response.status_code == 200
 

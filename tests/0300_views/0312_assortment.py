@@ -23,12 +23,18 @@ def test_index_empty(client, db):
     assert len(dom.find(".assortment-index .assortments .item")) == 0
 
 
-def test_index_filled(client, db, initial_catalog):  # noqa: F811
+def test_index_filled(client, db, initial_catalog,  # noqa: F811
+                      django_assert_num_queries):
     """
     Assortment index should list available assortments with pagination.
     """
     url = reverse("atoum:assortment-index")
-    response = client.get(url, follow=True)
+
+    # Only a count queryset from pagination and the other one to list objects with
+    # their relation preloaded
+    with django_assert_num_queries(2):
+        response = client.get(url, follow=True)
+
     assert response.redirect_chain == []
     assert response.status_code == 200
 
@@ -46,7 +52,8 @@ def test_index_filled(client, db, initial_catalog):  # noqa: F811
     ]
 
 
-def test_detail_filled(client, db, initial_catalog):  # noqa: F811
+def test_detail_filled(client, db, initial_catalog,  # noqa: F811
+                       django_assert_num_queries):
     """
     Assortment detail should list its related categories.
     """
@@ -58,7 +65,12 @@ def test_detail_filled(client, db, initial_catalog):  # noqa: F811
             "assortment_slug": meats.slug,
         }
     )
-    response = client.get(url, follow=True)
+
+    # A queryset for the main object, another one to list its related objects and
+    # another one for pagination
+    with django_assert_num_queries(3):
+        response = client.get(url, follow=True)
+
     assert response.redirect_chain == []
     assert response.status_code == 200
 
