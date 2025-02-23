@@ -12,7 +12,7 @@ Atoum
 
 A Django application to manage shopping list and stock of consumables.
 
-This is currently in alpha stage development.
+This is currently in beta stage development.
 
 
 Dependencies
@@ -31,5 +31,11 @@ Links
 *****
 
 * **Not yet** Read the documentation on `Read the docs <https://atoum.readthedocs.io/>`_;
-* **Not yet** Download its `PyPi package <https://pypi.python.org/pypi/atoum>`_;
+* Download its `PyPi package <https://pypi.python.org/pypi/atoum>`_;
 * Clone it on its `Github repository <https://github.com/sveetch/atoum>`_;
+
+
+Credits
+*******
+
+Logo vector and icon by `SVG Repo <https://www.svgrepo.com>`_.

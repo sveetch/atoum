@@ -26,3 +26,7 @@ object definitions used in application with Django ORM.
 .. automodule:: atoum.models.product
     :members: Product
     :exclude-members: DoesNotExist, MultipleObjectsReturned
+
+.. automodule:: atoum.models.shopping
+    :members: Shopping, ShoppingItem
+    :exclude-members: DoesNotExist, MultipleObjectsReturned

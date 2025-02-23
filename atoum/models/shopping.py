@@ -86,7 +86,8 @@ class ShoppingItem(models.Model):
     """
     Shopping list item object.
 
-    TODO: Quantity value may be a choice field if product unit was a volume or weight.
+    .. todo::
+        Quantity value may be a choice field if product unit was a volume or weight.
 
     Attributes:
         created (models.DateTimeField): Required creation datetime, automatically
