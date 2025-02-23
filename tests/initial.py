@@ -1,5 +1,7 @@
 import pytest
 
+from django.core.management import call_command
+
 from atoum.factories import (
     AssortmentFactory, BrandFactory, CategoryFactory, ConsumableFactory, ProductFactory
 )
@@ -17,12 +19,12 @@ def initial_catalog(db):
     foods = ConsumableFactory(title="Food", slug="foods")
     pets = ConsumableFactory(title="Pets", slug="pets")
     hygiene = ConsumableFactory(title="Hygiene", slug="hygiene")
-
-    meats = AssortmentFactory(
-        consumable=foods,
-        title="Meats",
-        slug="meats"
+    other_consumable = ConsumableFactory(
+        title="Other consumable",
+        slug="other-consumable"
     )
+
+    meats = AssortmentFactory(consumable=foods, title="Meats", slug="meats")
     vegetables = AssortmentFactory(
         consumable=foods,
         title="Vegetables",
@@ -38,6 +40,11 @@ def initial_catalog(db):
         title="Croquettes",
         slug="croquettes"
     )
+    other_assortment = AssortmentFactory(
+        consumable=other_consumable,
+        title="Other assortment",
+        slug="other-assortment"
+    )
 
     beeffoods = CategoryFactory(assortment=meats, title="Beef", slug="beef")
     pig = CategoryFactory(assortment=meats, title="Pig", slug="pig")
@@ -45,6 +52,11 @@ def initial_catalog(db):
     beefpets = CategoryFactory(assortment=croquettes, title="Beef", slug="beef")
     yellows = CategoryFactory(assortment=vegetables, title="Yellows", slug="yellows")
     reds = CategoryFactory(assortment=vegetables, title="Reds", slug="reds")
+    other_category = CategoryFactory(
+        assortment=other_assortment,
+        title="Other category",
+        slug="other-category"
+    )
 
     meowmax = BrandFactory(title="Meow MAX", slug="meow-max")
 
@@ -90,18 +102,26 @@ def initial_catalog(db):
         slug="sensitive",
         brand=meowmax
     )
+    other_product = ProductFactory(
+        category=other_category,
+        title="Other product",
+        slug="other-product",
+        brand=None
+    )
 
     return InitialCatalog(
         consumables={
             "foods": foods,
             "pets": pets,
             "hygiene": hygiene,
+            "other_consumable": other_consumable,
         },
         assortments={
             "meats": meats,
             "vegetables": vegetables,
             "sweettreats": sweettreats,
             "croquettes": croquettes,
+            "other_assortment": other_assortment,
         },
         brands={
             "meowmax": meowmax,
@@ -111,6 +131,7 @@ def initial_catalog(db):
             "pig": pig,
             "chicken": chicken,
             "beefpets": beefpets,
+            "other_category": other_category,
         },
         products={
             "steack": steack,
@@ -120,5 +141,43 @@ def initial_catalog(db):
             "corn": corn,
             "sensitive": sensitive,
             "wing": wing,
+            "other_product": other_product,
         },
     )
+
+
+@pytest.fixture(scope="function")
+def index_initial_catalog(initial_catalog):
+    """
+    Invoke "initial_catalog" to build catalog then index it with Haystack.
+
+    This is only useful if your test assert against search result else it would be
+    useless.
+
+    It may be a little tricky but Haystack indexing processes are only properly
+    available from their Django command, this is the only way to do it on demand
+    (instead of a pre processed index shipped in test data).
+
+    Returns:
+        InitialCatalog: A dataclasses which contains every created model object.
+    """
+    from io import StringIO
+
+    with StringIO() as out:
+        args = [
+            "--noinput",
+            "--settings=sandbox.settings.tests",
+        ]
+        call_command("clear_index", *args, stdout=out)
+        # print(out.getvalue())
+        # print("-"*40)
+
+    with StringIO() as out:
+        args = [
+            "--settings=sandbox.settings.tests",
+        ]
+        call_command("update_index", *args, stdout=out)
+        # print(out.getvalue())
+        # print("-"*40)
+
+    return initial_catalog

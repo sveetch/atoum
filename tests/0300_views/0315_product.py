@@ -41,6 +41,7 @@ def test_index_filled(client, db, initial_catalog):  # noqa: F811
     ]
     assert titles == [
         "Yellows:Corn",
+        "Other category:Other product",
         "Beef:Sensitive",
         "Beef:Steack",
         "Beef:T-Bone",

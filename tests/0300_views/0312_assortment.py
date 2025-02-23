@@ -40,6 +40,7 @@ def test_index_filled(client, db, initial_catalog):  # noqa: F811
     assert titles == [
         "Pets:Croquettes",
         "Food:Meats",
+        "Other consumable:Other assortment",
         "Food:Sweat treats",
         "Food:Vegetables",
     ]

@@ -29,7 +29,7 @@ def test_index_filled(client, db, initial_catalog):  # noqa: F811
 
     dom = html_pyquery(response)
     titles = [v.text for v in dom.find(".consumable-index .consumables .item .title")]
-    assert titles == ["Food", "Hygiene", "Pets"]
+    assert titles == ["Food", "Hygiene", "Other consumable", "Pets"]
 
 
 def test_detail_filled(client, db, initial_catalog):  # noqa: F811

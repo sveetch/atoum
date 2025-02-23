@@ -19,3 +19,16 @@ LANGUAGE_CODE = "en"
 # Ensure english language is available
 if "en" not in [k for k, v in LANGUAGES]:
     LANGUAGES = LANGUAGES + (("en", "English"),)
+
+# Use the simple backend to avoid having to build index
+#HAYSTACK_CONNECTIONS = {
+    #"default": {
+        #"ENGINE": "haystack.backends.simple_backend.SimpleEngine",
+    #},
+#}
+HAYSTACK_CONNECTIONS = {
+    "default": {
+        "ENGINE": "haystack.backends.whoosh_backend.WhooshEngine",
+        "PATH": VAR_PATH / "whoosh_index_tests",
+    },
+}

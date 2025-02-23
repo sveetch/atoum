@@ -28,5 +28,9 @@ def test_factory_creation(db, initial_catalog):  # noqa: F811
         "   └─<Assortment: Croquettes>\n"
         "      └─<Category: Beef>\n"
         "         └─<Product: Sensitive>\n"
-        "───<Consumable: Hygiene>"
+        "───<Consumable: Hygiene>\n"
+        "───<Consumable: Other consumable>\n"
+        "   └─<Assortment: Other assortment>\n"
+        "      └─<Category: Other category>\n"
+        "         └─<Product: Other product>"
     )

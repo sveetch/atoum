@@ -42,6 +42,7 @@ def test_index_filled(client, db, initial_catalog):  # noqa: F811
         "Meats:Beef",
         "Croquettes:Beef",
         "Meats:Chicken",
+        "Other assortment:Other category",
         "Meats:Pig",
         "Vegetables:Reds",
         "Vegetables:Yellows",

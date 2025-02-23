@@ -19,36 +19,40 @@
                 {% translate "Results" %}
             </h3>
 
-            <div class="results stacks">
-                {% for result in page_obj.object_list %}
-                    {% if result.model_name == "assortment" %}
-                        <a href="{{ result.object.get_absolute_url }}" class="item">
-                            <small><i class="bi bi-tags"></i> {% translate "Assortment" %}</small><br>
-                            {{ result.object.title }}
-                            <br><small>{% translate "In consumable" %} <em>{{ result.object.consumable.title }}</em></small>
-                        </a>
-                    {% elif result.model_name == "category" %}
-                        <a href="{{ result.object.get_absolute_url }}" class="item">
-                            <small><i class="bi bi-tags"></i> {% translate "Category" %}</small><br>
-                            {{ result.object.title }}
-                            <br><small>{% translate "In assortment" %} <em>{{ result.object.assortment.title }}</em></small>
-                        </a>
-                    {% elif result.model_name == "consumable" %}
-                        <a href="{{ result.object.get_absolute_url }}" class="item">
-                            <small><i class="bi bi-boxes"></i> {% translate "Consumable" %}</small><br>
-                            {{ result.object.title }}
-                        </a>
-                    {% elif result.model_name == "product" %}
-                        <a href="{{ result.object.get_absolute_url }}" class="item">
-                            <small><i class="bi bi-archive"></i> {% translate "Product" %}</small><br>
-                            {{ result.object.title }}
-                            <br><small>{% translate "In category" %} <em>{{ result.object.category.title }}</em></small>
-                        </a>
-                    {% endif %}
-                {% empty %}
+            {% with results=page_obj.object_list %}
+                {% if results %}
+                    <div class="results stacks">
+                        {% for result in results %}
+                            {% if result.model_name == "assortment" %}
+                                <a href="{{ result.object.get_absolute_url }}" class="item">
+                                    <small class="model"><i class="bi bi-stack"></i> {% translate "Assortment" %}</small><br>
+                                    <span class="title">{{ result.object.title }}</span>
+                                    <br><small class="parent">{% translate "In consumable" %} <em>{{ result.object.consumable.title }}</em></small>
+                                </a>
+                            {% elif result.model_name == "category" %}
+                                <a href="{{ result.object.get_absolute_url }}" class="item">
+                                    <small class="model"><i class="bi bi-tags"></i> {% translate "Category" %}</small><br>
+                                    <span class="title">{{ result.object.title }}</span>
+                                    <br><small class="parent">{% translate "In assortment" %} <em>{{ result.object.assortment.title }}</em></small>
+                                </a>
+                            {% elif result.model_name == "consumable" %}
+                                <a href="{{ result.object.get_absolute_url }}" class="item">
+                                    <small class="model"><i class="bi bi-boxes"></i> {% translate "Consumable" %}</small><br>
+                                    <span class="title">{{ result.object.title }}</span>
+                                </a>
+                            {% elif result.model_name == "product" %}
+                                <a href="{{ result.object.get_absolute_url }}" class="item">
+                                    <small class="model"><i class="bi bi-archive"></i> {% translate "Product" %}</small><br>
+                                    <span class="title">{{ result.object.title }}</span>
+                                    <br><small class="parent">{% translate "In category" %} <em>{{ result.object.category.title }}</em></small>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
                     <p class="item empty">{% translate "No results found." %}</p>
-                {% endfor %}
-            </div>
+                {% endif %}
+            {% endwith %}
 
             {% include "atoum/pagination.html" with page=page_obj query=query %}
         {% else %}
