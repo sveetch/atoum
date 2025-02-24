@@ -9,6 +9,8 @@ Development
 * Added Makefile tasks to manage search engine indexes;
 * Improved some view tests to assert on amount of querysets to ensure we do not break
   performances;
+* Added new behavior to Shopping list admin to set shopping list as done or undone
+  depending the 'done state' of its items;
 
 
 Version 0.3.0 - 2025/02/23

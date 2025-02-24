@@ -2,7 +2,7 @@ from django import forms
 
 from dal import autocomplete
 
-from ..models import Product, ShoppingItem
+from ..models import Product, Shopping, ShoppingItem
 
 
 class ProductBreadcrumbChoiceField(forms.ModelChoiceField):
@@ -17,6 +17,12 @@ class ProductBreadcrumbChoiceField(forms.ModelChoiceField):
         ``ProductAutocompleteView.get_selected_result_label()``.
         """
         return obj.parenting_crumbs_html()
+
+
+class ShoppingAdminForm(forms.ModelForm):
+    class Meta:
+        fields = "__all__"
+        model = Shopping
 
 
 class ShoppingItemInlineForm(autocomplete.FutureModelForm):

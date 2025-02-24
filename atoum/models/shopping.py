@@ -62,7 +62,7 @@ class Shopping(models.Model):
     def __str__(self):
         """
         TODO: We should return a localized and humanized date when falling back to
-        planning date because of empty title.
+        planning date because of an empty title.
         """
         return self.title or str(self.planning)
 
@@ -131,3 +131,6 @@ class ShoppingItem(models.Model):
                 name="atoum_unique_shoppingitem_shopping_product"
             ),
         ]
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
