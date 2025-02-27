@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from atoum.utils.tests import html_pyquery
 
-from tests.initial import initial_catalog, index_initial_catalog  # noqa: F401
+from tests.initial import initial_catalog, index_catalog  # noqa: F401
 
 
 def parse_result_items(elements):
@@ -13,7 +13,7 @@ def parse_result_items(elements):
         elements (list): List of HtmlElement nodes.
 
     Returns:
-        tuple: Respectively the found title, model and parent (Always null for
+        tuple: Respectively found Title, Model and possibly Parent (Always null for
         Consumable)
     """
     return [
@@ -32,7 +32,7 @@ def parse_result_items(elements):
     ]
 
 
-def test_index_empty(client, db, index_initial_catalog):  # noqa: F811
+def test_index_empty(client, db):  # noqa: F811
     """
     Search view should just respond with an empty message without any results.
     """
@@ -46,11 +46,13 @@ def test_index_empty(client, db, index_initial_catalog):  # noqa: F811
     assert len(dom.find(".search-results .empty")) == 1
 
 
-def test_index_basic(client, db, index_initial_catalog):  # noqa: F811
+def test_index_basic(client, db, initial_catalog, index_catalog):  # noqa: F811
     """
     At least two characters are needed else search engine don't process anything and
-    there is no results.
+    there is no results. With minimal characters requirement the query should result
+    for expected items.
     """
+
     url = reverse("atoum:search-results")
     response = client.get(url, data={"q": "b"})
     assert response.status_code == 200
@@ -60,14 +62,13 @@ def test_index_basic(client, db, index_initial_catalog):  # noqa: F811
     response = client.get(url, data={"q": "be"})
     assert response.status_code == 200
     dom = html_pyquery(response)
-    assert len(dom.find(".search-results .results .item")) == 2
     assert parse_result_items(dom.find(".search-results .results .item")) == [
         ("Beef", "Category", "In assortment Meats"),
         ("Beef", "Category", "In assortment Croquettes"),
     ]
 
 
-def test_index_models(client, db, index_initial_catalog,  # noqa: F811
+def test_index_models(client, db, initial_catalog, index_catalog,  # noqa: F811
                       django_assert_num_queries):
     """
     Search engine can gather results from different models.

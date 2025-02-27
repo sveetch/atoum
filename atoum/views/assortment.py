@@ -20,7 +20,7 @@ class AssortmentIndexView(AtoumBreadcrumMixin, ListView):
     """
     model = Assortment
     template_name = "atoum/assortment/index.html"
-    paginate_by = settings.ASSORTMENT_PAGINATION
+    paginate_by = settings.ATOUM_ASSORTMENT_PAGINATION
     crumb_title = _("Assortments")
     crumb_urlname = "atoum:assortment-index"
 
@@ -44,7 +44,7 @@ class AssortmentDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
     Assortment detail and its related category list
     """
     template_name = "atoum/assortment/detail.html"
-    paginate_by = settings.CATEGORY_PAGINATION
+    paginate_by = settings.ATOUM_CATEGORY_PAGINATION
     context_object_name = "assortment_object"
     crumb_title = None  # No usage since title depends from object
     crumb_urlname = "atoum:assortment-detail"

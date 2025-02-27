@@ -9,6 +9,8 @@ from smart_media.mixins import SmartFormatMixin
 from smart_media.modelfields import SmartMediaField
 from smart_media.signals import auto_purge_files_on_change, auto_purge_files_on_delete
 
+from ..utils.text import normalize_text
+
 
 class Product(SmartFormatMixin, models.Model):
     """
@@ -115,6 +117,12 @@ class Product(SmartFormatMixin, models.Model):
 
     def __str__(self):
         return self.title
+
+    def normalized_title(self):
+        return normalize_text(self.title)
+
+    def normalized_description(self):
+        return normalize_text(self.description)
 
     def get_absolute_url(self):
         """

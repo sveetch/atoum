@@ -73,7 +73,7 @@ class Shopping(models.Model):
         Returns:
             string: An URL.
         """
-        return reverse("atoum:shopping-detail", args=[self.id])
+        return reverse("atoum:shopping-list-detail", args=[self.id])
 
     def save(self, *args, **kwargs):
         # Auto update 'modified' value on each save

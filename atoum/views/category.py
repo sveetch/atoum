@@ -21,7 +21,7 @@ class CategoryIndexView(AtoumBreadcrumMixin, ListView):
     """
     model = Category
     template_name = "atoum/category/index.html"
-    paginate_by = settings.CATEGORY_PAGINATION
+    paginate_by = settings.ATOUM_CATEGORY_PAGINATION
     crumb_title = _("Categories")
     crumb_urlname = "atoum:category-index"
 
@@ -45,7 +45,7 @@ class CategoryDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
     Category detail and its related category list
     """
     template_name = "atoum/category/detail.html"
-    paginate_by = settings.PRODUCT_PAGINATION
+    paginate_by = settings.ATOUM_PRODUCT_PAGINATION
     context_object_name = "category_object"
     crumb_title = None  # No usage since title depends from object
     crumb_urlname = "atoum:category-detail"

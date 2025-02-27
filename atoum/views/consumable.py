@@ -36,7 +36,7 @@ class ConsumableDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
     Consumable detail and its related assortment list
     """
     template_name = "atoum/consumable/detail.html"
-    paginate_by = settings.ASSORTMENT_PAGINATION
+    paginate_by = settings.ATOUM_ASSORTMENT_PAGINATION
     context_object_name = "consumable_object"
     crumb_title = None  # No usage since title depends from object
     crumb_urlname = "atoum:consumable-detail"

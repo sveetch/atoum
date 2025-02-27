@@ -66,7 +66,7 @@ help:
 	@echo "  Search indexes commands"
 	@echo "  ======================="
 	@echo
-	@echo "  search-rebuild             -- to (Re)Build search engine indexes"
+	@echo "  search-build               -- to (Re)Build search engine indexes"
 	@echo "  search-update              -- to update search engine indexes"
 	@echo
 	@echo "  Diskette commands"
@@ -326,7 +326,7 @@ search-update:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> (Re)Build search indexes <---$(FORMATRESET)\n"
 	@echo ""
-	$(PYTHON_BIN) $(DJANGO_MANAGE) update_index -v 3
+	$(PYTHON_BIN) $(DJANGO_MANAGE) update_index -v 3 --remove
 .PHONY: search-update
 
 disk-dump:

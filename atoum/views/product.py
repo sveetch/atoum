@@ -22,7 +22,7 @@ class ProductIndexView(AtoumBreadcrumMixin, ListView):
     """
     model = Product
     template_name = "atoum/product/index.html"
-    paginate_by = settings.PRODUCT_PAGINATION
+    paginate_by = settings.ATOUM_PRODUCT_PAGINATION
     crumb_title = _("Products")
     crumb_urlname = "atoum:product-index"
 

@@ -16,6 +16,8 @@ DATABASES = {
     }
 }
 
+ATOUM_INDEXES_DEBUG = True
+
 # Import local settings if any
 try:
     import debug_toolbar  # noqa: F401,F403

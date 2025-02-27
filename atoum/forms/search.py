@@ -2,6 +2,7 @@ from haystack.forms import ModelSearchForm
 
 from ..models import Assortment, Category, Product
 from ..form_helpers import AdvancedSearchFormHelper
+from ..utils.text import normalize_text
 
 
 class GlobalSearchForm(ModelSearchForm):
@@ -29,7 +30,8 @@ class GlobalSearchForm(ModelSearchForm):
         if not self.cleaned_data.get("q"):
             return self.no_query_found()
 
-        sqs = self.searchqueryset.filter(title_partial=self.cleaned_data["q"])
+        # Search on main content with normalized query
+        sqs = self.searchqueryset.filter(text=normalize_text(self.cleaned_data["q"]))
 
         # Enable all discovered model indexes from enabled applications
         sqs = sqs.models(*self.get_models())

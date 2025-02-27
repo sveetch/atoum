@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html
 
+from ..utils.text import normalize_text
+
 
 class Assortment(models.Model):
     """
@@ -77,6 +79,9 @@ class Assortment(models.Model):
 
     def __str__(self):
         return self.title
+
+    def normalized_title(self):
+        return normalize_text(self.title)
 
     def get_absolute_url(self):
         """

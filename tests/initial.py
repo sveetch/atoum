@@ -1,3 +1,6 @@
+import shutil
+from io import StringIO
+
 import pytest
 
 from django.core.management import call_command
@@ -60,53 +63,62 @@ def initial_catalog(db):
 
     meowmax = BrandFactory(title="Meow MAX", slug="meow-max")
 
+    # We empty all description to avoid unexpected positive results on search tests
     steack = ProductFactory(
         category=beeffoods,
         title="Steack",
         slug="steack",
-        brand=None
+        brand=None,
+        description=""
     )
     tongue = ProductFactory(
         category=beeffoods,
         title="Tongue",
         slug="tongue",
-        brand=None
+        brand=None,
+        description=""
     )
     tbone = ProductFactory(
         category=beeffoods,
         title="T-Bone",
         slug="tbone",
-        brand=None
+        brand=None,
+        description=""
     )
     wing = ProductFactory(
         category=chicken,
         title="Wing",
         slug="wing",
-        brand=None
+        brand=None,
+        description=""
     )
     tomatoe = ProductFactory(
         category=reds,
         title="Tomatoe",
         slug="tomatoe",
-        brand=None
+        brand=None,
+        description=""
     )
     corn = ProductFactory(
         category=yellows,
         title="Corn",
         slug="corn",
-        brand=None
+        brand=None,
+        description=""
     )
     sensitive = ProductFactory(
         category=beefpets,
         title="Sensitive",
         slug="sensitive",
-        brand=meowmax
+        brand=meowmax,
+        description=""
     )
     other_product = ProductFactory(
         category=other_category,
         title="Other product",
         slug="other-product",
-        brand=None
+        brand=None,
+        description=""
     )
 
     return InitialCatalog(
@@ -147,37 +159,37 @@ def initial_catalog(db):
 
 
 @pytest.fixture(scope="function")
-def index_initial_catalog(initial_catalog):
+def index_catalog(settings):
     """
-    Invoke "initial_catalog" to build catalog then index it with Haystack.
+    Index catalog with Haystack.
 
     This is only useful if your test assert against search result else it would be
     useless.
 
-    It may be a little tricky but Haystack indexing processes are only properly
-    available from their Django command, this is the only way to do it on demand
-    (instead of a pre processed index shipped in test data).
+    It may seems a little tricky but Haystack indexing processes are available from
+    their Django command because do it programmatically seems very complicated.
+
+    Finally this fixture assumes only a single backend (default) is configured.
 
     Returns:
         InitialCatalog: A dataclasses which contains every created model object.
     """
-    from io import StringIO
+    # Ensure internal connection is rebooted. This is required because we directly
+    # remove the backend index directory, else Haystack seems to keep reference or
+    # pointer to the index and may fail or hang process.
+    import haystack
+    haystack.connections.reload("default")
 
-    with StringIO() as out:
-        args = [
-            "--noinput",
-            "--settings=sandbox.settings.tests",
-        ]
-        call_command("clear_index", *args, stdout=out)
-        # print(out.getvalue())
-        # print("-"*40)
+    # Directly removes the directory instead of using 'clean_index' command, obviously
+    # this would work only with Whoosh backend and it remove every backend indexes.
+    if settings.HAYSTACK_CONNECTIONS["default"]["PATH"].exists():
+        shutil.rmtree(settings.HAYSTACK_CONNECTIONS["default"]["PATH"])
 
     with StringIO() as out:
         args = [
             "--settings=sandbox.settings.tests",
         ]
         call_command("update_index", *args, stdout=out)
-        # print(out.getvalue())
-        # print("-"*40)
+        content = out.getvalue()
 
-    return initial_catalog
+    return content

@@ -1,2 +1,2 @@
-{{ object.title }}
-{{ object.description }}
+{{ object.normalized_title }}{% if object.description %}
+{{ object.normalized_description }}{% endif %}

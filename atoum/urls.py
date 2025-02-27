@@ -16,6 +16,7 @@ from .views import (
     ProductDetailView,
     ProductIndexView,
     RecursiveTreeView,
+    ShoppinglistDetailView,
 )
 
 
@@ -83,6 +84,13 @@ urlpatterns = [
         name="brand-detail"
     ),
 
+    # Shopping list detail
+    path(
+        "shopping/<int:pk>/",
+        ShoppinglistDetailView.as_view(),
+        name="shopping-list-detail"
+    ),
+
     # Autocomplete views for various models, only for staff users
     path(
         "autocomplete/assortments/",
@@ -100,5 +108,6 @@ urlpatterns = [
         name="autocomplete-products",
     ),
 
+    # Search engine form and results
     path("search/", GlobalSearchView.as_view(), name="search-results"),
 ]

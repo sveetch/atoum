@@ -11,6 +11,8 @@ Development
   performances;
 * Added new behavior to Shopping list admin to set shopping list as done or undone
   depending the 'done state' of its items;
+* Improved search implementation, this is a partial search and query is normalized
+  (lowercase and accent removed);
 
 
 Version 0.3.0 - 2025/02/23
