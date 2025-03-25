@@ -184,7 +184,7 @@ else:
 
 
 """
-django-autocomplete-light part
+Crispy forms part
 """
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 

@@ -16,11 +16,11 @@ class InitialCatalog:
         instead of those from this dataclass because retrieving children is more
         difficult from store than from db.
     """
-    assortments: dict[Assortment] = field(default_factory=dict)
-    brands: dict[Brand] = field(default_factory=dict)
-    consumables: dict[Consumable] = field(default_factory=dict)
-    categories: dict[Category] = field(default_factory=dict)
-    products: dict[Product] = field(default_factory=dict)
+    assortments: dict = field(default_factory=dict)
+    brands: dict = field(default_factory=dict)
+    consumables: dict = field(default_factory=dict)
+    categories: dict = field(default_factory=dict)
+    products: dict = field(default_factory=dict)
 
     def get_repr(self, value, attr=None):
         """

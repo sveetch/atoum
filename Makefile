@@ -360,7 +360,7 @@ test:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Tests <---$(FORMATRESET)\n"
 	@echo ""
-	$(PYTEST_BIN) --reuse-db tests/
+	$(PYTEST_BIN) -vv --reuse-db tests/
 	rm -Rf var/media-tests/
 .PHONY: test
 
@@ -368,7 +368,7 @@ test-initial:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Tests from zero <---$(FORMATRESET)\n"
 	@echo ""
-	$(PYTEST_BIN) --reuse-db --create-db tests/
+	$(PYTEST_BIN) -vv --reuse-db --create-db tests/
 	rm -Rf var/media-tests/
 .PHONY: test-initial
 
