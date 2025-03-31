@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
 from ..forms import ShoppingAdminForm, ShoppingItemInlineForm
 from ..models import Shopping, ShoppingItem
@@ -25,6 +26,22 @@ class ShoppingAdmin(admin.ModelAdmin):
     inlines = [
         ShoppingItemInlineAdmin,
     ]
+    search_fields = [
+        "title",
+    ]
+    list_display = (
+        "get_title",
+        "created",
+        "planning",
+        "done",
+    )
+
+    def get_title(self, obj):
+        """
+        Count related assortments.
+        """
+        return str(obj)
+    get_title.short_description = _("Title")
 
     def save_formset(self, request, form, formset, change):
         """

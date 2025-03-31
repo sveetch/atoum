@@ -11,7 +11,7 @@ from .product import (
     ProductAutocompleteView, ProductDetailView, ProductIndexView,
 )
 from .search import GlobalSearchView
-from .shopping import ShoppinglistDetailView
+from .shopping import ShoppinglistDetailView, ShoppinglistIndexView
 from .tree import RecursiveTreeView
 
 
@@ -32,4 +32,5 @@ __all__ = [
     "ProductIndexView",
     "RecursiveTreeView",
     "ShoppinglistDetailView",
+    "ShoppinglistIndexView",
 ]

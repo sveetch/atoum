@@ -118,7 +118,7 @@ def test_admin_detail_inlines(db, admin_client, payload, expected):
     assert response.redirect_chain == [(get_admin_list_url(Shopping), 302)]
     assert response.status_code == 200
 
-    # Ensure objects 'done state' is in expected value
+    # Ensure objects 'done' state is in expected value
     shopping.refresh_from_db()
     arugula_through.refresh_from_db()
     romaine_through.refresh_from_db()

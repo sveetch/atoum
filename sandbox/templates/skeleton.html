@@ -39,10 +39,13 @@
                         <ul class="menu-apps">
                             {% comment %}{% include "partials/menu-apps_sample.html" %}{% endcomment %}
                             <li>
+                                <a href="{% url "atoum:search-results" %}"><i class="bi bi-search"></i> {% trans "Search" %}</a>
+                            </li>
+                            <li>
                                 <a href="{% url "atoum:dashboard" %}"><i class="bi bi-bar-chart"></i> {% trans "Dashboard" %}</a>
                             </li>
                             <li>
-                                <a href="{% url "atoum:search-results" %}"><i class="bi bi-search"></i> {% trans "Search" %}</a>
+                                <a href="{% url "atoum:shopping-list-index" %}"><i class="bi bi-cart4"></i> {% translate "Shopping lists" %}</a>
                             </li>
 
                             <li class="section">

@@ -94,7 +94,7 @@ class Product(SmartFormatMixin, models.Model):
     ]
     """
     List of foreign-key relationships field names to "follow" in queryset to avoid
-    multiple queries. Commonly used in ``Queryset.select_related()``.
+    multiple queries. Commonly used in a ``Queryset.select_related()``.
     """
 
     HIERARCHY_ORDER = [

@@ -1,7 +1,5 @@
 import json
 
-from atoum.models import Assortment, Brand, Category, Consumable, Product
-
 from dataclasses import dataclass, field
 
 

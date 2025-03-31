@@ -55,8 +55,16 @@ class ShoppingFactory(factory.django.DjangoModelFactory):
         # Take given item objects
         else:
             # Add items
+            dones = []
             for product, through_defaults in extracted:
                 self.products.add(product, through_defaults=through_defaults)
+                if through_defaults.get("done", False) is True:
+                    dones.append(True)
+
+            # Ensure Shopping.done is updated to True if all given items are marked as
+            # done because model doesn't do it itself
+            if len(dones) == len(extracted):
+                self.done = True
 
 
 class ShoppingItemFactory(factory.django.DjangoModelFactory):

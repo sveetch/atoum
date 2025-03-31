@@ -4,7 +4,7 @@
 
 {% block title-content %}{% spaceless %}
     <p class="mb-0">
-        <small class="text-body-secondary"><i class="bi bi-archive"></i> {% translate "Shopping" %}</small>
+        <small class="text-body-secondary"><i class="bi bi-cart4"></i> {% translate "Shopping lists" %}</small>
     </p>
 
     <h1>
@@ -40,6 +40,25 @@
 {% endblock page-submenu %}
 
 {% block app_content %}{% spaceless %}
-    <div class="shopping-detail">
+    <div class="shopping-detail mt-3">
+        <h2 class="h4 mb-4">
+            {% if shopping_object.done %}
+                <i class="bi bi-cart-check"></i> {% translate "Done" %}
+            {% else %}
+                <i class="bi bi-cart3"></i> {% translate "Open" %}
+            {% endif %}
+        </h2>
+
+        <div class="shopping-items list-group">
+            {% for item in shopping_object.get_items %}
+                <label class="item list-group-item d-flex gap-2">
+                    <input class="form-check-input flex-shrink-0" type="checkbox" value=""{% if item.done %} checked=""{% endif %}>
+                    <span>
+                        <span class="title">{{ item.product.title }}: {{ item.quantity }}</span>
+                        <small class="d-block text-body-secondary">{{ item.product.parenting_crumbs_html }}</small>
+                    </span>
+                </label>
+            {% endfor %}
+        </div>
     </div>
 {% endspaceless %}{% endblock app_content %}

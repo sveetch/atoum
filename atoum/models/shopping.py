@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.dateformat import format as date_format
+from django.utils.text import capfirst
 
 
 class Shopping(models.Model):
@@ -52,6 +54,17 @@ class Shopping(models.Model):
     List of field order commonly used in frontend view/api
     """
 
+    HIERARCHY_SELECT_RELATED = [
+        "product",
+        "product__category",
+        "product__category__assortment",
+        "product__category__assortment__consumable",
+    ]
+    """
+    List of foreign-key relationships field names to "follow" in queryset to avoid
+    multiple queries. Commonly used in a ``Queryset.select_related()``.
+    """
+
     class Meta:
         verbose_name = _("Shopping")
         verbose_name_plural = _("Shoppings")
@@ -61,10 +74,9 @@ class Shopping(models.Model):
 
     def __str__(self):
         """
-        TODO: We should return a localized and humanized date when falling back to
-        planning date because of an empty title.
+        Display title if not empty else the creation date.
         """
-        return self.title or str(self.planning)
+        return self.title or capfirst(date_format(self.created, "l d F Y"))
 
     def get_absolute_url(self):
         """
@@ -74,6 +86,43 @@ class Shopping(models.Model):
             string: An URL.
         """
         return reverse("atoum:shopping-list-detail", args=[self.id])
+
+    def get_status(self):
+        """
+        Get a status computed from 'done' state and number of done items.
+
+        Returns:
+            dict:
+        """
+        computed = _("done") if self.done is True else _("open")
+        states = self.shoppingitem_set.values_list(
+            "done",
+            flat=True
+        )
+        dones = len([v for v in states if v is True])
+
+        computed = "open"
+        if self.done is True:
+            computed = "done"
+        elif dones > 0:
+            computed = "ongoing"
+
+        return {
+            "status": computed,
+            "dones": dones,
+            "opens": len([v for v in states if v is False]),
+        }
+
+    def get_items(self):
+        """
+        Return a queryset for all Shopping item objects in a single query.
+
+        Returns:
+            queryset: All ShoppingItem objects related to the Shopping object.
+        """
+        return ShoppingItem.objects.filter(shopping=self).select_related(
+            *self.HIERARCHY_SELECT_RELATED
+        )
 
     def save(self, *args, **kwargs):
         # Auto update 'modified' value on each save
@@ -119,9 +168,7 @@ class ShoppingItem(models.Model):
     class Meta:
         verbose_name = _("Shopping item")
         verbose_name_plural = _("Shopping items")
-        ordering = [
-            "shopping", "product",
-        ]
+        ordering = ["shopping", "product"]
         constraints = [
             # Enforce unique couple shopping + product
             models.UniqueConstraint(

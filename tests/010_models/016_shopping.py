@@ -7,7 +7,10 @@ import pytest
 from freezegun import freeze_time
 
 from atoum.models import Shopping, ShoppingItem
-from atoum.factories import ProductFactory, ShoppingFactory
+from atoum.factories import (
+    AssortmentFactory, ConsumableFactory, CategoryFactory, ProductFactory,
+    ShoppingFactory
+)
 
 
 @freeze_time("2012-10-15 10:00:00")
@@ -52,7 +55,7 @@ def test_required_fields(db, settings):
 
 
 @freeze_time("2012-10-15 10:00:00")
-def test_items(db):
+def test_add_items(db):
     """
     Adding shopping items should work but respect unique constraints
     """
@@ -106,7 +109,6 @@ def test_factory_items_creation(db):
     romaine = ProductFactory(title="Romaine")
     arugula = ProductFactory(title="Arugula")
 
-    # Shopping with a random product item
     shopping = ShoppingFactory(fill_products=[
         (romaine, {"quantity": 2}),
         (arugula, {"quantity": 42}),
@@ -116,3 +118,80 @@ def test_factory_items_creation(db):
     items = ShoppingItem.objects.all().values_list("product__title", flat=True)
     assert list(items) == [arugula.title, romaine.title]
     assert list(shopping.products.all()) == [arugula, romaine]
+
+
+@freeze_time("2012-10-15 10:00:00")
+def test_get_items(db, django_assert_num_queries):
+    """
+    Method should return a queryset of all Shopping list items with their related
+    product and in a single query.
+    """
+    romaine = ProductFactory(title="Romaine")
+    arugula = ProductFactory(title="Arugula")
+
+    shopping = ShoppingFactory(fill_products=[
+        (romaine, {"quantity": 2}),
+        (arugula, {"quantity": 42}),
+    ])
+    assert shopping.products.count() == 2
+
+    with django_assert_num_queries(1):
+        # Enforce usage of relevant attributes to ensure they don't hide further
+        # querysets
+        items_buffer = []
+        for item in shopping.get_items():
+            items_buffer.append((
+                item.created,
+                item.product.title,
+                item.quantity,
+                item.product.parenting_crumbs()
+            ))
+
+
+@freeze_time("2012-10-15 10:00:00")
+def test_get_status(db, django_assert_num_queries):
+    """
+    Method should return correct data information about Shopping is open (no item done),
+    ongoing (some items done) or done (all items are done).
+    """
+    consumable = ConsumableFactory(title="Consum")
+    assortment = AssortmentFactory(consumable=consumable, title="Assort")
+    category = CategoryFactory(assortment=assortment, title="Cat")
+    romaine = ProductFactory(category=category, title="Romaine")
+    arugula = ProductFactory(category=category, title="Arugula")
+    beef = ProductFactory(category=category, title="Beef")
+    egg = ProductFactory(category=category, title="Egg")
+    tomatoe = ProductFactory(category=category, title="Tomatoe")
+
+    openlist = ShoppingFactory(fill_products=[
+        (romaine, {"quantity": 1}),
+        (arugula, {"quantity": 1}),
+        (beef, {"quantity": 1}),
+        (egg, {"quantity": 1}),
+        (tomatoe, {"quantity": 1}),
+    ])
+    assert openlist.done is False
+    with django_assert_num_queries(1):
+        assert openlist.get_status() == {"status": "open", "dones": 0, "opens": 5}
+
+    ongoing = ShoppingFactory(fill_products=[
+        (romaine, {"quantity": 1, "done": True}),
+        (arugula, {"quantity": 1}),
+        (beef, {"quantity": 1}),
+        (egg, {"quantity": 1, "done": True}),
+        (tomatoe, {"quantity": 1}),
+    ])
+    assert ongoing.done is False
+    with django_assert_num_queries(1):
+        assert ongoing.get_status() == {"status": "ongoing", "dones": 2, "opens": 3}
+
+    done = ShoppingFactory(fill_products=[
+        (romaine, {"quantity": 1, "done": True}),
+        (arugula, {"quantity": 1, "done": True}),
+        (beef, {"quantity": 1, "done": True}),
+        (egg, {"quantity": 1, "done": True}),
+        (tomatoe, {"quantity": 1, "done": True}),
+    ])
+    assert done.done is True
+    with django_assert_num_queries(1):
+        assert done.get_status() == {"status": "done", "dones": 5, "opens": 0}

@@ -17,6 +17,7 @@ from .views import (
     ProductIndexView,
     RecursiveTreeView,
     ShoppinglistDetailView,
+    ShoppinglistIndexView,
 )
 
 
@@ -84,7 +85,12 @@ urlpatterns = [
         name="brand-detail"
     ),
 
-    # Shopping list detail
+    # Shopping list parts
+    path(
+        "shopping/",
+        ShoppinglistIndexView.as_view(),
+        name="shopping-list-index"
+    ),
     path(
         "shopping/<int:pk>/",
         ShoppinglistDetailView.as_view(),
