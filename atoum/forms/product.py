@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from dal import autocomplete
 
@@ -30,6 +31,7 @@ class ProductAdminForm(autocomplete.FutureModelForm):
         # Override Category model form field to customize option label and enable
         # DAL autocompletion
         self.fields["category"] = CategoryBreadcrumbChoiceField(
+            label=_("Category"),
             queryset=Category.objects.all().select_related(
                 "assortment",
                 "assortment__consumable"

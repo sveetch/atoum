@@ -19,7 +19,7 @@ class DashboardView(AtoumBreadcrumMixin, TemplateView):
 
     """
     template_name = "atoum/dashboard.html"
-    crumb_title = _("Catalog dashboard")
+    crumb_title = _("Dashboard")
     crumb_urlname = "atoum:dashboard"
 
     @property

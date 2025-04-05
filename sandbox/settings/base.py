@@ -257,6 +257,8 @@ from atoum.settings import *  # noqa: E402,F401,F403
 
 INSTALLED_APPS.append("atoum")
 
+# App local directory has higher priority over sandbox
+LOCALE_PATHS = [BASE_DIR / "atoum/locale"] + LOCALE_PATHS
 
 """
 Diskette configuration using its defaults

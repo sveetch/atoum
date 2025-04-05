@@ -49,15 +49,18 @@
             <p class="h5 p-2">
                 {% if shopping_object.done %}
                     <i class="bi bi-cart-check"></i> {% translate "Done" %}
+                {% elif current_shoppinglist and current_shoppinglist.id == shopping_object.id %}
+                    <i class="bi bi-cart-plus"></i> {% translate "Open" %}
                 {% else %}
-                    <i class="bi bi-cart3"></i> {% translate "Open" %}
+                    <i class="bi bi-cart2"></i> {% translate "To do" %}
                 {% endif %}
             </p>
 
             {% if not current_shoppinglist or current_shoppinglist.id != shopping_object.id %}
             <p class="controls">
-                <a href="{% url "atoum:shopping-list-open-selection" pk=shopping_object.id %}" class="btn btn-primary">
-                    {% translate "Enter in product selection" %}
+                <a href="{% url "atoum:shopping-list-open-selection" pk=shopping_object.id %}"
+                   class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle"></i> {% translate "Add new products" %}
                 </a>
             </p>
             {% endif %}
