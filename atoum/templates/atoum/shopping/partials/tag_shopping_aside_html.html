@@ -1,0 +1,64 @@
+{% load i18n %}{% spaceless %}
+    {% with shopping_items=current_shoppinglist.get_items %}
+        <div class="aside-shopping">
+            <div class="head">
+                <h3 class="title h6">
+                    {% if current_shoppinglist.done %}
+                        <i class="bi bi-cart-check"></i>
+                    {% else %}
+                        <i class="bi bi-cart3"></i>
+                    {% endif %}
+                    {{ current_shoppinglist }}
+                </h3>
+
+                <div class="controls btn-group btn-group-sm" role="group" aria-label="Current shopping list controls">
+                    <a href="{{ current_shoppinglist.get_absolute_url }}" class="btn btn-outline-primary">
+                        {% translate "Show" %}
+                    </a>
+                    <a href="{% url "atoum:shopping-list-close-selection" %}?next={{ request.path }}" class="btn btn-outline-primary">
+                        {% translate "Close" %}
+                    </a>
+                </div>
+            </div>
+
+            {% comment %}<div class="d-flex justify-content-end">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Current shopping list controls">
+                    <button type="button" class="btn btn-outline-primary">{% translate "Save" %}</button>
+                </div>
+            </div>{% endcomment %}
+
+            {% if shopping_items %}
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{% translate "Quantity" %}</th>
+                            <th>{% translate "Product" %}</th>
+                            <th>{% translate "Done" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in shopping_items %}
+                        <tr>
+                            <td class="quantity">
+                                <input type="number" id="id_shopping-item-{{ item.id }}_quantity"
+                                       name="shopping-item-{{ item.id }}_quantity"
+                                       value="{{ item.quantity }}">
+                            </td>
+                            <td class="title">{{ item.product.title }}</td>
+                            <td class="done">
+                                {% comment %}TODO There is no need of an input here, we should just use some icons instead{% endcomment %}
+                                <input class="form-check-input" type="checkbox"
+                                    id="id_shopping-item-{{ item.id }}_done" value="{{ item.id }}"
+                                    name="shopping-item-{{ item.id }}_done"
+                                    {% if item.done %} checked=""{% endif %} disabled>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="empty">{% translate "No products yet." %}</p>
+            {% endif %}
+        </div>
+    {% endwith %}
+{% endspaceless %}

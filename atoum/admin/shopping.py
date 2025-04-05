@@ -26,6 +26,7 @@ class ShoppingAdmin(admin.ModelAdmin):
     inlines = [
         ShoppingItemInlineAdmin,
     ]
+    readonly_fields = ["created"]
     search_fields = [
         "title",
     ]
@@ -47,6 +48,11 @@ class ShoppingAdmin(admin.ModelAdmin):
         """
         Customize inlines item saving (because it can not be done on the inline form
         itself).
+
+        TODO: When creating a new fresh Shopping object, if no items have been added
+        the following cause the Shopping object to be directly marked as 'done'. It's
+        not what would be expected, at least a new object without initial items should
+        let it be 'undone'.
         """
         super().save_formset(request, form, formset, change)
 

@@ -18,6 +18,7 @@ from .views import (
     RecursiveTreeView,
     ShoppinglistDetailView,
     ShoppinglistIndexView,
+    ShoppinglistToggleSelectionView,
 )
 
 
@@ -92,9 +93,19 @@ urlpatterns = [
         name="shopping-list-index"
     ),
     path(
+        "shopping/close-selection/",
+        ShoppinglistToggleSelectionView.as_view(),
+        name="shopping-list-close-selection"
+    ),
+    path(
         "shopping/<int:pk>/",
         ShoppinglistDetailView.as_view(),
         name="shopping-list-detail"
+    ),
+    path(
+        "shopping/<int:pk>/open-selection/",
+        ShoppinglistToggleSelectionView.as_view(),
+        name="shopping-list-open-selection"
     ),
 
     # Autocomplete views for various models, only for staff users

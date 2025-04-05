@@ -129,14 +129,16 @@
                         </div>
                     {% endblock page-context %}
 
-                    <div class="page-content">
+                    <div class="page-content{% block content-classes %}{% endblock content-classes %}">
                         {% block breadcrumbs %}
                             {% render_breadcrumbs "view_breadcrumbs/bootstrap5.html" %}
-                        {% endblock %}
+                        {% endblock breadcrumbs %}
 
                         <div class="main-content container-xxl">
-                            {% block content %}{% endblock %}
+                            {% block content %}{% endblock content %}
                         </div>
+
+                        {% block content-sidebar %}{% endblock content-sidebar %}
                     </div>
                 </div>
             {% endspaceless %}

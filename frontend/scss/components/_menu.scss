@@ -17,7 +17,7 @@
 
     color: var(--site-menu-color);
     background-color: var(--site-menu-bg);
-    border-right: var(--site-menu-subtle) solid $onepixel;
+    border-right: $onepixel solid var(--site-menu-subtle);
 
     .page-brand {
         @include font-size(2rem);
@@ -29,7 +29,7 @@
         align-items: center;
         font-weight: $font-weight-bold;
         text-decoration: none;
-        border-bottom: var(--site-menu-subtle) solid $onepixel;
+        border-bottom: $onepixel solid var(--site-menu-subtle);
         text-transform: uppercase;
 
         img {

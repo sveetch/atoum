@@ -6,7 +6,7 @@
     padding: space("shorter") space("large");
     color: var(--site-context-color);
     background-color: var(--site-context-bg);
-    border-bottom: var(--site-context-subtle) solid $onepixel;
+    border-bottom: $onepixel solid var(--site-context-subtle);
     display: flex;
     justify-content: space-between;
     align-items: center;

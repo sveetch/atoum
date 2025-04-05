@@ -1,7 +1,16 @@
 {% extends "skeleton.html" %}
+{% load atoum i18n %}
+
+{% block content-classes %}{% if has_current_shoppinglist %} splitted{% endif %}{% endblock content-classes %}
 
 {% block content %}
-    <div class="atoum">
-        {% block app_content %}{% endblock app_content %}
-    </div>
+    {% block app_content %}{% endblock app_content %}
 {% endblock content %}
+
+{% block content-sidebar %}{% spaceless %}
+    {% if has_current_shoppinglist %}
+        <div class="aside-content">
+            {% shopping_list_html %}
+        </div>
+    {% endif %}
+{% endspaceless %}{% endblock content-sidebar %}

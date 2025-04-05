@@ -1,5 +1,5 @@
 ///
-/// Page main content container
+/// Page contents
 ///
 
 .page-content {
@@ -7,6 +7,77 @@
 
     .main-content {
         padding: space("normal");
+    }
 
+    .aside-content {
+        padding: 0;
+        border-left: $onepixel solid var(--site-menu-subtle);
+        background-color: var(--bs-body-bg);
+
+        .aside-shopping {
+            .head {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: $onepixel solid var(--site-context-subtle);
+
+                .title {
+                    margin: 0;
+                    padding: space("normal") space("short");
+                    color: var(--bs-primary-text-emphasis);
+                    font-weight: $font-weight-bold;
+                }
+
+                .controls {
+                    align-items: center;
+                }
+            }
+
+            table {
+                thead {
+                    display: none;
+                }
+                tbody {
+                    tr {
+                        td {
+                            @include font-size($small2-font-size);
+
+                            &.quantity {
+                                padding: 0;
+                                text-align: right;
+                                vertical-align: middle;
+                                width: rem-calc(60px);
+
+                                input {
+                                    width: 100%;
+                                    font-size: inherit;
+                                    text-align: right;
+                                    border: 0;
+                                }
+                            }
+
+                            &:first-child {
+                                border-left: 0;
+                            }
+                            &:last-child {
+                                border-right: 0;
+                            }
+                        }
+
+                        &:last-child {
+                            td {
+                                border-bottom: 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .empty {
+                @include font-size($h6-font-size);
+                padding: space("large") space("normal");
+                font-style: italic;
+                text-align: center;
+            }
+        }
     }
 }

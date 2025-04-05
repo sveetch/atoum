@@ -39,5 +39,34 @@ body {
     .page-content {
         grid-area: main;
         overflow-y: auto;
+
+        // When splitted mode is enabled with a main content and an aside content
+        &.splitted {
+            overflow-y: none;
+            display: grid;
+            height: 100%;
+            grid-template-columns: 3fr 1fr;
+            grid-template-rows: auto 1fr;
+            grid-template-areas:
+                "breadcrumbs contentsidebar"
+                "contentmain contentsidebar";
+            column-gap: 0;
+            row-gap: 0;
+
+            .breadcrumb-container {
+                grid-area: breadcrumbs;
+            }
+
+            .main-content {
+                grid-area: contentmain;
+                overflow-y: auto;
+            }
+
+            .aside-content {
+                grid-area: contentsidebar;
+                overflow-y: auto;
+            }
+        }
+
     }
 }
