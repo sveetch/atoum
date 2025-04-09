@@ -42,17 +42,17 @@
                             @include font-size($small2-font-size);
 
                             &.quantity {
-                                padding: 0;
+                                // padding: 0;
                                 text-align: right;
                                 vertical-align: middle;
                                 width: rem-calc(60px);
 
-                                input {
-                                    width: 100%;
-                                    font-size: inherit;
-                                    text-align: right;
-                                    border: 0;
-                                }
+                                // input {
+                                //     width: 100%;
+                                //     font-size: inherit;
+                                //     text-align: right;
+                                //     border: 0;
+                                // }
                             }
 
                             &:first-child {

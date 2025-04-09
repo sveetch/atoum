@@ -3,7 +3,7 @@ from .brand import Brand
 from .category import Category
 from .consumable import Consumable
 from .product import Product
-from .shopping import Shopping, ShoppingItem
+from .shopping import Shopping, ShoppingItem, ShoppingListInventory
 
 
 __all__ = [
@@ -14,4 +14,5 @@ __all__ = [
     "Product",
     "Shopping",
     "ShoppingItem",
+    "ShoppingListInventory",
 ]

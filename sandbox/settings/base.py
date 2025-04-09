@@ -236,6 +236,14 @@ IMPORT_EXPORT_FORMATS = [CSV, HTML, JSON, XLSX, YAML]
 
 
 """
+django-htmx part
+"""
+
+INSTALLED_APPS.append("django_htmx")
+MIDDLEWARE.append("django_htmx.middleware.HtmxMiddleware")
+
+
+"""
 Search engine with django-haystack settings
 """
 INSTALLED_APPS.append("haystack")

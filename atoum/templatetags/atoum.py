@@ -50,6 +50,11 @@ def querystring(context, query_dict=None, **kwargs):
     return f"?{query_string}"
 
 
+@register.filter(is_safe=True)
+def is_product_in_shoppinglist(value, arg):
+    return value in arg
+
+
 @register.simple_tag(takes_context=True)
 def is_shopping_enabled(context):
     """
@@ -71,7 +76,7 @@ def is_shopping_enabled(context):
     Returns:
         boolean:
     """
-    if context.get("current_shoppinglist", None):
+    if context.get("opened_shoppinglist", None):
         return True
 
     return False
@@ -88,10 +93,43 @@ def shopping_list_html(context, **kwargs):
         Basic usage: ::
 
             {% load atoum %}
-            {% translation_siblings_html [template="foo/bar.html"] %}
+            {% shopping_list_html [template="foo/bar.html"] %}
 
 
     Arguments:
+        context (object): A ``django.template.RequestContext`` object.
+
+    Returns:
+        string: Rendered template tag fragment.
+
+    """  # noqa: E501
+    template_path = kwargs.get("template") or settings.ATOUM_SHOPPING_ASIDE_TEMPLATE
+
+    return loader.get_template(template_path).render({
+        "request": context.request,
+        "LANGUAGES": context.get("LANGUAGES"),
+        "LANGUAGE_CODE": context.get("LANGUAGE_CODE"),
+        "debug": context.get("debug", False),
+        "user": context.get("user", None),
+        "opened_shoppinglist": context.get("opened_shoppinglist", None),
+        "opened_shoppinglist_items": context.get("opened_shoppinglist_items", []),
+        "opened_shoppinglist_itemids": context.get("opened_shoppinglist_itemids", []),
+    })
+
+
+@register.simple_tag(takes_context=True)
+def shopping_product_control(context, product, **kwargs):
+    """
+    Render HTML of available controls for a product against an opened shopping list.
+
+    Exemple:
+        Basic usage: ::
+
+            {% load atoum %}
+            {% shopping_product_control PRODUCT [template="foo/bar.html"] %}
+
+    Arguments:
+        product (atoum.models.Product): Product object.
         context (object): Either a ``django.template.Context`` or a dictionnary for
             context variable for template where the tag is included. This is only used
             with an Article object, so it should be safe to be empty for a Category.
@@ -100,15 +138,22 @@ def shopping_list_html(context, **kwargs):
         string: Rendered template tag fragment.
 
     """  # noqa: E501
-    template_path = kwargs.get("template") or settings.ATOUM_SHOPPING_ASIDE_TEMPLATE
+    template_path = (
+        kwargs.get("template") or settings.ATOUM_SHOPPING_PRODUCT_CONTROLS_TEMPLATE
+    )
 
-    render_context = {
+    opened_shoppinglist = context.get("opened_shoppinglist", None)
+
+    return loader.get_template(template_path).render({
         "request": context.request,
-        "LANGUAGES": context["LANGUAGES"],
-        "LANGUAGE_CODE": context["LANGUAGE_CODE"],
-        "debug": context["debug"],
-        "user": context["user"],
-        "current_shoppinglist": context.get("current_shoppinglist", None),
-    }
-
-    return loader.get_template(template_path).render(render_context)
+        "LANGUAGES": context.get("LANGUAGES"),
+        "LANGUAGE_CODE": context.get("LANGUAGE_CODE"),
+        "debug": context.get("debug", False),
+        "user": context.get("user", None),
+        "opened_shoppinglist": opened_shoppinglist,
+        "is_product_selected": (
+            opened_shoppinglist.is_product_selected(product)
+            if opened_shoppinglist else False
+        ),
+        "product": product,
+    })

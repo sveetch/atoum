@@ -19,6 +19,7 @@ from .views import (
     ShoppinglistDetailView,
     ShoppinglistIndexView,
     ShoppinglistToggleSelectionView,
+    ShoppinglistManageProductView,
 )
 
 
@@ -79,7 +80,7 @@ urlpatterns = [
     ),
 
     # TODO: These are temporarily dummy views enabled to allow reversing until
-    # implemented
+    # they are implemented
     path(
         "brands/<slug:slug>/",
         DummyView.as_view(),
@@ -106,6 +107,11 @@ urlpatterns = [
         "shopping/<int:pk>/open-selection/",
         ShoppinglistToggleSelectionView.as_view(),
         name="shopping-list-open-selection"
+    ),
+    path(
+        "shopping/<int:pk>/product/<int:product_id>/",
+        ShoppinglistManageProductView.as_view(),
+        name="shopping-list-product"
     ),
 
     # Autocomplete views for various models, only for staff users

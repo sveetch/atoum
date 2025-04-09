@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 import pytest
 from freezegun import freeze_time
 
-from atoum.models import Shopping, ShoppingItem
+from atoum.models import Shopping, ShoppingItem, ShoppingListInventory
 from atoum.factories import (
     AssortmentFactory, ConsumableFactory, CategoryFactory, ProductFactory,
     ShoppingFactory
@@ -195,3 +195,26 @@ def test_get_status(db, django_assert_num_queries):
     assert done.done is True
     with django_assert_num_queries(1):
         assert done.get_status() == {"status": "done", "dones": 5, "opens": 0}
+
+
+def test_list_inventory(db, django_assert_num_queries):
+    """
+    ShoppingInventory
+    """
+    romaine = ProductFactory(title="Romaine")
+    arugula = ProductFactory(title="Arugula")
+
+    shopping = ShoppingFactory(fill_products=[
+        (romaine, {"quantity": 2}),
+        (arugula, {"quantity": 42}),
+    ])
+
+    with django_assert_num_queries(1):
+        inventory = ShoppingListInventory(obj=shopping)
+
+    # No additional queries are performed
+    with django_assert_num_queries(0):
+        inventory.obj
+        list(inventory.items)
+        list(inventory.items)
+        list(inventory.item_ids)

@@ -1,3 +1,5 @@
+from dataclasses import dataclass, field as dataclass_field
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
@@ -181,3 +183,52 @@ class ShoppingItem(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
+
+@dataclass
+class ShoppingListInventory:
+    """
+    A simple dataclass to carry a Shopping list.
+
+    It is especially used to provide an opened Shopping list in template context with
+    its related products loaded in a single place to ensure no duplicate queries are
+    performed.
+    """
+    obj: type(Shopping)
+    items: list = dataclass_field(default_factory=list)
+    item_ids: tuple = dataclass_field(default_factory=tuple, init=False)
+
+    def __post_init__(self):
+        if not self.items:
+            self.items = self.obj.get_items()
+
+        self.item_ids = tuple([v.product.id for v in self.items])
+
+    def is_product_selected(self, product):
+        """
+        Check if product is in Shopping list.
+
+        Arguments:
+            product (atoum.models.Product): Product object.
+
+        Returns:
+            boolean: True if product is in list else None.
+        """
+        return product.id in self.item_ids
+
+    def quantity_for_product(self, product):
+        """
+        Return the quantity save for a product in shopping list.
+
+        Arguments:
+            product (atoum.models.Product): Product object.
+
+        Returns:
+            integer: The quantity of product if in list else None.
+        """
+        if self.is_product_selected(product):
+            for item in self.items:
+                if item.product.id == product.id:
+                    return item.product.quantity
+
+        return None

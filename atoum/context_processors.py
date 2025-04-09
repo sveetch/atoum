@@ -1,4 +1,4 @@
-from .models import Shopping
+from .models import Shopping, ShoppingListInventory
 
 
 def session_data_processor(request):
@@ -15,7 +15,7 @@ def session_data_processor(request):
         dict: Variables to append to the template context.
     """
     shopping_id = request.session.get("atoum_shopping_selection")
-    shopping_obj = None
+    inventory = None
 
     # If there is an opened shopping in user session
     if shopping_id:
@@ -24,8 +24,9 @@ def session_data_processor(request):
         except Shopping.DoesNotExist:
             # Purge session item if it does not exists anymore
             del request.session["atoum_shopping_selection"]
+        else:
+            inventory = ShoppingListInventory(obj=shopping_obj)
 
     return {
-        "has_current_shoppinglist": shopping_obj is not None,
-        "current_shoppinglist": shopping_obj,
+        "opened_shoppinglist": inventory,
     }

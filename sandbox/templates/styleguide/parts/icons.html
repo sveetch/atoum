@@ -1,10 +1,12 @@
 <div class="container-xl mb-5">
     <h2 class="section-title sg-anchor" id="icons">Icons</h2>
+
     <div class="glyph-palette row align-items-start g-3 p-2">
+
         <h3 class="part-title sg-anchor" id="icons-glyphs">Glyphs</h3>
         <p class="lead col-12">Available icon glyphs usable as class helpers or Sass variables.</p>
         {% for k in styleguide.st_icon_glyphs %}
-            <div class="col-12 col-md-6 col-lg-3 col-xl-2">
+            <div class="col-12 col-md-6 col-lg-3 col-xl-1">
                 <div class="card">
                     <div class="visual big card-img-top">
                         <i class="bi bi-{{ k }}"></i>
@@ -17,7 +19,9 @@
             </div>
         {% endfor %}
     </div>
+
     <hr class="part-divider">
+
     {% with sample_icon=styleguide.st_icon_glyphs.0 %}
         <div class="glyph-palette row align-items-start g-3 p-2">
             <h3 class="part-title sg-anchor" id="icons-sizes">Sizes</h3>
@@ -35,10 +39,13 @@
                 </div>
             {% endfor %}
         </div>
+
         <hr class="part-divider">
+
         <div class="glyph-palette row align-items-start g-3 p-2">
             <h3 class="part-title sg-anchor" id="icons-usages">Usage</h3>
             <p class="lead col-12">Basic usage demonstration in various elements.</p>
+
             <div class="col-12 col-md-6 col-lg-3 col-xl-2">
                 <div class="card">
                     <div class="visual card-img-top">
@@ -49,6 +56,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-12 col-md-6 col-lg-3 col-xl-2">
                 <div class="card">
                     <div class="visual card-img-top">
@@ -59,6 +67,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-12 col-md-6 col-lg-3 col-xl-2">
                 <div class="card">
                     <div class="visual card-img-top">
@@ -69,6 +78,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-12 col-md-6 col-lg-3 col-xl-2">
                 <div class="card">
                     <div class="visual card-img-top">

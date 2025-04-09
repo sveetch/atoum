@@ -1,5 +1,5 @@
 {% extends "atoum/base.html" %}
-{% load i18n %}
+{% load atoum i18n %}
 {% block header-title %}{% translate "Products" %} - {{ block.super }}{% endblock header-title %}
 
 {% block title-content %}{% spaceless %}
@@ -21,7 +21,9 @@
                     <li>
                         <a href="{% url "admin:atoum_product_add" %}"
                             class="dropdown-item">
-                            <small class="me-3"><i class="bi bi-plus-circle text-success"></i> {% translate "Add a new Product" %}</small>
+                            <small class="me-3">
+                                <i class="bi bi-plus-lg text-success"></i> {% translate "Add a new Product" %}
+                            </small>
                         </a>
                     </li>
                 </ul>
@@ -34,10 +36,14 @@
     <div class="product-index mt-3">
         <div class="products stacks">
             {% for product in object_list %}
-                <a href="{{ product.get_absolute_url }}" class="item">
-                    <span class="title">{{ product.title }}</span>
-                    <br><small class="parent">{{ product.category.title }}</small>
-                </a>
+                <div class="item">
+                    <a href="{{ product.get_absolute_url }}" class="content">
+                        <span class="title">{{ product.title }}</span>
+                        <br><small class="parent">{{ product.category.title }}</small>
+                    </a>
+
+                    {% shopping_product_control product %}
+                </div>
             {% empty %}
                 <p class="empty">{% translate "No products yet." %}</p>
             {% endfor %}

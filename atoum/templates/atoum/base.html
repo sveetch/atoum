@@ -1,14 +1,16 @@
 {% extends "skeleton.html" %}
 {% load atoum i18n %}
 
-{% block content-classes %}{% if has_current_shoppinglist %} splitted{% endif %}{% endblock content-classes %}
+{% block content-classes %}{% if opened_shoppinglist %} splitted{% endif %}{% endblock content-classes %}
 
 {% block content %}
     {% block app_content %}{% endblock app_content %}
 {% endblock content %}
 
+{% block body-attrs %} hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'{% endblock body-attrs %}
+
 {% block content-sidebar %}{% spaceless %}
-    {% if has_current_shoppinglist %}
+    {% if opened_shoppinglist %}
         <div class="aside-content">
             {% shopping_list_html %}
         </div>

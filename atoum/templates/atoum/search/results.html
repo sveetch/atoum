@@ -24,28 +24,36 @@
                     <div class="results stacks">
                         {% for result in results %}
                             {% if result.model_name == "assortment" %}
-                                <a href="{{ result.object.get_absolute_url }}" class="item">
-                                    <small class="model"><i class="bi bi-stack"></i> {% translate "Assortment" %}</small><br>
-                                    <span class="title">{{ result.object.title }}</span>
-                                    <br><small class="parent">{% translate "In consumable" %} <em>{{ result.object.consumable.title }}</em></small>
-                                </a>
+                                <div class="item">
+                                    <a href="{{ result.object.get_absolute_url }}" class="content">
+                                        <small class="model"><i class="bi bi-stack"></i> {% translate "Assortment" %}</small><br>
+                                        <span class="title">{{ result.object.title }}</span>
+                                        <br><small class="parent">{% translate "In consumable" %} <em>{{ result.object.consumable.title }}</em></small>
+                                    </a>
+                                </div>
                             {% elif result.model_name == "category" %}
-                                <a href="{{ result.object.get_absolute_url }}" class="item">
-                                    <small class="model"><i class="bi bi-tags"></i> {% translate "Category" %}</small><br>
-                                    <span class="title">{{ result.object.title }}</span>
-                                    <br><small class="parent">{% translate "In assortment" %} <em>{{ result.object.assortment.title }}</em></small>
-                                </a>
+                                <div class="item">
+                                    <a href="{{ result.object.get_absolute_url }}" class="content">
+                                        <small class="model"><i class="bi bi-tags"></i> {% translate "Category" %}</small><br>
+                                        <span class="title">{{ result.object.title }}</span>
+                                        <br><small class="parent">{% translate "In assortment" %} <em>{{ result.object.assortment.title }}</em></small>
+                                    </a>
+                                </div>
                             {% elif result.model_name == "consumable" %}
-                                <a href="{{ result.object.get_absolute_url }}" class="item">
-                                    <small class="model"><i class="bi bi-boxes"></i> {% translate "Consumable" %}</small><br>
-                                    <span class="title">{{ result.object.title }}</span>
-                                </a>
+                                <div class="item">
+                                    <a href="{{ result.object.get_absolute_url }}" class="content">
+                                        <small class="model"><i class="bi bi-boxes"></i> {% translate "Consumable" %}</small><br>
+                                        <span class="title">{{ result.object.title }}</span>
+                                    </a>
+                                </div>
                             {% elif result.model_name == "product" %}
-                                <a href="{{ result.object.get_absolute_url }}" class="item">
-                                    <small class="model"><i class="bi bi-archive"></i> {% translate "Product" %}</small><br>
-                                    <span class="title">{{ result.object.title }}</span>
-                                    <br><small class="parent">{% translate "In category" %} <em>{{ result.object.category.title }}</em></small>
-                                </a>
+                                <div class="item">
+                                    <a href="{{ result.object.get_absolute_url }}" class="content">
+                                        <small class="model"><i class="bi bi-archive"></i> {% translate "Product" %}</small><br>
+                                        <span class="title">{{ result.object.title }}</span>
+                                        <br><small class="parent">{% translate "In category" %} <em>{{ result.object.category.title }}</em></small>
+                                    </a>
+                                </div>
                             {% endif %}
                         {% endfor %}
                     </div>

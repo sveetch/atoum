@@ -42,25 +42,25 @@
 {% block app_content %}{% spaceless %}
     <div class="shopping-detail mt-3">
         <div class="head mb-4 d-flex justify-content-between">
-            <p class="empty h5 p-2 flex-grow-1">
-                {% translate "Planned for" %} {{ shopping_object.planning|date:"l d F Y"|capfirst }}
-            </p>
+            <div class="flex-grow-1 p-2">
+                <p class="h5">{% translate "Planned for" %} {{ shopping_object.planning|date:"l d F Y"|capfirst }}
 
-            <p class="h5 p-2">
-                {% if shopping_object.done %}
-                    <i class="bi bi-cart-check"></i> {% translate "Done" %}
-                {% elif current_shoppinglist and current_shoppinglist.id == shopping_object.id %}
-                    <i class="bi bi-cart-plus"></i> {% translate "Open" %}
-                {% else %}
-                    <i class="bi bi-cart2"></i> {% translate "To do" %}
-                {% endif %}
-            </p>
+                <p class="pt-1"><small>
+                    {% if shopping_object.done %}
+                        <i class="bi bi-cart-check"></i> {% translate "Done" %}
+                    {% elif opened_shoppinglist and opened_shoppinglist.id == shopping_object.id %}
+                        <i class="bi bi-cart-plus"></i> {% translate "Open" %}
+                    {% else %}
+                        <i class="bi bi-cart2"></i> {% translate "To do" %}
+                    {% endif %}
+                </small></p>
+            </div>
 
-            {% if not current_shoppinglist or current_shoppinglist.id != shopping_object.id %}
+            {% if not opened_shoppinglist or opened_shoppinglist.id != shopping_object.id %}
             <p class="controls">
                 <a href="{% url "atoum:shopping-list-open-selection" pk=shopping_object.id %}"
                    class="btn btn-outline-primary">
-                    <i class="bi bi-plus-circle"></i> {% translate "Add new products" %}
+                    <i class="bi bi-plus-lg"></i> {% translate "Add new products" %}
                 </a>
             </p>
             {% endif %}

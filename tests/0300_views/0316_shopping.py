@@ -1,3 +1,6 @@
+import datetime
+from zoneinfo import ZoneInfo
+
 from django.urls import reverse
 
 from freezegun import freeze_time
@@ -26,14 +29,15 @@ def test_index_filled(client, db, initial_catalog,  # noqa: F811
                       django_assert_num_queries):
     """
     Shopping list index should list all available Shopping objects.
-
-    TODO: This fails sometime because wrong order consistency between Fontessa and Foo,
-    try first to explicitly define a different 'planning' date on those two.
     """
     url = reverse("atoum:shopping-list-index")
 
-    ShoppingFactory(title="Fontessa")
-    ShoppingFactory(title="Foo")
+    # NOTE: Planning date are manually defined to avoid trouble in result ordering
+    tomorrow = datetime.datetime(2012, 10, 16, 10, 0).replace(tzinfo=ZoneInfo("UTC"))
+    yesterday = datetime.datetime(2012, 10, 14, 10, 0).replace(tzinfo=ZoneInfo("UTC"))
+
+    ShoppingFactory(title="Fontessa", planning=yesterday)
+    ShoppingFactory(title="Foo", planning=tomorrow)
     ShoppingFactory(title="Bar", done=True)
 
     # Only a single queryset to list objects
@@ -77,4 +81,4 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
         v.text
         for v in dom.find(".shopping-detail .shopping-items .item .title")
     ]
-    assert titles == ["Corn: 1", "Steack: 1", "Tomatoe: 42"]
+    assert titles == ["Corn", "Steack", "Tomatoe"]

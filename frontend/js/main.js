@@ -17,6 +17,22 @@
 //window.$ = $;
 
 //
+// Initialize Alpine.js
+//
+// import Alpine from "alpinejs";
+
+// window.Alpine = Alpine;
+// Alpine.start();
+
+//
+// Initialize htmx
+//
+import "htmx.org";
+import "htmx-ext-response-targets";
+
+window.htmx = require("htmx.org");
+
+//
 // Make Bootstrap components usable from templates (like "bootstrap.Modal(..)")
 //
 window.bootstrap = require("bootstrap/dist/js/bootstrap.bundle.js");
@@ -26,17 +42,17 @@ window.bootstrap = require("bootstrap/dist/js/bootstrap.bundle.js");
 // You may disable unused components to lighten builded JS file
 //
 import {
-    Alert,
+    // Alert,
     Button,
-    Carousel,
+    // Carousel,
     Collapse,
     Dropdown,
-    Modal,
-    Popover,
-    ScrollSpy,
-    Tab,
-    Toast,
-    Tooltip,
+    // Modal,
+    // Popover,
+    // ScrollSpy,
+    // Tab,
+    // Toast,
+    // Tooltip,
 } from "bootstrap/dist/js/bootstrap.bundle.js";
 
 //
