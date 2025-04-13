@@ -1,0 +1,29 @@
+{% load i18n %}{% spaceless %}
+    {% comment %}
+    Product item row exists in this partial template so it can be
+    shared from both shopping list render and the shopping management view with
+    htmx
+    {% endcomment %}
+    {% if operation == "addition" %}
+        <tbody hx-swap-oob="afterbegin:#shopping-list-{{ opened_shoppinglist.obj.id }}-rows">
+    {% endif %}
+
+        <tr id="shopping-list-{{ opened_shoppinglist.obj.id }}-item-{{ item.id }}"
+            {% if operation == "edition" %} hx-swap-oob="true"{% endif %}>
+            <td class="quantity">
+                {{ item.quantity }}
+            </td>
+            <td class="title">{{ item.product.title }}</td>
+            <td class="done">
+                {% if item.done %}
+                    <i class="bi bi-check-circle-fill"></i>
+                {% else %}
+                    <i class="bi bi-circle"></i>
+                {% endif %}
+            </td>
+        </tr>
+
+    {% if operation == "addition" %}
+        </tbody>
+    {% endif %}
+{% endspaceless %}

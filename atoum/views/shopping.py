@@ -7,7 +7,8 @@ from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from ..models import Product, Shopping
+from ..models import Product, Shopping, ShoppingItem
+from ..context_processors import session_data_processor
 from .mixins import AtoumBreadcrumMixin
 
 
@@ -122,27 +123,15 @@ class ShoppinglistToggleSelectionView(SingleObjectMixin, View):
         return HttpResponseRedirect(url)
 
 
-class ShoppinglistManageProductView(SingleObjectMixin, View):
+class ShoppinglistManageProductView(SingleObjectMixin, TemplateView):
     """
     View to add or remove a product from a Shopping list.
 
-    TODO: Test coverage.
-
-    TODO:
-        It should provide different rendering depending it is an addition, edition or
-        deletion.
-
-        * Deletion should just have the quantity + add button;
-        * Addition should return the quantity + edit button + delete button;
-        * Edition should return the quantity + edit button + delete button;
-
-        This would replace the product controls.
-
-        Then there should be a <template> element containg the <tr> row of product from
-        list and should define hx-swap-oob="true" and proper target to update the
-        shopping list.
+    This has been done for usage from htmx so it won't return a proper HTML page
+    document.
     """
     model = Shopping
+    template_name = "atoum/shopping/manage_opened_list.html"
     operation_name = None
 
     def get_shopping_object(self):
@@ -173,6 +162,97 @@ class ShoppinglistManageProductView(SingleObjectMixin, View):
 
         return obj
 
+    def delete_shopping_item(self):
+        """
+        Remove the given product item from the Shopping list.
+
+        Returns:
+            dict: Return dict with some values (id and quantity) from deleted object.
+        """
+        try:
+            obj = ShoppingItem.objects.filter(
+                shopping=self.object,
+                product=self.product
+            ).get()
+        except ShoppingItem.DoesNotExist:
+            raise Http404
+        else:
+            # Memorize useful data from object because template still use it
+            memorized = {"id": obj.id, "quantity": obj.quantity}
+            # Finally deletes the item
+            obj.delete()
+            self.operation_name = "deletion"
+
+        return memorized
+
+    def update_or_create_shopping_item(self, quantity):
+        """
+        Update or create the ShoppingItem object and possibly set its quantity if not
+        null.
+
+        Arguments:
+            quantity (integer): The quantity to apply on object. It must be a greater
+                or equal to 1 else it would not do nothing (except getting existing
+                item).
+
+        Returns:
+            atoum.models.ShoppingItem: Return the existing or created object if
+                quantity is greater or equal to 1. Else it returns the item object if
+                it already exists or a null value if it does not exists yet.
+        """
+        try:
+            obj = ShoppingItem.objects.filter(
+                shopping=self.object,
+                product=self.product
+            ).get()
+        except ShoppingItem.DoesNotExist:
+            if quantity:
+                obj = ShoppingItem(
+                    shopping=self.object,
+                    product=self.product,
+                    quantity=quantity
+                )
+                obj.full_clean()
+                obj.save()
+                self.operation_name = "addition"
+            else:
+                obj = None
+        else:
+            if quantity:
+                obj.quantity = obj.quantity + quantity
+                obj.full_clean()
+                obj.save()
+                self.operation_name = "edition"
+
+        return obj
+
+    def parse_quantity(self):
+        """
+        Parse given quantity from POST arguments.
+
+        Returns:
+            integer: Parsed quantity if it is a valid integer else returns a null
+                value.
+        """
+        try:
+            quantity = int(self.request.POST.get("quantity", 1))
+        except ValueError:
+            return None
+
+        if not quantity or quantity < 1:
+            quantity = 0
+
+        return quantity
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            "product": self.product,
+            "shopping_item": self.shopping_item,
+            "operation": self.operation_name,
+        })
+
+        return context
 
     def get(self, request, *args, **kwargs):
         """
@@ -182,28 +262,53 @@ class ShoppinglistManageProductView(SingleObjectMixin, View):
 
     def delete(self, request, *args, **kwargs):
         """
-        TODO: Should be only for deletion
+        POST verb allows for deletion of an existing product item from a shopping list.
+
+        Response will only contains the HTML for product controls for an addition.
         """
-        self.shopping_object = self.get_shopping_object()
+        self.object = self.get_shopping_object()
         self.product = self.get_product_object()
 
-        self.operation_name = "delete"
+        self.shopping_item = self.delete_shopping_item()
 
-        return HttpResponse("<p>Non mais ho</p>")
+        return self.render_to_response(self.get_context_data(**kwargs))
 
     def post(self, request, *args, **kwargs):
         """
-        TODO:
-        * Should be for addition or edition.
-        * It's an edition if product is in shopping, else it is an addition.
-        * Use swap-oob to edit the <tr> of product or just the new <tr> (at top of list)
-          for addition
+        POST verb allows for addition or edition of a product item from a shopping list.
+
+        If product is already an item of shopping list it is an edition and quantity
+        will be incremented with value.
+
+        Else if product is not in shopping list yet it is an addition and quantity will
+        be set from posted value.
+
+        Negative or null quantity is not allowed.
+
+        Response will contains the HTML for product controls and possibly the new item
+        row to append to the shopping list component in case of addition.
         """
-        self.shopping_object = self.get_shopping_object()
+        self.object = self.get_shopping_object()
         self.product = self.get_product_object()
 
-        self.operation_name = "addition"
-        self.operation_name = "edition"
+        quantity = self.parse_quantity()
+        if quantity is None:
+            return HttpResponseBadRequest()
 
-        #return HttpResponseRedirect(url)
-        return HttpResponse("<p>Non mais ho</p>")
+        # Get opened shopping list from session
+        inventory = session_data_processor(self.request).get(
+            "opened_shoppinglist",
+            None
+        )
+
+        if not inventory:
+            msg = _("No opened shopping list")
+            raise Http404(msg)
+        elif inventory.obj.id != self.object.id:
+            msg = _("Given Shopping is not the opened shopping list")
+            raise Http404(msg)
+
+        # Proceed to operation
+        self.shopping_item = self.update_or_create_shopping_item(quantity)
+
+        return self.render_to_response(self.get_context_data(**kwargs))

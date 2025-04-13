@@ -112,13 +112,11 @@ def shopping_list_html(context, **kwargs):
         "debug": context.get("debug", False),
         "user": context.get("user", None),
         "opened_shoppinglist": context.get("opened_shoppinglist", None),
-        "opened_shoppinglist_items": context.get("opened_shoppinglist_items", []),
-        "opened_shoppinglist_itemids": context.get("opened_shoppinglist_itemids", []),
     })
 
 
 @register.simple_tag(takes_context=True)
-def shopping_product_control(context, product, **kwargs):
+def shopping_product_controls(context, product, **kwargs):
     """
     Render HTML of available controls for a product against an opened shopping list.
 

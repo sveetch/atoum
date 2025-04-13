@@ -45,15 +45,13 @@ for indexed objects.
 This can be huge if you have hundreds or more objects to index.
 """
 
-ATOUM_SHOPPING_ASIDE_TEMPLATE = "atoum/shopping/partials/tag_shopping_aside_html.html"
+ATOUM_SHOPPING_ASIDE_TEMPLATE = "atoum/shopping/partials/tag_opened_list.html"
 """
 Template path used to render A Shopping list as aside content. This is used when
 user has opened a Shopping list in 'selection' mode.
 """
 
-ATOUM_SHOPPING_PRODUCT_CONTROLS_TEMPLATE = (
-    "atoum/product/partials/shopping_product_controls.html"
-)
+ATOUM_SHOPPING_PRODUCT_CONTROLS_TEMPLATE = "atoum/product/partials/controls.html"
 """
 Template path used to render product controls for a possible opened Shopping list.
 """

@@ -6,6 +6,16 @@ def session_data_processor(request):
     A template context processor to search for some references in session, resolve them
     and inject them in a template context.
 
+    NOTE: Because a context processor is not aware of current context, it can not
+    know if a variable as already been set and so some views like
+    ``ShoppinglistManageProductView`` may perform the same query to get it from session.
+    Also context processor are applied during response, not from
+    ``View.get_context_data()`` so the view can not stand on the context processor.
+
+    TODO: We may look instead for a View mixin to bring the var in context so it can
+    be driven from view and avoid getting opened shopping list object twice. Still the
+    context processor could be helpful for external usage in other apps from a project.
+
     TODO: Test coverage.
 
     Args:

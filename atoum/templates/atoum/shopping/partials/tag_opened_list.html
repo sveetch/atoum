@@ -35,9 +35,9 @@
                         <th>{% translate "Done" %}</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="shopping-list-{{ opened_shoppinglist.obj.id }}-rows">
                     {% for item in opened_shoppinglist.items %}
-                        {% include "atoum/shopping/partials/shopping_aside_product_item.html" with opened_shoppinglist=opened_shoppinglist item=item only %}
+                        {% include "atoum/shopping/partials/opened_list_item.html" with opened_shoppinglist=opened_shoppinglist item=item only %}
                     {% endfor %}
                 </tbody>
             </table>

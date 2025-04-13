@@ -218,7 +218,7 @@ class ShoppingListInventory:
 
     def quantity_for_product(self, product):
         """
-        Return the quantity save for a product in shopping list.
+        Return the saved quantity for a product in shopping list.
 
         Arguments:
             product (atoum.models.Product): Product object.
