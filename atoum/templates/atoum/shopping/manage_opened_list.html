@@ -1,5 +1,4 @@
-{% load atoum i18n %}
-{% comment %} {% spaceless %} {% endcomment %}
+{% load atoum i18n %}{% spaceless %}
     {% comment %}The product controls to update in product item from a list{% endcomment %}
     {% shopping_product_controls product %}
 
@@ -13,4 +12,4 @@
             <div id="shopping-list-{{ opened_shoppinglist.obj.id }}-item-{{ shopping_item.id }}" hx-swap-oob="delete"></div>
         </template>
     {% endif %}
-{% comment %} {% endspaceless %} {% endcomment %}
+{% endspaceless %}

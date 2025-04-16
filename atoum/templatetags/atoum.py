@@ -154,4 +154,8 @@ def shopping_product_controls(context, product, **kwargs):
             if opened_shoppinglist else False
         ),
         "product": product,
+        "product_shopping_item": (
+            opened_shoppinglist.item_for_product(product)
+            if opened_shoppinglist else False
+        ),
     })

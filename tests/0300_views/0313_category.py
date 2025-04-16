@@ -80,8 +80,8 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
 
     dom = html_pyquery(response)
     titles = [
-        v.text
-        for v in dom.find(".category-detail .category-products .item")
+        v.cssselect(".title")[0].text
+        for v in dom.find(".category-detail .category-products .item .content")
     ]
     assert titles == ["Steack", "T-Bone", "Tongue"]
 

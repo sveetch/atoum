@@ -1,8 +1,4 @@
-from django.urls import reverse
 from django.template import RequestContext
-
-import pytest
-from freezegun import freeze_time
 
 from atoum.utils.tests import html_pyquery
 from atoum.models import ShoppingListInventory
@@ -21,7 +17,7 @@ def test_empty(db, rf, settings):
     assert render.strip() == ""
 
 
-def test_product_controls(client, db, initial_catalog, rf, settings):
+def test_product_controls(client, db, initial_catalog, rf, settings):  # noqa: F811
     """
     Tag should correctly render the HTML for the product controls.
     """
@@ -32,7 +28,7 @@ def test_product_controls(client, db, initial_catalog, rf, settings):
         (corn, {"quantity": 1}),
     ])
 
-    # Render for a product in list
+    # Render for a product in shopping list
     context = RequestContext(
         rf,
         {
@@ -50,7 +46,7 @@ def test_product_controls(client, db, initial_catalog, rf, settings):
     assert len(dom.find("#btn_shopping-product-{}-post".format(corn.id))) == 1
     assert len(dom.find("#btn_shopping-product-{}-delete".format(corn.id))) == 1
 
-    # Render for a product not in list
+    # Render for a product not in shopping list
     context = RequestContext(
         rf,
         {

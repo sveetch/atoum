@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseServerError
+from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic import ListView
@@ -219,7 +219,7 @@ class ShoppinglistManageProductView(SingleObjectMixin, TemplateView):
                 obj = None
         else:
             if quantity:
-                obj.quantity = obj.quantity + quantity
+                obj.quantity = quantity
                 obj.full_clean()
                 obj.save()
                 self.operation_name = "edition"
@@ -264,7 +264,7 @@ class ShoppinglistManageProductView(SingleObjectMixin, TemplateView):
         """
         POST verb allows for deletion of an existing product item from a shopping list.
 
-        Response will only contains the HTML for product controls for an addition.
+        Response will only contains the HTML for product controls for a creation.
         """
         self.object = self.get_shopping_object()
         self.product = self.get_product_object()
@@ -275,18 +275,18 @@ class ShoppinglistManageProductView(SingleObjectMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         """
-        POST verb allows for addition or edition of a product item from a shopping list.
+        POST verb allows for creation or edition of a product item from a shopping list.
 
-        If product is already an item of shopping list it is an edition and quantity
-        will be incremented with value.
+        If product is already an item of shopping list it is an edition and posted
+        quantity will replace the previous value.
 
-        Else if product is not in shopping list yet it is an addition and quantity will
+        Else if product is not in shopping list yet it is a creation and quantity will
         be set from posted value.
 
         Negative or null quantity is not allowed.
 
         Response will contains the HTML for product controls and possibly the new item
-        row to append to the shopping list component in case of addition.
+        row to append to the shopping list component in case of a creation.
         """
         self.object = self.get_shopping_object()
         self.product = self.get_product_object()

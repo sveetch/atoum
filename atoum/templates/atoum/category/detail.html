@@ -1,5 +1,5 @@
 {% extends "atoum/base.html" %}
-{% load i18n %}
+{% load atoum i18n %}
 {% block header-title %}{{ category_object.title }} - {{ block.super }}{% endblock header-title %}
 
 {% block title-content %}{% spaceless %}
@@ -57,9 +57,19 @@
 
             <div class="products stacks">
                 {% for product in object_list %}
-                    <a href="{{ product.get_absolute_url }}" class="item">{{ product.title }}</a>
+                    <div class="item">
+                        <a href="{{ product.get_absolute_url }}" class="content">
+                            <span class="title">{{ product.title }}</span>
+                        </a>
+
+                        {% if opened_shoppinglist %}
+                            <div class="controls">
+                                {% shopping_product_controls product %}
+                            </div>
+                        {% endif %}
+                    </div>
                 {% empty %}
-                    <p class="item empty">{% translate "No products yet." %}</p>
+                    <p class="empty">{% translate "No products yet." %}</p>
                 {% endfor %}
             </div>
         </div>

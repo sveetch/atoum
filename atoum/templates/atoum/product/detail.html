@@ -1,5 +1,5 @@
 {% extends "atoum/base.html" %}
-{% load i18n smart_image %}
+{% load atoum i18n smart_image %}
 {% block header-title %}{{ product_object.title }} - {{ block.super }}{% endblock header-title %}
 
 {% block title-content %}{% spaceless %}
@@ -56,9 +56,12 @@
                 </div>
             </div>
 
-            <div class="g-col-4 p-2"></div>
-
             <div class="g-col-8">
+                {% if opened_shoppinglist %}
+                    <div class="controls mb-3" style="width:120px">
+                        {% shopping_product_controls product_object %}
+                    </div>
+                {% endif %}
                 <div class="brand mb-3">
                     <h2 class="h4 mb-2">{% translate "Brand" %}</h2>
                     {% if product_object.brand %}

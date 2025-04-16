@@ -229,6 +229,21 @@ class ShoppingListInventory:
         if self.is_product_selected(product):
             for item in self.items:
                 if item.product.id == product.id:
-                    return item.product.quantity
+                    return item.quantity
+
+    def item_for_product(self, product):
+        """
+        Return the shopping item object for a product in shopping list.
+
+        Arguments:
+            product (atoum.models.Product): Product object.
+
+        Returns:
+            ShoppingItem: The item object if in list else None.
+        """
+        if self.is_product_selected(product):
+            for item in self.items:
+                if item.product.id == product.id:
+                    return item
 
         return None

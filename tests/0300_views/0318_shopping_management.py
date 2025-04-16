@@ -1,16 +1,15 @@
 from django.urls import reverse
 
 import pytest
-from freezegun import freeze_time
 
 from atoum.factories import ShoppingFactory
 from atoum.models import ShoppingItem
-from atoum.utils.tests import html_pyquery, decode_response_or_string
+from atoum.utils.tests import html_pyquery
 
 from tests.initial import initial_catalog  # noqa: F401
 
 
-def test_no_opened_shoppinglist(client, db, initial_catalog):
+def test_no_opened_shoppinglist(client, db, initial_catalog):  # noqa: F811
     """
     If there is no opened shopping list in user session the view raises a 404
     """
@@ -25,7 +24,7 @@ def test_no_opened_shoppinglist(client, db, initial_catalog):
     assert response.status_code == 404
 
 
-def test_shopping_different_shoppinglist(client, db, initial_catalog):
+def test_shopping_different_shoppinglist(client, db, initial_catalog):  # noqa: F811
     """
     If request point to a shopping object that is not the opened shopping list, the view
     raises a 404
@@ -52,7 +51,8 @@ def test_shopping_different_shoppinglist(client, db, initial_catalog):
     (0, 0, 0, None),
     (-1, 0, 0, None),
 ])
-def test_post_add(client, db, initial_catalog, qty_value, row, delete, qty_returned):
+def test_post_add(client, db, initial_catalog, qty_value, row, delete,  # noqa: F811
+                  qty_returned):
     """
     View perform operation and respond to POST with a HTML including controls and
     possible row.
@@ -101,11 +101,12 @@ def test_post_add(client, db, initial_catalog, qty_value, row, delete, qty_retur
 
 
 @pytest.mark.parametrize("qty_value, row, qty_returned", [
-    (3, 1, 4),
+    (3, 1, 3),
     (0, 0, None),
     (-1, 0, None),
 ])
-def test_post_edit(client, db, initial_catalog, qty_value, row, qty_returned):
+def test_post_edit(client, db, initial_catalog, qty_value, row,  # noqa: F811
+                   qty_returned):
     """
     View perform operation and respond to POST with a HTML including controls and
     possible row.
@@ -151,7 +152,7 @@ def test_post_edit(client, db, initial_catalog, qty_value, row, qty_returned):
         assert saved_quantity.strip() == str(qty_returned)
 
 
-def test_post_delete(client, db, initial_catalog):
+def test_post_delete(client, db, initial_catalog):  # noqa: F811
     """
     View perform operation and respond to POST with a HTML including controls.
     """
