@@ -1,5 +1,5 @@
 {% extends "atoum/base.html" %}
-{% load i18n smart_image %}
+{% load atoum i18n smart_image %}
 {% block header-title %}{{ shopping_object }} - {{ block.super }}{% endblock header-title %}
 
 {% block title-content %}{% spaceless %}
@@ -70,13 +70,16 @@
             {% if shopping_items %}
                 <div class="shopping-items list-group">
                     {% for item in shopping_items %}
-                        <label class="item list-group-item d-flex gap-2">
+                        <label class="item list-group-item d-flex gap-2 justify-content-between">
                             <input class="form-check-input flex-shrink-0" type="checkbox" value=""{% if item.done %} checked=""{% endif %}>
                             <span class="quantity">{{ item.quantity }}</span>
-                            <span>
+                            <span class="flex-fill">
                                 <span class="title">{{ item.product.title }}</span>
                                 <small class="d-block text-body-secondary">{{ item.product.parenting_crumbs_html }}</small>
                             </span>
+                            <div class="controls mb-3" style="flex: 1 0 160px; max-width: 160px">
+                                {% shopping_product_controls item.product %}
+                            </div>
                         </label>
                     {% endfor %}
                 </div>
