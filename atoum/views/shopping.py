@@ -129,6 +129,10 @@ class ShoppinglistManageProductView(SingleObjectMixin, TemplateView):
 
     This has been done for usage from htmx so it won't return a proper HTML page
     document.
+
+    TODO: The shopping session can still live in anonymous session in rare cases, this
+    is normal since there is no user check but it demonstrates that anonymous request
+    can modify shopping which is a flaw to fix.
     """
     model = Shopping
     template_name = "atoum/shopping/manage_opened_list.html"

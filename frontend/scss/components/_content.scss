@@ -2,6 +2,17 @@
 /// Page contents
 ///
 
+// Animation to highlight an element background in yellow to transparent
+@keyframes highlight-product-row {
+    from {
+        background-color: rgba($yellow, 0.3);
+    }
+
+    to {
+        background-color: transparent;
+    }
+}
+
 .page-content {
     background-color: var(--site-content-bg);
 
@@ -40,6 +51,7 @@
                     tr {
                         td {
                             @include font-size($small2-font-size);
+                            background-color: transparent;
 
                             &.quantity {
                                 // padding: 0;
@@ -60,6 +72,14 @@
                             }
                             &:last-child {
                                 border-right: 0;
+                            }
+                        }
+
+                        // Class to apply highlight animation
+                        &.bump {
+                            td {
+                                animation-duration: 3s;
+                                animation-name: highlight-product-row;
                             }
                         }
 
