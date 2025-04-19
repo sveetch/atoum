@@ -50,44 +50,14 @@ def querystring(context, query_dict=None, **kwargs):
     return f"?{query_string}"
 
 
-@register.filter(is_safe=True)
-def is_product_in_shoppinglist(value, arg):
-    return value in arg
-
-
-@register.simple_tag(takes_context=True)
-def is_shopping_enabled(context):
-    """
-    A tag to find in user session if it have a Shopping list in selection
-    mode or not.
-
-    TODO: Test coverage.
-
-    Exemple:
-        Usage exemple is simple as: ::
-
-            {% load atoum %}
-            {% is_shopping_enabled %}
-
-    Arguments:
-        context (object): Either a ``django.template.Context`` or a dictionnary for
-            context variable for template where the tag is included.
-
-    Returns:
-        boolean:
-    """
-    if context.get("opened_shoppinglist", None):
-        return True
-
-    return False
-
-
 @register.simple_tag(takes_context=True)
 def shopping_list_html(context, **kwargs):
     """
-    Render HTML for a current opened Shopping list.
+    Render HTML for an opened Shopping list.
 
-    TODO: Test coverage.
+    It does not expect any other argument than the optional template one. Everything
+    else is discovered from template context (which should have been fullfilled from
+    context processor with a ShoppingListInventory object).
 
     Exemple:
         Basic usage: ::
@@ -95,15 +65,20 @@ def shopping_list_html(context, **kwargs):
             {% load atoum %}
             {% shopping_list_html [template="foo/bar.html"] %}
 
-
     Arguments:
         context (object): A ``django.template.RequestContext`` object.
 
     Returns:
-        string: Rendered template tag fragment.
+        string: Rendered template tag fragment with possible shopping list content.
+        Render is only performed for authenticated user because anonymous are not
+        allowed to manage a shopping list.
 
     """  # noqa: E501
     template_path = kwargs.get("template") or settings.ATOUM_SHOPPING_ASIDE_TEMPLATE
+    user = context.get("user", None)
+
+    if not user:
+        return ""
 
     return loader.get_template(template_path).render({
         "request": context.request,

@@ -2,7 +2,7 @@ from django.urls import reverse
 
 import pytest
 
-from atoum.factories import ShoppingFactory
+from atoum.factories import ShoppingFactory, UserFactory
 from atoum.models import ShoppingItem
 from atoum.utils.tests import html_pyquery
 
@@ -20,6 +20,39 @@ def test_no_opened_shoppinglist(client, db, initial_catalog):  # noqa: F811
         "product_id": initial_catalog.products["wing"].id,
     })
     response = client.post(url, follow=True)
+    assert response.redirect_chain == []
+    assert response.status_code == 404
+
+
+def test_anonymous(client, db, initial_catalog):  # noqa: F811
+    """
+    Anonymous can not have an opened shopping list and are not allowed to perform a
+    request on management view.
+
+    It currently respond with a 404 but may be turned to a 403 in future.
+    """
+    shopping = ShoppingFactory()
+
+    # Set opened shopping list (even that in practice it should not be possible)
+    session = client.session
+    session["atoum_shopping_selection"] = shopping.id
+    session.save()
+
+    # Post request
+    url = reverse("atoum:shopping-list-product", kwargs={
+        "pk": shopping.id,
+        "product_id": initial_catalog.products["wing"].id,
+    })
+    response = client.post(url, follow=True)
+    assert response.redirect_chain == []
+    assert response.status_code == 404
+
+    # Delete request
+    url = reverse("atoum:shopping-list-product", kwargs={
+        "pk": shopping.id,
+        "product_id": initial_catalog.products["wing"].id,
+    })
+    response = client.delete(url, follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 404
 
@@ -57,10 +90,13 @@ def test_post_add(client, db, initial_catalog, qty_value, row, delete,  # noqa: 
     View perform operation and respond to POST with a HTML including controls and
     possible row.
     """
+    user = UserFactory()
     corn = initial_catalog.products["corn"]
     wing = initial_catalog.products["wing"]
 
     shopping = ShoppingFactory(fill_products=[(corn, {"quantity": 1})])
+
+    client.force_login(user)
 
     # Make Shopping list opened in session
     session = client.session
@@ -111,9 +147,12 @@ def test_post_edit(client, db, initial_catalog, qty_value, row,  # noqa: F811
     View perform operation and respond to POST with a HTML including controls and
     possible row.
     """
+    user = UserFactory()
     corn = initial_catalog.products["corn"]
 
     shopping = ShoppingFactory(fill_products=[(corn, {"quantity": 1})])
+
+    client.force_login(user)
 
     # Make Shopping list opened in session
     session = client.session
@@ -156,10 +195,13 @@ def test_post_delete(client, db, initial_catalog):  # noqa: F811
     """
     View perform operation and respond to POST with a HTML including controls.
     """
+    user = UserFactory()
     corn = initial_catalog.products["corn"]
     wing = initial_catalog.products["wing"]
 
     shopping = ShoppingFactory(fill_products=[(corn, {"quantity": 1})])
+
+    client.force_login(user)
 
     # Make Shopping list opened in session
     session = client.session

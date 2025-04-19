@@ -88,6 +88,9 @@ class ShoppinglistToggleSelectionView(SingleObjectMixin, View):
     View to open or close a Shopping list for product selection.
 
     TODO: Test coverage.
+
+    TODO: The view should be restricted to authenticated user (and further to an user
+    granted to use the shopping object).
     """
     model = Shopping
 
@@ -130,9 +133,8 @@ class ShoppinglistManageProductView(SingleObjectMixin, TemplateView):
     This has been done for usage from htmx so it won't return a proper HTML page
     document.
 
-    TODO: The shopping session can still live in anonymous session in rare cases, this
-    is normal since there is no user check but it demonstrates that anonymous request
-    can modify shopping which is a flaw to fix.
+    TODO: The view should be restricted to authenticated user (and further to an user
+    granted to use the shopping object).
     """
     model = Shopping
     template_name = "atoum/shopping/manage_opened_list.html"
@@ -266,7 +268,8 @@ class ShoppinglistManageProductView(SingleObjectMixin, TemplateView):
 
     def delete(self, request, *args, **kwargs):
         """
-        POST verb allows for deletion of an existing product item from a shopping list.
+        DELETE verb allows for deletion of an existing product item from a shopping
+        list.
 
         Response will only contains the HTML for product controls for a creation.
         """

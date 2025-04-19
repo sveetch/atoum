@@ -10,13 +10,8 @@ def session_data_processor(request):
     know if a variable as already been set and so some views like
     ``ShoppinglistManageProductView`` may perform the same query to get it from session.
     Also context processor are applied during response, not from
-    ``View.get_context_data()`` so the view can not stand on the context processor.
-
-    TODO: Test coverage.
-
-    DANGER: Opened should be purged from session for anonymous since they should not
-    be able to edit anything, however it has been reproduced than for some reasons that
-    anonymous can have a shopping in session.
+    ``View.get_context_data()`` so the view can not depend on the context processor
+    result.
 
     Arguments:
         request (object): A Django Request object.
@@ -26,10 +21,14 @@ def session_data_processor(request):
     """
     shopping_id = request.session.get("atoum_shopping_selection")
     inventory = None
-
-    # If there is an opened shopping in user session
-    # TODO: And 'if not request.user.is_anonymous'
-    if shopping_id:
+    # Possible anonymous user with an ID in session (that should not occurs in practice)
+    if (
+        (not hasattr(request, "user") or not request.user.is_authenticated) and
+        "atoum_shopping_selection" in request.session
+    ):
+        del request.session["atoum_shopping_selection"]
+    # Stored ID in session for an authenticated user
+    elif shopping_id:
         try:
             shopping_obj = Shopping.objects.filter(**{"pk": shopping_id}).get()
         except Shopping.DoesNotExist:

@@ -11,9 +11,7 @@
         <tr id="shopping-list-{{ opened_shoppinglist.obj.id }}-item-{{ item.id }}"
             {% if operation == "edition" %} hx-swap-oob="true"{% endif %}
             {% if operation == "addition" or operation == "edition" %} class="bump"{% endif %}>
-            <td class="quantity">
-                {{ item.quantity }}
-            </td>
+            <td class="quantity">{{ item.quantity }}</td>
             <td class="title">{{ item.product.title }}</td>
             <td class="done">
                 {% if item.done %}
