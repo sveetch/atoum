@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import RedirectURLMixin
 from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.views import View
 from django.views.generic import TemplateView
@@ -12,7 +14,7 @@ from ..context_processors import session_data_processor
 from .mixins import AtoumBreadcrumMixin
 
 
-class ShoppinglistIndexView(AtoumBreadcrumMixin, ListView):
+class ShoppinglistIndexView(AtoumBreadcrumMixin, LoginRequiredMixin, ListView):
     """
     List of Shopping lists
     """
@@ -38,7 +40,8 @@ class ShoppinglistIndexView(AtoumBreadcrumMixin, ListView):
         ]
 
 
-class ShoppinglistDetailView(AtoumBreadcrumMixin, SingleObjectMixin, TemplateView):
+class ShoppinglistDetailView(AtoumBreadcrumMixin, LoginRequiredMixin, SingleObjectMixin,
+                             TemplateView):
     """
     Shopping list detail
     """
@@ -83,16 +86,16 @@ class ShoppinglistDetailView(AtoumBreadcrumMixin, SingleObjectMixin, TemplateVie
         return super().get(request, *args, **kwargs)
 
 
-class ShoppinglistToggleSelectionView(SingleObjectMixin, View):
+class ShoppinglistToggleSelectionView(LoginRequiredMixin, RedirectURLMixin,
+                                      SingleObjectMixin, View):
     """
     View to open or close a Shopping list for product selection.
 
-    TODO: Test coverage.
-
-    TODO: The view should be restricted to authenticated user (and further to an user
-    granted to use the shopping object).
+    For opening it requires the shopping ID in "pk" argument from URL. For closing it
+    does not require anything and just blindly purge the session variable.
     """
     model = Shopping
+    raise_exception = True
 
     def get_object(self):
         """
@@ -109,11 +112,9 @@ class ShoppinglistToggleSelectionView(SingleObjectMixin, View):
         return obj
 
     def get(self, request, *args, **kwargs):
-        url = reverse("atoum:dashboard")
+        self.next_page = reverse("atoum:dashboard")
 
-        # TODO: Ensure given url path is always safe
-        if "next" in self.request.GET:
-            url = self.request.GET.get("next")
+        url = self.get_success_url()
 
         # If shopping id is given add it as opened in session
         if "pk" in self.kwargs:
@@ -126,19 +127,18 @@ class ShoppinglistToggleSelectionView(SingleObjectMixin, View):
         return HttpResponseRedirect(url)
 
 
-class ShoppinglistManageProductView(SingleObjectMixin, TemplateView):
+class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
+                                    TemplateView):
     """
     View to add or remove a product from a Shopping list.
 
     This has been done for usage from htmx so it won't return a proper HTML page
     document.
-
-    TODO: The view should be restricted to authenticated user (and further to an user
-    granted to use the shopping object).
     """
     model = Shopping
     template_name = "atoum/shopping/manage_opened_list.html"
     operation_name = None
+    raise_exception = True
 
     def get_shopping_object(self):
         """

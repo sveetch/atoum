@@ -9,27 +9,10 @@ from atoum.utils.tests import html_pyquery
 from tests.initial import initial_catalog  # noqa: F401
 
 
-def test_no_opened_shoppinglist(client, db, initial_catalog):  # noqa: F811
-    """
-    If there is no opened shopping list in user session the view raises a 404
-    """
-    shopping = ShoppingFactory()
-
-    url = reverse("atoum:shopping-list-product", kwargs={
-        "pk": shopping.id,
-        "product_id": initial_catalog.products["wing"].id,
-    })
-    response = client.post(url, follow=True)
-    assert response.redirect_chain == []
-    assert response.status_code == 404
-
-
 def test_anonymous(client, db, initial_catalog):  # noqa: F811
     """
     Anonymous can not have an opened shopping list and are not allowed to perform a
     request on management view.
-
-    It currently respond with a 404 but may be turned to a 403 in future.
     """
     shopping = ShoppingFactory()
 
@@ -45,7 +28,7 @@ def test_anonymous(client, db, initial_catalog):  # noqa: F811
     })
     response = client.post(url, follow=True)
     assert response.redirect_chain == []
-    assert response.status_code == 404
+    assert response.status_code == 403
 
     # Delete request
     url = reverse("atoum:shopping-list-product", kwargs={
@@ -53,6 +36,24 @@ def test_anonymous(client, db, initial_catalog):  # noqa: F811
         "product_id": initial_catalog.products["wing"].id,
     })
     response = client.delete(url, follow=True)
+    assert response.redirect_chain == []
+    assert response.status_code == 403
+
+
+def test_no_opened_shoppinglist(client, db, initial_catalog):  # noqa: F811
+    """
+    If there is no opened shopping list in user session the view raises a 404
+    """
+    user = UserFactory()
+    client.force_login(user)
+
+    shopping = ShoppingFactory()
+
+    url = reverse("atoum:shopping-list-product", kwargs={
+        "pk": shopping.id,
+        "product_id": initial_catalog.products["wing"].id,
+    })
+    response = client.post(url, follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 404
 
@@ -62,6 +63,9 @@ def test_shopping_different_shoppinglist(client, db, initial_catalog):  # noqa: 
     If request point to a shopping object that is not the opened shopping list, the view
     raises a 404
     """
+    user = UserFactory()
+    client.force_login(user)
+
     unopened_shopping = ShoppingFactory()
     opened_shopping = ShoppingFactory()
 

@@ -6,15 +6,30 @@ from django.urls import reverse
 from freezegun import freeze_time
 
 from atoum.utils.tests import html_pyquery
-from atoum.factories import ShoppingFactory
+from atoum.factories import ShoppingFactory, UserFactory
 
 from tests.initial import initial_catalog  # noqa: F401
+
+
+def test_index_anonymous(client, db):
+    """
+    Anonymous are not allowed and is redirect to login.
+    """
+    url = reverse("atoum:shopping-list-index")
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == [
+        ("/admin/login/?next={}".format(url), 302)
+    ]
+    assert response.status_code == 200
 
 
 def test_index_empty(client, db):
     """
     Shopping list index should just respond with an empty list.
     """
+    user = UserFactory()
+    client.force_login(user)
+
     url = reverse("atoum:shopping-list-index")
     response = client.get(url, follow=True)
     assert response.redirect_chain == []
@@ -30,6 +45,9 @@ def test_index_filled(client, db, initial_catalog,  # noqa: F811
     """
     Shopping list index should list all available Shopping objects.
     """
+    user = UserFactory()
+    client.force_login(user)
+
     url = reverse("atoum:shopping-list-index")
 
     # NOTE: Planning date are manually defined to avoid trouble in result ordering
@@ -40,8 +58,7 @@ def test_index_filled(client, db, initial_catalog,  # noqa: F811
     ShoppingFactory(title="Foo", planning=tomorrow)
     ShoppingFactory(title="Bar", done=True)
 
-    # Only a single queryset to list objects
-    with django_assert_num_queries(2):
+    with django_assert_num_queries(4):
         response = client.get(url, follow=True)
 
     assert response.redirect_chain == []
@@ -60,6 +77,9 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
     """
     Shopping list detail should list its related items.
     """
+    user = UserFactory()
+    client.force_login(user)
+
     shopping = ShoppingFactory(fill_products=[
         (initial_catalog.products["corn"], {"quantity": 1}),
         (initial_catalog.products["steack"], {"quantity": 1, "done": True}),
@@ -68,9 +88,7 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
 
     url = reverse("atoum:shopping-list-detail", kwargs={"pk": shopping.id})
 
-    # A queryset for the main object, another one to list its related objects and
-    # another one for pagination
-    with django_assert_num_queries(2):
+    with django_assert_num_queries(4):
         response = client.get(url, follow=True)
 
     assert response.redirect_chain == []
