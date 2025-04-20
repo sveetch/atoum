@@ -45,13 +45,13 @@ def test_index_filled(client, db, initial_catalog,  # noqa: F811
         for v in dom.find(".category-index .categories .item")
     ]
     assert titles == [
-        "Meats:Beef",
-        "Croquettes:Beef",
-        "Meats:Chicken",
-        "Other assortment:Other category",
-        "Meats:Pig",
-        "Vegetables:Reds",
-        "Vegetables:Yellows",
+        "Meats:Beef (3)",
+        "Croquettes:Beef (1)",
+        "Meats:Chicken (1)",
+        "Other assortment:Other category (1)",
+        "Meats:Pig (0)",
+        "Vegetables:Reds (1)",
+        "Vegetables:Yellows (1)",
     ]
 
 

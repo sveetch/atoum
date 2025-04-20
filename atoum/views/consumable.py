@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.models import Count
 from django.views.generic import ListView
 from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
@@ -28,7 +29,9 @@ class ConsumableIndexView(AtoumBreadcrumMixin, ListView):
         ]
 
     def get_queryset(self):
-        return self.model.objects.order_by("title")
+        return self.model.objects.annotate(
+            assortment_count=Count("assortment")
+        ).order_by("title")
 
 
 class ConsumableDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):

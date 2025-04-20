@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest
 from django.views.generic import ListView
 from django.views.generic.detail import SingleObjectMixin
@@ -27,8 +28,10 @@ class CategoryIndexView(AtoumBreadcrumMixin, ListView):
 
     def get_queryset(self):
         return self.model.objects.order_by("title").select_related(
-                *Category.HIERARCHY_SELECT_RELATED
-            )
+            *Category.HIERARCHY_SELECT_RELATED
+        ).annotate(
+            product_count=Count("product")
+        )
 
     @property
     def crumbs(self):

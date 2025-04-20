@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest
 from django.views.generic import ListView
 from django.views.generic.detail import SingleObjectMixin
@@ -27,6 +28,8 @@ class AssortmentIndexView(AtoumBreadcrumMixin, ListView):
     def get_queryset(self):
         return self.model.objects.order_by("title").select_related(
             *Assortment.HIERARCHY_SELECT_RELATED
+        ).annotate(
+            category_count=Count("category")
         )
 
     @property
