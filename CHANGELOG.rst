@@ -3,8 +3,8 @@
 Changelog
 =========
 
-Development
-***********
+Version 0.4.0 - 2025/03/20
+**************************
 
 * Added Makefile tasks to manage search engine indexes;
 * Improved some view tests to assert on amount of querysets to ensure we do not break
@@ -13,6 +13,11 @@ Development
   depending the 'done state' of its items;
 * Improved search implementation, this is a partial search and query is normalized
   (lowercase and accent removed);
+* Implemented opened Shopping list management and interface with htmx library;
+* Updated PO french catalog;
+* Improved test coverage;
+* Added children counts on list items for all index and detail views;
+* Made some various minor fixes and improvements;
 
 
 Version 0.3.0 - 2025/02/23
