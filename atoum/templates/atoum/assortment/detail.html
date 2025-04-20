@@ -57,7 +57,7 @@
                     <a class="item item--category" href="{{ category.get_absolute_url }}">
                         <div class="cover"></div>
                         <div class="body">
-                            <span class="title">{{ category.title }}</span>
+                            <span class="title">{{ category.title }} ({{ category.product_count }})</span>
                         </div>
                     </a>
                 {% empty %}

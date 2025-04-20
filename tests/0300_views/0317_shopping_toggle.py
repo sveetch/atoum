@@ -1,10 +1,6 @@
 from django.urls import reverse
 
-import pytest
-
 from atoum.factories import ShoppingFactory, UserFactory
-from atoum.models import ShoppingItem
-from atoum.utils.tests import html_pyquery
 
 from tests.initial import initial_catalog  # noqa: F401
 
@@ -64,7 +60,6 @@ def test_authenticated_open_invalid(client, db):
     Invalid Shopping ID will result on a 404.
     """
     user = UserFactory()
-    shopping = ShoppingFactory()
     client.force_login(user)
 
     url = reverse("atoum:shopping-list-open-selection", kwargs={"pk": 420})

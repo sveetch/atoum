@@ -79,7 +79,7 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
         v.text
         for v in dom.find(".assortment-detail .assortment-categories .item .title")
     ]
-    assert titles == ["Beef", "Chicken", "Pig"]
+    assert titles == ["Beef (3)", "Chicken (1)", "Pig (0)"]
 
 
 def test_autocomplete_authentication(client, db, settings):

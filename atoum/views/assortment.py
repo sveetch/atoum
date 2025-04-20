@@ -74,7 +74,9 @@ class AssortmentDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
         """
         Queryset to list sub relations
         """
-        return self.object.category_set.order_by("title")
+        return self.object.category_set.annotate(
+            product_count=Count("product")
+        ).order_by("title")
 
     def get_object(self):
         """

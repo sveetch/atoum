@@ -54,7 +54,9 @@ class ConsumableDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
         ]
 
     def get_queryset(self):
-        return self.object.assortment_set.order_by("title")
+        return self.object.assortment_set.annotate(
+            category_count=Count("category")
+        ).order_by("title")
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=Consumable.objects.all())

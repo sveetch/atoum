@@ -58,4 +58,4 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
         v.text
         for v in dom.find(".consumable-detail .consumable-assortments .item .title")
     ]
-    assert titles == ["Meats", "Sweat treats", "Vegetables"]
+    assert titles == ["Meats (3)", "Sweat treats (0)", "Vegetables (2)"]
