@@ -16,13 +16,21 @@ class AdvancedSearchFormHelper(DefaultFormHelper):
     DEFAULT_METHOD = "get"
     DEFAULT_CSSCLASSES = "search-advanced-form needs-validation"
 
+    def __init__(self, *args, **kwargs):
+        self.empty_query = kwargs.pop("empty_query", False)
+        self.empty_models = kwargs.pop("empty_models", False)
+        super().__init__(*args, **kwargs)
+
     def provide_action(self, value=None):
         self.form_action = reverse("atoum:search-results")
 
     def provide_layout(self, value=None, layout_args=None, layout_kwargs=None):
+        query_extras = {} if not self.empty_query else {"autofocus": ""}
+        models_extras = {} if not self.empty_models else {"checked": ""}
+
         self.layout = Layout(
             FieldWithButtons(
-                Field("q", placeholder=_("Search"), required=""),
+                Field("q", placeholder=_("Search"), required="", **query_extras),
                 StrictButton("Go!", type="submit", css_class="btn-primary"),
                 input_size="input-group-sm"
             ),
@@ -30,5 +38,6 @@ class AdvancedSearchFormHelper(DefaultFormHelper):
                 "models",
                 group_class="list-group-horizontal-md",
                 item_class="list-group-item-light",
+                **models_extras
             ),
         )

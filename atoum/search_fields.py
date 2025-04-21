@@ -9,7 +9,7 @@ from haystack.fields import (
 class DebuggingField:
     """
     A custom search field for CharField which is able to print the rendered indexes
-    content when it is allowed so from ``settings.FOO``.
+    content when it is allowed so from ``settings.ATOUM_INDEXES_DEBUG``.
     """
 
     def prepare_template(self, obj):
@@ -34,7 +34,7 @@ class DebuggingField:
 class CharField(DebuggingField, OriginalCharField):
     """
     A custom search field for CharField which is able to print the rendered indexes
-    content when it is allowed so from ``settings.FOO``.
+    content when it is allowed so from ``settings.ATOUM_INDEXES_DEBUG``.
     """
     pass
 
@@ -42,6 +42,6 @@ class CharField(DebuggingField, OriginalCharField):
 class EdgeNgramField(DebuggingField, OriginalEdgeNgramField):
     """
     A custom search field for EdgeNgramField which is able to print the rendered indexes
-    content when it is allowed so from ``settings.FOO``.
+    content when it is allowed so from ``settings.ATOUM_INDEXES_DEBUG``.
     """
     pass

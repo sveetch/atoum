@@ -11,18 +11,25 @@ class GlobalSearchForm(ModelSearchForm):
     """
 
     def __init__(self, *args, **kwargs):
+        empty_query = kwargs.pop("empty_query", False)
+        empty_models = kwargs.pop("empty_models", False)
+
         super().__init__(*args, **kwargs)
+
         # We don't want label since we use a group inline layout
         self.fields["q"].label = False
         self.fields["models"].label = False
 
-        self.helper = AdvancedSearchFormHelper()
+        self.helper = AdvancedSearchFormHelper(
+            empty_query=empty_query,
+            empty_models=empty_models,
+        )
 
     def search(self):
         """
         We don't keep the base queryset from inherit ModelSearchForm since it starts
         with an 'auto_query' that is not efficient with partial search. However this
-        drops the feature of some operator like ``-`` to negate keyword.
+        drops the feature of some operator like ``-`` to negate keywords.
         """
         if not self.is_valid():
             return self.no_query_found()
