@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import RedirectURLMixin
+from django.shortcuts import get_object_or_404
 from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.views import View
 from django.views.generic import TemplateView
@@ -70,15 +71,7 @@ class ShoppinglistDetailView(AtoumBreadcrumMixin, LoginRequiredMixin, SingleObje
         """
         Get the Shopping list object
         """
-        object_id = self.kwargs.get("pk")
-
-        try:
-            obj = Shopping.objects.filter(**{"pk": object_id}).get()
-        except Shopping.DoesNotExist:
-            msg = _("No {} found matching the query")
-            raise Http404(msg.format(self.model._meta.verbose_name))
-
-        return obj
+        return get_object_or_404(self.model, pk=self.kwargs.get("pk"))
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -101,15 +94,7 @@ class ShoppinglistToggleSelectionView(LoginRequiredMixin, RedirectURLMixin,
         """
         Get the Shopping list object
         """
-        object_id = self.kwargs.get("pk")
-
-        try:
-            obj = self.model.objects.filter(**{"pk": object_id}).get()
-        except self.model.DoesNotExist:
-            msg = _("No {} found matching the query")
-            raise Http404(msg.format(self.model._meta.verbose_name))
-
-        return obj
+        return get_object_or_404(self.model, pk=self.kwargs.get("pk"))
 
     def get(self, request, *args, **kwargs):
         self.next_page = reverse("atoum:dashboard")
@@ -140,34 +125,6 @@ class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
     operation_name = None
     raise_exception = True
 
-    def get_shopping_object(self):
-        """
-        Get the Shopping list object
-        """
-        object_id = self.kwargs.get("pk")
-
-        try:
-            obj = self.model.objects.filter(**{"pk": object_id}).get()
-        except self.model.DoesNotExist:
-            msg = _("No {} found matching the query")
-            raise Http404(msg.format(self.model._meta.verbose_name))
-
-        return obj
-
-    def get_product_object(self):
-        """
-        Get the Product object
-        """
-        object_id = self.kwargs.get("product_id")
-
-        try:
-            obj = Product.objects.filter(**{"pk": object_id}).get()
-        except Product.DoesNotExist:
-            msg = _("No {} found matching the query")
-            raise Http404(msg.format(Product._meta.verbose_name))
-
-        return obj
-
     def delete_shopping_item(self):
         """
         Remove the given product item from the Shopping list.
@@ -175,19 +132,17 @@ class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
         Returns:
             dict: Return dict with some values (id and quantity) from deleted object.
         """
-        try:
-            obj = ShoppingItem.objects.filter(
-                shopping=self.object,
-                product=self.product
-            ).get()
-        except ShoppingItem.DoesNotExist:
-            raise Http404
-        else:
-            # Memorize useful data from object because template still use it
-            memorized = {"id": obj.id, "quantity": obj.quantity}
-            # Finally deletes the item
-            obj.delete()
-            self.operation_name = "deletion"
+        obj = get_object_or_404(
+            ShoppingItem,
+            shopping=self.object,
+            product=self.product
+        )
+
+        # Memorize useful data from object because template still use it
+        memorized = {"id": obj.id, "quantity": obj.quantity}
+        # Finally deletes the item
+        obj.delete()
+        self.operation_name = "deletion"
 
         return memorized
 
@@ -273,8 +228,8 @@ class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
 
         Response will only contains the HTML for product controls for a creation.
         """
-        self.object = self.get_shopping_object()
-        self.product = self.get_product_object()
+        self.object = get_object_or_404(self.model, pk=self.kwargs.get("pk"))
+        self.product = get_object_or_404(Product, pk=self.kwargs.get("product_id"))
 
         self.shopping_item = self.delete_shopping_item()
 
@@ -295,8 +250,8 @@ class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
         Response will contains the HTML for product controls and possibly the new item
         row to append to the shopping list component in case of a creation.
         """
-        self.object = self.get_shopping_object()
-        self.product = self.get_product_object()
+        self.object = get_object_or_404(self.model, pk=self.kwargs.get("pk"))
+        self.product = get_object_or_404(Product, pk=self.kwargs.get("product_id"))
 
         quantity = self.parse_quantity()
         if quantity is None:

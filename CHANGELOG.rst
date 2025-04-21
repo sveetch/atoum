@@ -6,7 +6,9 @@ Changelog
 Development
 ***********
 
-Todo.
+* Search form now apply autofocus on query input if it is empty;
+* Search form now make all models as checked if none was checked;
+* Simplified some view code with usage ``get_object_or_404``;
 
 
 Version 0.4.0 - 2025/03/20

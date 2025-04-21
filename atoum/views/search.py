@@ -23,12 +23,12 @@ class GlobalSearchView(AtoumBreadcrumMixin, SearchView):
         ]
 
     def get_form_kwargs(self):
-        """
-        Returns the keyword arguments for instantiating the form.
-        """
         kwargs = super().get_form_kwargs()
 
         if self.request.method == "GET":
+            # Add some arguments to notify some fields are empty
+            # TODO: Usage of these args (from the crispy layout) should have a test
+            # coverage
             kwargs.update({
                 "empty_query": not self.request.GET.get("q"),
                 "empty_models": not self.request.GET.get("models"),
