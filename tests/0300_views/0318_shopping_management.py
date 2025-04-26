@@ -40,7 +40,7 @@ def test_anonymous(client, db, initial_catalog):  # noqa: F811
     assert response.status_code == 403
 
 
-def test_no_shoppinglist_inventory(client, db, initial_catalog):  # noqa: F811
+def test_no_shopping_inventory(client, db, initial_catalog):  # noqa: F811
     """
     If there is no opened shopping list in user session a POST request will receive a
     404 response.

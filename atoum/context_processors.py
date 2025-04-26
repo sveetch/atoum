@@ -38,5 +38,5 @@ def session_data_processor(request):
             inventory = ShoppingListInventory(obj=shopping_obj)
 
     return {
-        "shoppinglist_inventory": inventory,
+        "shopping_inventory": inventory,
     }

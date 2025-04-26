@@ -9,7 +9,7 @@ def test_empty(client, db, rf):
     rf.session = client.session
     context = session_data_processor(rf)
 
-    assert context == {"shoppinglist_inventory": None}
+    assert context == {"shopping_inventory": None}
 
 
 def test_opened_exists(client, db, rf):
@@ -31,9 +31,9 @@ def test_opened_exists(client, db, rf):
     rf.session = session
     context = session_data_processor(rf)
 
-    assert "shoppinglist_inventory" in context
-    assert context["shoppinglist_inventory"] is not None
-    assert context["shoppinglist_inventory"].obj.id == opened_shopping.id
+    assert "shopping_inventory" in context
+    assert context["shopping_inventory"] is not None
+    assert context["shopping_inventory"].obj.id == opened_shopping.id
 
 
 def test_opened_dont_exists(client, db, rf):
@@ -49,4 +49,4 @@ def test_opened_dont_exists(client, db, rf):
     rf.session = session
     context = session_data_processor(rf)
 
-    assert context["shoppinglist_inventory"] is None
+    assert context["shopping_inventory"] is None

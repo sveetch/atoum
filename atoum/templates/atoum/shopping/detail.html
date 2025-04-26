@@ -46,12 +46,12 @@
 
                 <p class="pt-1">
                     <small><span id="shopping-detail-{{ shopping_object.id }}-status">
-                    {% include "atoum/shopping/partials/list_status.html" with shoppinglist_inventory=shoppinglist_inventory.obj shopping_object=shopping_object only %}
+                    {% include "atoum/shopping/partials/list_status.html" with shopping_inventory=shopping_inventory.obj shopping_object=shopping_object only %}
                     </span></small>
                 </p>
             </div>
 
-            {% if not shoppinglist_inventory or shoppinglist_inventory.obj.id != shopping_object.id %}
+            {% if not shopping_inventory or shopping_inventory.obj.id != shopping_object.id %}
             <p class="controls">
                 <a href="{% url "atoum:shopping-list-open-selection" pk=shopping_object.id %}"
                    class="btn btn-outline-primary">

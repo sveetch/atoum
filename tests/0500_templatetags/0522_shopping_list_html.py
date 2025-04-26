@@ -33,7 +33,7 @@ def test_no_opened_shopping(client, db, rf, settings):
             "LANGUAGE_CODE": "en",
             "debug": False,
             "user": user,
-            "shoppinglist_inventory": None,
+            "shopping_inventory": None,
         }
     )
     render = shopping_list_html(context)
@@ -64,7 +64,7 @@ def test_render_opened_shopping(client, db, initial_catalog, rf,  # noqa: F811
             "LANGUAGE_CODE": "en",
             "debug": False,
             "user": user,
-            "shoppinglist_inventory": ShoppingListInventory(obj=shopping),
+            "shopping_inventory": ShoppingListInventory(obj=shopping),
         }
     )
     render = shopping_list_html(context)

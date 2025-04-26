@@ -1,18 +1,18 @@
 {% load i18n %}{% spaceless %}
-    {% if shoppinglist_inventory %}
+    {% if shopping_inventory %}
         <div id="aside-shopping">
             <div class="head">
                 <h3 class="title h6">
-                    {% if shoppinglist_inventory.obj.done %}
+                    {% if shopping_inventory.obj.done %}
                         <i class="bi bi-cart-check"></i>
                     {% else %}
                         <i class="bi bi-cart3"></i>
                     {% endif %}
-                    {{ shoppinglist_inventory.obj }}
+                    {{ shopping_inventory.obj }}
                 </h3>
 
                 <div class="controls btn-group btn-group-sm" role="group" aria-label="Current shopping list controls">
-                    <a href="{{ shoppinglist_inventory.obj.get_absolute_url }}" class="btn btn-outline-primary">
+                    <a href="{{ shopping_inventory.obj.get_absolute_url }}" class="btn btn-outline-primary">
                         {% translate "Show" %}
                     </a>
                     <a href="{% url "atoum:shopping-list-close-selection" %}?next={{ request.path }}" class="btn btn-outline-primary">
@@ -27,8 +27,8 @@
                 </div>
             </div>{% endcomment %}
 
-            {% if shoppinglist_inventory.items %}
-                <table class="table table-hover table-bordered" id="shopping-inventory-{{ shoppinglist_inventory.obj.id }}">
+            {% if shopping_inventory.items %}
+                <table class="table table-hover table-bordered" id="shopping-inventory-{{ shopping_inventory.obj.id }}">
                     <thead>
                         <tr>
                             <th>{% translate "Quantity" %}</th>
@@ -36,9 +36,9 @@
                             <th>{% translate "Done" %}</th>
                         </tr>
                     </thead>
-                    <tbody id="shopping-inventory-{{ shoppinglist_inventory.obj.id }}-rows">
-                        {% for item in shoppinglist_inventory.items %}
-                            {% include "atoum/shopping/partials/opened_list_item.html" with shoppinglist_inventory=shoppinglist_inventory item=item only %}
+                    <tbody id="shopping-inventory-{{ shopping_inventory.obj.id }}-rows">
+                        {% for item in shopping_inventory.items %}
+                            {% include "atoum/shopping/partials/opened_list_item.html" with shopping_inventory=shopping_inventory item=item only %}
                         {% endfor %}
                     </tbody>
                 </table>

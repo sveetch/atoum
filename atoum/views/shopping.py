@@ -128,7 +128,7 @@ class ShoppinglistManageProductView(LoginRequiredMixin, TemplateView):
     TODO:
         * Fix conflict of controls from detail that still manage inventory even they are
           not the same shopping object;
-        * Rename 'shoppinglist_inventory' variable to 'shoppinglist_inventory' everywhere
+        * Rename 'shopping_inventory' variable to 'shopping_inventory' everywhere
           (tag, processors, templates and here);
         * The same with 'atoum_shopping_inventory' to 'atoum_shopping_inventory';
         * Ensure the inventory is optional so we can manage a shopping from its detail
@@ -313,7 +313,7 @@ class ShoppinglistManageProductView(LoginRequiredMixin, TemplateView):
 
         # Get shopping list inventory from session
         inventory = session_data_processor(self.request).get(
-            "shoppinglist_inventory",
+            "shopping_inventory",
             None
         )
 

@@ -86,7 +86,7 @@ def shopping_list_html(context, **kwargs):
         "LANGUAGE_CODE": context.get("LANGUAGE_CODE"),
         "debug": context.get("debug", False),
         "user": context.get("user", None),
-        "shoppinglist_inventory": context.get("shoppinglist_inventory", None),
+        "shopping_inventory": context.get("shopping_inventory", None),
     })
 
 
@@ -133,7 +133,7 @@ def shopping_product_controls(context, product, **kwargs):
         kwargs.get("template") or settings.ATOUM_SHOPPING_PRODUCT_CONTROLS_TEMPLATE
     )
 
-    shopping_inventory = context.get("shoppinglist_inventory", None)
+    shopping_inventory = context.get("shopping_inventory", None)
 
     tag_context = {
         "request": context.request,
@@ -142,7 +142,7 @@ def shopping_product_controls(context, product, **kwargs):
         "debug": context.get("debug", False),
         "user": context.get("user", None),
         "shopping_object": shopping_object,
-        "shoppinglist_inventory": shopping_inventory,
+        "shopping_inventory": shopping_inventory,
         "is_product_selected": (
             shopping_inventory.is_product_selected(product)
             if shopping_inventory else False

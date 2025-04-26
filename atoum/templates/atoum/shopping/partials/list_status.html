@@ -1,7 +1,7 @@
 {% load i18n %}{% spaceless %}
     {% if shopping_object.done %}
         <i class="bi bi-cart-check state-done"></i> {% translate "Done" %}
-    {% elif shoppinglist_inventory and shoppinglist_inventory.id == shopping_object.id %}
+    {% elif shopping_inventory and shopping_inventory.id == shopping_object.id %}
         <i class="bi bi-cart-plus state-open"></i> {% translate "Open" %}
     {% else %}
         <i class="bi bi-cart2 state-todo"></i> {% translate "To do" %}

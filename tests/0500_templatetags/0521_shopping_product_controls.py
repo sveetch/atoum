@@ -31,7 +31,7 @@ def test_product_controls_anonymous(db, initial_catalog, rf, settings):  # noqa:
             "LANGUAGES": settings.LANGUAGES,
             "LANGUAGE_CODE": "en",
             "debug": False,
-            "shoppinglist_inventory": ShoppingListInventory(obj=shopping),
+            "shopping_inventory": ShoppingListInventory(obj=shopping),
         }
     )
     assert shopping_product_controls(context, corn) == ""
@@ -59,7 +59,7 @@ def test_product_controls_in_inventory(client, db, initial_catalog, rf, settings
             "LANGUAGE_CODE": "en",
             "debug": False,
             "user": user,
-            "shoppinglist_inventory": ShoppingListInventory(obj=shopping),
+            "shopping_inventory": ShoppingListInventory(obj=shopping),
         }
     )
     render = shopping_product_controls(context, corn)
@@ -94,7 +94,7 @@ def test_product_controls_not_in_inventory(client, db, initial_catalog, rf, sett
             "LANGUAGE_CODE": "en",
             "debug": False,
             "user": user,
-            "shoppinglist_inventory": ShoppingListInventory(obj=shopping),
+            "shopping_inventory": ShoppingListInventory(obj=shopping),
         }
     )
     render = shopping_product_controls(context, wing)
