@@ -285,7 +285,7 @@ msgstr "Aucun motif de recherche n'a été soumis."
 #: templates/atoum/shopping/detail.html:7 templates/atoum/shopping/index.html:8
 #: views/shopping.py:21
 msgid "Shopping lists"
-msgstr "Listes de course"
+msgstr "Listes de courses"
 
 #: templates/atoum/shopping/detail.html:46
 #: templates/atoum/shopping/index.html:51
@@ -317,7 +317,7 @@ msgstr "Liste de courses"
 
 #: templates/atoum/shopping/index.html:24
 msgid "Add a new Shopping list"
-msgstr "Ajouter une nouvelle liste de course"
+msgstr "Ajouter une nouvelle liste de courses"
 
 #: templates/atoum/shopping/index.html:55
 #: templates/atoum/shopping/partials/tag_shopping_aside_html.html:16
@@ -326,7 +326,7 @@ msgstr "Voir"
 
 #: templates/atoum/shopping/index.html:64
 msgid "No shopping list yet."
-msgstr "Aucune liste de course pour l'instant."
+msgstr "Aucune liste de courses pour l'instant."
 
 #: templates/atoum/shopping/partials/tag_shopping_aside_html.html:19
 msgid "Close"

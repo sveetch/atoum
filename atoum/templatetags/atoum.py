@@ -86,8 +86,6 @@ def shopping_list_html(context, **kwargs):
         "LANGUAGE_CODE": context.get("LANGUAGE_CODE"),
         "debug": context.get("debug", False),
         "user": context.get("user", None),
-        # TODO: name is not accurate it should be something like 'shoppinglist_inventory'
-        # everywhere
         "shoppinglist_inventory": context.get("shoppinglist_inventory", None),
     })
 
@@ -97,11 +95,21 @@ def shopping_product_controls(context, product, **kwargs):
     """
     Render HTML of available controls for a product against an opened shopping list.
 
+    TODO: We are adding 'shopping' for the proper shopping object to use. It could be
+    given when on a Shopping detail to have controls working only for the detailled
+    shopping object but optionnal since controls elsewhere (like product index or
+    category detail) should work only with an inventory (shopping list or futur stock).
+
+    This component is reserved to authenticated user.
+
+    Ensure it does not fails if there is no shopping or inventory (just return empty
+    string?).
+
     Exemple:
         Basic usage: ::
 
             {% load atoum %}
-            {% shopping_product_control PRODUCT [template="foo/bar.html"] %}
+            {% shopping_product_control SHOPPING PRODUCT [template="foo/bar.html"] %}
 
     Arguments:
         product (atoum.models.Product): Product object.
@@ -109,30 +117,41 @@ def shopping_product_controls(context, product, **kwargs):
             context variable for template where the tag is included. This is only used
             with an Article object, so it should be safe to be empty for a Category.
 
+    Keyword Arguments:
+        shopping (atoum.models.Shopping): Shopping object to use instead of inventory.
+
     Returns:
         string: Rendered template tag fragment.
 
     """  # noqa: E501
+    user = getattr(context.request, "user", None)
+    if not user or not user.is_authenticated:
+        return ""
+
+    shopping_object = kwargs.get("shopping")
     template_path = (
         kwargs.get("template") or settings.ATOUM_SHOPPING_PRODUCT_CONTROLS_TEMPLATE
     )
 
-    shoppinglist_inventory = context.get("shoppinglist_inventory", None)
+    shopping_inventory = context.get("shoppinglist_inventory", None)
 
-    return loader.get_template(template_path).render({
+    tag_context = {
         "request": context.request,
         "LANGUAGES": context.get("LANGUAGES"),
         "LANGUAGE_CODE": context.get("LANGUAGE_CODE"),
         "debug": context.get("debug", False),
         "user": context.get("user", None),
-        "shoppinglist_inventory": shoppinglist_inventory,
+        "shopping_object": shopping_object,
+        "shoppinglist_inventory": shopping_inventory,
         "is_product_selected": (
-            shoppinglist_inventory.is_product_selected(product)
-            if shoppinglist_inventory else False
+            shopping_inventory.is_product_selected(product)
+            if shopping_inventory else False
         ),
         "product": product,
         "product_shopping_item": (
-            shoppinglist_inventory.item_for_product(product)
-            if shoppinglist_inventory else False
+            shopping_inventory.item_for_product(product)
+            if shopping_inventory else False
         ),
-    })
+    }
+
+    return loader.get_template(template_path).render(tag_context)

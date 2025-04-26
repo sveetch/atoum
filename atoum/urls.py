@@ -93,6 +93,7 @@ urlpatterns = [
         ShoppinglistIndexView.as_view(),
         name="shopping-list-index"
     ),
+    #TODO: Rename with "inventory" instead
     path(
         "shopping/close-selection/",
         ShoppinglistToggleSelectionView.as_view(),
@@ -103,6 +104,7 @@ urlpatterns = [
         ShoppinglistDetailView.as_view(),
         name="shopping-list-detail"
     ),
+    #TODO: Rename with "inventory" instead
     path(
         "shopping/<int:pk>/open-selection/",
         ShoppinglistToggleSelectionView.as_view(),

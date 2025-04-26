@@ -6,9 +6,14 @@ Changelog
 Development
 ***********
 
-* Search form now apply autofocus on query input if it is empty;
-* Search form now make all models as checked if none was checked;
+* Search form now applies autofocus on query input if it is empty;
+* Search form now makes all models as checked if none was checked;
 * Simplified some view code with usage ``get_object_or_404``;
+* Made some renaming so the vague term *opened shopping list* is renamed to
+  *shopping inventory*;
+* Implemented 'done' field control to update a product state;
+* Changed shopping management so it work also from shopping detail and not anymore
+  only from inventory;
 
 
 Version 0.4.0 - 2025/03/20
