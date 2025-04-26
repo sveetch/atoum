@@ -110,10 +110,10 @@ class ShoppinglistToggleSelectionView(LoginRequiredMixin, RedirectURLMixin, View
         # If shopping id is given add it as opened in session
         if "pk" in self.kwargs:
             self.object = self.get_object()
-            self.request.session["atoum_shopping_selection"] = self.object.id
+            self.request.session["atoum_shopping_inventory"] = self.object.id
         # Else assume we have to close any opened shopping from session
         else:
-            del self.request.session["atoum_shopping_selection"]
+            del self.request.session["atoum_shopping_inventory"]
 
         return HttpResponseRedirect(url)
 
@@ -126,8 +126,13 @@ class ShoppinglistManageProductView(LoginRequiredMixin, TemplateView):
     document.
 
     TODO:
-        * Finish the patch
-        * Ensure the inventory/opened_shoppinglist is optional
+        * Fix conflict of controls from detail that still manage inventory even they are
+          not the same shopping object;
+        * Rename 'shoppinglist_inventory' variable to 'shoppinglist_inventory' everywhere
+          (tag, processors, templates and here);
+        * The same with 'atoum_shopping_inventory' to 'atoum_shopping_inventory';
+        * Ensure the inventory is optional so we can manage a shopping from its detail
+          view, not only for an inventory;
     """
     model = Shopping
     template_name = "atoum/shopping/manage_inventory.html"
@@ -308,7 +313,7 @@ class ShoppinglistManageProductView(LoginRequiredMixin, TemplateView):
 
         # Get shopping list inventory from session
         inventory = session_data_processor(self.request).get(
-            "opened_shoppinglist",
+            "shoppinglist_inventory",
             None
         )
 

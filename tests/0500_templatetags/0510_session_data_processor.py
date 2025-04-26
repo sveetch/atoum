@@ -9,7 +9,7 @@ def test_empty(client, db, rf):
     rf.session = client.session
     context = session_data_processor(rf)
 
-    assert context == {"opened_shoppinglist": None}
+    assert context == {"shoppinglist_inventory": None}
 
 
 def test_opened_exists(client, db, rf):
@@ -25,15 +25,15 @@ def test_opened_exists(client, db, rf):
 
     # Set a shopping list different than the one given in URL args
     session = client.session
-    session["atoum_shopping_selection"] = opened_shopping.id
+    session["atoum_shopping_inventory"] = opened_shopping.id
     session.save()
 
     rf.session = session
     context = session_data_processor(rf)
 
-    assert "opened_shoppinglist" in context
-    assert context["opened_shoppinglist"] is not None
-    assert context["opened_shoppinglist"].obj.id == opened_shopping.id
+    assert "shoppinglist_inventory" in context
+    assert context["shoppinglist_inventory"] is not None
+    assert context["shoppinglist_inventory"].obj.id == opened_shopping.id
 
 
 def test_opened_dont_exists(client, db, rf):
@@ -43,10 +43,10 @@ def test_opened_dont_exists(client, db, rf):
     """
     # Set a shopping list different than the one given in URL args
     session = client.session
-    session["atoum_shopping_selection"] = "520"
+    session["atoum_shopping_inventory"] = "520"
     session.save()
 
     rf.session = session
     context = session_data_processor(rf)
 
-    assert context["opened_shoppinglist"] is None
+    assert context["shoppinglist_inventory"] is None

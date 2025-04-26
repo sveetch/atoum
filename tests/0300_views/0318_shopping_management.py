@@ -18,7 +18,7 @@ def test_anonymous(client, db, initial_catalog):  # noqa: F811
 
     # Set opened shopping list (even that in practice it should not be possible)
     session = client.session
-    session["atoum_shopping_selection"] = shopping.id
+    session["atoum_shopping_inventory"] = shopping.id
     session.save()
 
     # Post request
@@ -40,7 +40,7 @@ def test_anonymous(client, db, initial_catalog):  # noqa: F811
     assert response.status_code == 403
 
 
-def test_no_opened_shoppinglist(client, db, initial_catalog):  # noqa: F811
+def test_no_shoppinglist_inventory(client, db, initial_catalog):  # noqa: F811
     """
     If there is no opened shopping list in user session a POST request will receive a
     404 response.
@@ -72,7 +72,7 @@ def test_shopping_different_shoppinglist(client, db, initial_catalog):  # noqa: 
 
     # Set a shopping list different than the one given in URL args
     session = client.session
-    session["atoum_shopping_selection"] = opened_shopping.id
+    session["atoum_shopping_inventory"] = opened_shopping.id
     session.save()
 
     url = reverse("atoum:shopping-list-product", kwargs={
@@ -103,7 +103,7 @@ def test_post_add(client, db, initial_catalog, qty_value, row, delete,  # noqa: 
 
     # Make Shopping list opened in session
     session = client.session
-    session["atoum_shopping_selection"] = shopping.id
+    session["atoum_shopping_inventory"] = shopping.id
     session.save()
 
     # Post request to add product item in list
@@ -126,7 +126,7 @@ def test_post_add(client, db, initial_catalog, qty_value, row, delete,  # noqa: 
         shopping=shopping,
         product=wing
     ).get()
-    wing_item_cssid = "#shopping-list-{shopping}-item-{item}".format(
+    wing_item_cssid = "#shopping-inventory-{shopping}-item-{item}".format(
         shopping=shopping.id,
         item=wing_item.id,
     )
@@ -153,7 +153,7 @@ def test_post_add_fail(client, db, initial_catalog, qty_value):  # noqa: F811
 
     # Make Shopping list opened in session
     session = client.session
-    session["atoum_shopping_selection"] = shopping.id
+    session["atoum_shopping_inventory"] = shopping.id
     session.save()
 
     # Post request to add product item in list
@@ -185,7 +185,7 @@ def test_post_edit(client, db, initial_catalog, qty_value, row,  # noqa: F811
 
     # Make Shopping list opened in session
     session = client.session
-    session["atoum_shopping_selection"] = shopping.id
+    session["atoum_shopping_inventory"] = shopping.id
     session.save()
 
     # Get the existing shopping item
@@ -193,7 +193,7 @@ def test_post_edit(client, db, initial_catalog, qty_value, row,  # noqa: F811
         shopping=shopping,
         product=corn
     ).get()
-    corn_item_cssid = "#shopping-list-{shopping}-item-{item}".format(
+    corn_item_cssid = "#shopping-inventory-{shopping}-item-{item}".format(
         shopping=shopping.id,
         item=corn_item.id,
     )
@@ -234,7 +234,7 @@ def test_post_edit_fail(client, db, initial_catalog, qty_value):  # noqa: F811
 
     # Make Shopping list opened in session
     session = client.session
-    session["atoum_shopping_selection"] = shopping.id
+    session["atoum_shopping_inventory"] = shopping.id
     session.save()
 
     # Get the existing shopping item
@@ -242,7 +242,7 @@ def test_post_edit_fail(client, db, initial_catalog, qty_value):  # noqa: F811
         shopping=shopping,
         product=corn
     ).get()
-    corn_item_cssid = "#shopping-list-{shopping}-item-{item}".format(
+    corn_item_cssid = "#shopping-inventory-{shopping}-item-{item}".format(
         shopping=shopping.id,
         item=corn_item.id,
     )
@@ -272,7 +272,7 @@ def test_post_delete(client, db, initial_catalog):  # noqa: F811
 
     # Make Shopping list opened in session
     session = client.session
-    session["atoum_shopping_selection"] = shopping.id
+    session["atoum_shopping_inventory"] = shopping.id
     session.save()
 
     # Get the existing shopping item
@@ -280,7 +280,7 @@ def test_post_delete(client, db, initial_catalog):  # noqa: F811
         shopping=shopping,
         product=corn
     ).get()
-    corn_item_cssid = "#shopping-list-{shopping}-item-{item}".format(
+    corn_item_cssid = "#shopping-inventory-{shopping}-item-{item}".format(
         shopping=shopping.id,
         item=corn_item.id,
     )
@@ -339,7 +339,7 @@ def test_patch_done(client, db, initial_catalog):  # noqa: F811
 
     # Make Shopping list opened in session
     session = client.session
-    session["atoum_shopping_selection"] = shopping.id
+    session["atoum_shopping_inventory"] = shopping.id
     session.save()
 
     # Get the existing shopping item
@@ -353,11 +353,11 @@ def test_patch_done(client, db, initial_catalog):  # noqa: F811
         "pk": shopping.id,
         "product_id": wing.id,
     })
-    corn_done_cssid = "#shopping-list-{shopping}-item-{item}-done".format(
+    corn_done_cssid = "#shopping-inventory-{shopping}-item-{item}-done".format(
         shopping=shopping.id,
         item=corn_item.id,
     )
-    wing_done_cssid = "#shopping-list-{shopping}-item-{item}-done".format(
+    wing_done_cssid = "#shopping-inventory-{shopping}-item-{item}-done".format(
         shopping=shopping.id,
         item=wing_item.id,
     )

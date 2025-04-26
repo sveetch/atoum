@@ -19,24 +19,24 @@ def session_data_processor(request):
     Returns:
         dict: Variables to append to the template context.
     """
-    shopping_id = request.session.get("atoum_shopping_selection")
+    shopping_id = request.session.get("atoum_shopping_inventory")
     inventory = None
     # Possible anonymous user with an ID in session (that should not occurs in practice)
     if (
         (not hasattr(request, "user") or not request.user.is_authenticated) and
-        "atoum_shopping_selection" in request.session
+        "atoum_shopping_inventory" in request.session
     ):
-        del request.session["atoum_shopping_selection"]
+        del request.session["atoum_shopping_inventory"]
     # Stored ID in session for an authenticated user
     elif shopping_id:
         try:
             shopping_obj = Shopping.objects.filter(**{"pk": shopping_id}).get()
         except Shopping.DoesNotExist:
             # Purge session item if it does not exists anymore
-            del request.session["atoum_shopping_selection"]
+            del request.session["atoum_shopping_inventory"]
         else:
             inventory = ShoppingListInventory(obj=shopping_obj)
 
     return {
-        "opened_shoppinglist": inventory,
+        "shoppinglist_inventory": inventory,
     }

@@ -33,7 +33,7 @@ def test_authenticated_close(client, db):
 
     # Make Shopping list opened in session
     session = client.session
-    session["atoum_shopping_selection"] = shopping.id
+    session["atoum_shopping_inventory"] = shopping.id
     session.save()
 
     consommables_url = reverse("atoum:consumable-index")
@@ -42,17 +42,17 @@ def test_authenticated_close(client, db):
     response = client.get(url, data={"next": consommables_url}, follow=True)
     assert response.redirect_chain == [(consommables_url, 302)]
     assert response.status_code == 200
-    assert "atoum_shopping_selection" not in client.session
+    assert "atoum_shopping_inventory" not in client.session
 
     # With an invalid value does not raise error since it is just blindly purged
     session = client.session
-    session["atoum_shopping_selection"] = "wrong"
+    session["atoum_shopping_inventory"] = "wrong"
     session.save()
 
     response = client.get(url, data={"next": consommables_url}, follow=True)
     assert response.redirect_chain == [(consommables_url, 302)]
     assert response.status_code == 200
-    assert "atoum_shopping_selection" not in client.session
+    assert "atoum_shopping_inventory" not in client.session
 
 
 def test_authenticated_open_invalid(client, db):
@@ -67,7 +67,7 @@ def test_authenticated_open_invalid(client, db):
     response = client.get(url, follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 404
-    assert "atoum_shopping_selection" not in client.session
+    assert "atoum_shopping_inventory" not in client.session
 
 
 def test_authenticated_open_valid(client, db):
@@ -90,8 +90,8 @@ def test_authenticated_open_valid(client, db):
     response = client.get(url, follow=True)
     assert response.redirect_chain == [(dashboard_url, 302)]
     assert response.status_code == 200
-    assert "atoum_shopping_selection" in client.session
-    assert client.session["atoum_shopping_selection"] == shopping_1.id
+    assert "atoum_shopping_inventory" in client.session
+    assert client.session["atoum_shopping_inventory"] == shopping_1.id
 
     # When session has already an opened ID it will be overwritten, also the given
     # URL path for redirection is followed
@@ -99,5 +99,5 @@ def test_authenticated_open_valid(client, db):
     response = client.get(url, data={"next": consommables_url}, follow=True)
     assert response.redirect_chain == [(consommables_url, 302)]
     assert response.status_code == 200
-    assert "atoum_shopping_selection" in client.session
-    assert client.session["atoum_shopping_selection"] == shopping_2.id
+    assert "atoum_shopping_inventory" in client.session
+    assert client.session["atoum_shopping_inventory"] == shopping_2.id

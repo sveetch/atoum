@@ -36,7 +36,7 @@ def test_product_controls(client, db, initial_catalog, rf, settings):  # noqa: F
             "LANGUAGE_CODE": "en",
             "debug": False,
             "user": user,
-            "opened_shoppinglist": ShoppingListInventory(obj=shopping),
+            "shoppinglist_inventory": ShoppingListInventory(obj=shopping),
         }
     )
     render = shopping_product_controls(context, corn)
@@ -54,7 +54,7 @@ def test_product_controls(client, db, initial_catalog, rf, settings):  # noqa: F
             "LANGUAGE_CODE": "en",
             "debug": False,
             "user": user,
-            "opened_shoppinglist": ShoppingListInventory(obj=shopping),
+            "shoppinglist_inventory": ShoppingListInventory(obj=shopping),
         }
     )
     render = shopping_product_controls(context, wing)

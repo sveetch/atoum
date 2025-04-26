@@ -33,7 +33,7 @@ def test_no_opened_shopping(client, db, rf, settings):
             "LANGUAGE_CODE": "en",
             "debug": False,
             "user": user,
-            "opened_shoppinglist": None,
+            "shoppinglist_inventory": None,
         }
     )
     render = shopping_list_html(context)
@@ -64,7 +64,7 @@ def test_render_opened_shopping(client, db, initial_catalog, rf,  # noqa: F811
             "LANGUAGE_CODE": "en",
             "debug": False,
             "user": user,
-            "opened_shoppinglist": ShoppingListInventory(obj=shopping),
+            "shoppinglist_inventory": ShoppingListInventory(obj=shopping),
         }
     )
     render = shopping_list_html(context)
@@ -77,6 +77,6 @@ def test_render_opened_shopping(client, db, initial_catalog, rf,  # noqa: F811
 
     item_titles = [
         v.cssselect(".title")[0].text + ":" + v.cssselect(".quantity")[0].text
-        for v in dom.find("#shopping-list-{} tbody tr".format(shopping.id))
+        for v in dom.find("#shopping-inventory-{} tbody tr".format(shopping.id))
     ]
     assert item_titles == ["Corn:1", "Wing:42"]

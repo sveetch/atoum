@@ -88,7 +88,7 @@ def shopping_list_html(context, **kwargs):
         "user": context.get("user", None),
         # TODO: name is not accurate it should be something like 'shoppinglist_inventory'
         # everywhere
-        "opened_shoppinglist": context.get("opened_shoppinglist", None),
+        "shoppinglist_inventory": context.get("shoppinglist_inventory", None),
     })
 
 
@@ -117,7 +117,7 @@ def shopping_product_controls(context, product, **kwargs):
         kwargs.get("template") or settings.ATOUM_SHOPPING_PRODUCT_CONTROLS_TEMPLATE
     )
 
-    opened_shoppinglist = context.get("opened_shoppinglist", None)
+    shoppinglist_inventory = context.get("shoppinglist_inventory", None)
 
     return loader.get_template(template_path).render({
         "request": context.request,
@@ -125,14 +125,14 @@ def shopping_product_controls(context, product, **kwargs):
         "LANGUAGE_CODE": context.get("LANGUAGE_CODE"),
         "debug": context.get("debug", False),
         "user": context.get("user", None),
-        "opened_shoppinglist": opened_shoppinglist,
+        "shoppinglist_inventory": shoppinglist_inventory,
         "is_product_selected": (
-            opened_shoppinglist.is_product_selected(product)
-            if opened_shoppinglist else False
+            shoppinglist_inventory.is_product_selected(product)
+            if shoppinglist_inventory else False
         ),
         "product": product,
         "product_shopping_item": (
-            opened_shoppinglist.item_for_product(product)
-            if opened_shoppinglist else False
+            shoppinglist_inventory.item_for_product(product)
+            if shoppinglist_inventory else False
         ),
     })
