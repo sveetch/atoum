@@ -2,7 +2,10 @@
     {% comment %}
     Product item row exists in this partial template so it can be
     shared from both shopping list render and the shopping management view with
-    htmx
+    htmx.
+
+    It does not include HTML for "deletion" and "patch_field_done" operations since it
+    is simple enough to be on its own apart in management template.
     {% endcomment %}
     {% if operation == "addition" %}
         <tbody hx-swap-oob="afterbegin:#shopping-list-{{ opened_shoppinglist.obj.id }}-rows">
@@ -13,7 +16,8 @@
             {% if operation == "addition" or operation == "edition" %} class="bump"{% endif %}>
             <td class="quantity">{{ item.quantity }}</td>
             <td class="title">{{ item.product.title }}</td>
-            <td class="done">
+            <td class="done"
+                id="shopping-list-{{ opened_shoppinglist.obj.id }}-item-{{ item.id }}-done">
                 {% if item.done %}
                     <i class="bi bi-check-circle-fill"></i>
                 {% else %}

@@ -48,26 +48,7 @@ class ShoppingAdmin(admin.ModelAdmin):
         """
         Customize inlines item saving (because it can not be done on the inline form
         itself).
-
-        TODO: When creating a new fresh Shopping object, if no items have been added
-        the following cause the Shopping object to be directly marked as 'done'. It's
-        not what would be expected, at least a new object without initial items should
-        let it be 'undone'.
         """
         super().save_formset(request, form, formset, change)
 
-        if (
-            form.instance.done is False and
-            ShoppingItem.objects.filter(shopping=form.instance, done=False).count() == 0
-        ):
-            # Items are allowed to make the shopping done if they are all done
-            # themselves
-            form.instance.done = True
-            form.instance.save()
-        elif (
-            form.instance.done is True and
-            ShoppingItem.objects.filter(shopping=form.instance, done=False).count() > 0
-        ):
-            # Items are allowed to make the shopping undone if one of them is undone
-            form.instance.done = False
-            form.instance.save()
+        form.instance.update_shopping_done()

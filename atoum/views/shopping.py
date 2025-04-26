@@ -2,11 +2,10 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import RedirectURLMixin
 from django.shortcuts import get_object_or_404
-from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest, QueryDict
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic import ListView
-from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -41,8 +40,7 @@ class ShoppinglistIndexView(AtoumBreadcrumMixin, LoginRequiredMixin, ListView):
         ]
 
 
-class ShoppinglistDetailView(AtoumBreadcrumMixin, LoginRequiredMixin, SingleObjectMixin,
-                             TemplateView):
+class ShoppinglistDetailView(AtoumBreadcrumMixin, LoginRequiredMixin, TemplateView):
     """
     Shopping list detail
     """
@@ -73,14 +71,22 @@ class ShoppinglistDetailView(AtoumBreadcrumMixin, LoginRequiredMixin, SingleObje
         """
         return get_object_or_404(self.model, pk=self.kwargs.get("pk"))
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            "object": self.object,
+            self.context_object_name: self.object,
+        })
+
+        return context
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
         return super().get(request, *args, **kwargs)
 
 
-class ShoppinglistToggleSelectionView(LoginRequiredMixin, RedirectURLMixin,
-                                      SingleObjectMixin, View):
+class ShoppinglistToggleSelectionView(LoginRequiredMixin, RedirectURLMixin, View):
     """
     View to open or close a Shopping list for product selection.
 
@@ -112,18 +118,50 @@ class ShoppinglistToggleSelectionView(LoginRequiredMixin, RedirectURLMixin,
         return HttpResponseRedirect(url)
 
 
-class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
-                                    TemplateView):
+class ShoppinglistManageProductView(LoginRequiredMixin, TemplateView):
     """
-    View to add or remove a product from a Shopping list.
+    View to add, edit or remove a product of a Shopping list.
 
     This has been done for usage from htmx so it won't return a proper HTML page
     document.
+
+    TODO:
+        * Finish the patch
+        * Ensure the inventory/opened_shoppinglist is optional
     """
     model = Shopping
-    template_name = "atoum/shopping/manage_opened_list.html"
+    template_name = "atoum/shopping/manage_inventory.html"
     operation_name = None
     raise_exception = True
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            "shopping_object": self.object,
+            "product": self.product,
+            "shopping_item": self.shopping_item,
+            "operation": self.operation_name,
+        })
+
+        return context
+
+    def parse_quantity(self):
+        """
+        Parse given quantity from POST arguments.
+
+        Returns:
+            integer: Parsed quantity if it is a valid integer else returns a null
+                value.
+        """
+        try:
+            quantity = int(self.request.POST.get("quantity", 1))
+        except ValueError:
+            return None
+
+        if not quantity or quantity < 1:
+            quantity = 0
+
+        return quantity
 
     def delete_shopping_item(self):
         """
@@ -187,39 +225,50 @@ class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
 
         return obj
 
-    def parse_quantity(self):
+    def patch_shopping_item(self, done=None):
         """
-        Parse given quantity from POST arguments.
-
-        Returns:
-            integer: Parsed quantity if it is a valid integer else returns a null
-                value.
+        Update attribute ``done`` of the Shopping item.
         """
-        try:
-            quantity = int(self.request.POST.get("quantity", 1))
-        except ValueError:
-            return None
+        if done is None:
+            return
 
-        if not quantity or quantity < 1:
-            quantity = 0
+        obj = get_object_or_404(
+            ShoppingItem,
+            shopping=self.object,
+            product=self.product
+        )
 
-        return quantity
+        # NOTE: We can use the update() method instead
+        obj.done = done
+        obj.save()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            "product": self.product,
-            "shopping_item": self.shopping_item,
-            "operation": self.operation_name,
-        })
+        self.object.update_shopping_done()
 
-        return context
+        self.operation_name = "patch_field_done"
 
-    def get(self, request, *args, **kwargs):
+        return obj
+
+    def patch(self, request, *args, **kwargs):
         """
-        GET verb is not supported.
+        PATCH verb allows to edit the ``done`` state.
         """
-        return HttpResponseBadRequest()
+        self.object = get_object_or_404(self.model, pk=self.kwargs.get("pk"))
+        self.product = get_object_or_404(Product, pk=self.kwargs.get("product_id"))
+
+        data = QueryDict(self.request.body)
+
+        done_value = (
+            data.get("done") == "true"
+            if data.get("done", None)
+            else None
+        )
+        # Done field value is mandatory
+        if done_value is None:
+            return HttpResponseBadRequest()
+
+        self.shopping_item = self.patch_shopping_item(done=done_value)
+
+        return self.render_to_response(self.get_context_data(**kwargs))
 
     def delete(self, request, *args, **kwargs):
         """
@@ -245,7 +294,7 @@ class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
         Else if product is not in shopping list yet it is a creation and quantity will
         be set from posted value.
 
-        Negative or null quantity is not allowed.
+        Negative or null quantity is not allowed, it will return a HTTP 400 response.
 
         Response will contains the HTML for product controls and possibly the new item
         row to append to the shopping list component in case of a creation.
@@ -257,7 +306,7 @@ class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
         if quantity is None:
             return HttpResponseBadRequest()
 
-        # Get opened shopping list from session
+        # Get shopping list inventory from session
         inventory = session_data_processor(self.request).get(
             "opened_shoppinglist",
             None
@@ -274,3 +323,9 @@ class ShoppinglistManageProductView(LoginRequiredMixin, SingleObjectMixin,
         self.shopping_item = self.update_or_create_shopping_item(quantity)
 
         return self.render_to_response(self.get_context_data(**kwargs))
+
+    def get(self, request, *args, **kwargs):
+        """
+        GET verb is not supported.
+        """
+        return HttpResponseBadRequest()

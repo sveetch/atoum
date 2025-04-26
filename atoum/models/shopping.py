@@ -126,6 +126,40 @@ class Shopping(models.Model):
             *self.HIERARCHY_SELECT_RELATED
         )
 
+    def update_shopping_done(self, commit=True):
+        """
+        Update the field ``done`` of a Shopping object depending its current value and
+        its items.
+
+        TODO: When creating a new fresh Shopping object, if no items have been added
+        the following cause the Shopping object to be directly marked as 'done'. It's
+        not what would be expected, at least a new object without initial items should
+        let it be 'undone'.
+        """
+        new_value = None
+
+        # Items are allowed to make the shopping done if they are all done themselves
+        if (
+            self.done is False and
+            ShoppingItem.objects.filter(shopping=self, done=False).count() == 0
+        ):
+            new_value = True
+        # Items are allowed to make the shopping undone if at least one of them is
+        # undone
+        elif (
+            self.done is True and
+            ShoppingItem.objects.filter(shopping=self, done=False).count() > 0
+        ):
+            new_value = False
+
+        if new_value is not None:
+            self.done = new_value
+
+            if commit:
+                self.save()
+
+        return new_value
+
     def save(self, *args, **kwargs):
         # Auto update 'modified' value on each save
         self.modified = timezone.now()

@@ -39,11 +39,7 @@
                     <div class="card-body">
                         <h2 class="card-title h4">
                             <small class="sm-3 lh-1">
-                                {% if shopping.done %}
-                                    {% translate "Done" %}
-                                {% else %}
-                                    {% translate "Open" %}
-                                {% endif %}
+                                {% include "atoum/shopping/partials/list_status.html" with shoppinglist_inventory=opened_shoppinglist.obj shopping_object=shopping only %}
                             </small><br>
                             <span class="title">{{ shopping }}</span>
                         </h2>

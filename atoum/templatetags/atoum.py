@@ -86,6 +86,8 @@ def shopping_list_html(context, **kwargs):
         "LANGUAGE_CODE": context.get("LANGUAGE_CODE"),
         "debug": context.get("debug", False),
         "user": context.get("user", None),
+        # TODO: name is not accurate it should be something like 'shoppinglist_inventory'
+        # everywhere
         "opened_shoppinglist": context.get("opened_shoppinglist", None),
     })
 

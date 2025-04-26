@@ -1,0 +1,52 @@
+{% load atoum i18n %}{% spaceless %}
+    {% if operation == "addition" or operation == "edition" %}
+        {% comment %}
+        TODO: Addition or edition should not alter opened inventory if it is not the inventory
+        of the targeted shopping object because we let the controls operate on detail of a Shopping
+        that is not necessary opened as inventory.
+        {% endcomment %}
+        {% shopping_product_controls product %}
+
+        {% comment %}Append or edit row from possible opened shopping inventory{% endcomment %}
+        {% if opened_shoppinglist and opened_shoppinglist.obj.id == shopping_object.id %}
+            <template>
+                {% include "atoum/shopping/partials/opened_list_item.html" with opened_shoppinglist=opened_shoppinglist item=shopping_item htmx_swap=True operation=operation only %}
+            </template>
+        {% endif %}
+    {% elif operation == "deletion" %}
+        {% comment %}
+        TODO: Deletion should not alter opened inventory if it is not the inventory
+        of the targeted shopping object because we let the controls operate on detail of a Shopping
+        that is not necessary opened as inventory.
+        {% endcomment %}
+        {% shopping_product_controls product %}
+
+        {% comment %}Remove row from possible opened shopping inventory{% endcomment %}
+        {% if opened_shoppinglist and opened_shoppinglist.obj.id == shopping_object.id %}
+            <template>
+                <div id="shopping-list-{{ opened_shoppinglist.obj.id }}-item-{{ shopping_item.id }}" hx-swap-oob="delete"></div>
+            </template>
+        {% endif %}
+
+        {% comment %}Delete row from shopping detail{% endcomment %}
+        <template>
+            <div id="shopping-detail-{{ opened_shoppinglist.obj.id }}-item-{{ shopping_item.id }}" hx-swap-oob="delete"></div>
+        </template>
+    {% elif operation == "patch_field_done" %}
+        {% comment %}Update status from shopping detail{% endcomment %}
+        {% include "atoum/shopping/partials/list_status.html" with shoppinglist_inventory=opened_shoppinglist.obj shopping_object=shopping_object only %}
+
+        {% comment %}Edit item status from possible opened shopping inventory{% endcomment %}
+        {% if opened_shoppinglist and opened_shoppinglist.obj.id == shopping_object.id %}
+            <template>
+                <td id="shopping-list-{{ opened_shoppinglist.obj.id }}-item-{{ shopping_item.id }}-done" hx-swap-oob="true">
+                    {% if shopping_item.done %}
+                        <i class="bi bi-check-circle-fill state-done"></i>
+                    {% else %}
+                        <i class="bi bi-circle state-undone"></i>
+                    {% endif %}
+                </td>
+            </template>
+        {% endif %}
+    {% endif %}
+{% endspaceless %}

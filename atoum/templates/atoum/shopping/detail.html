@@ -45,18 +45,14 @@
             <div class="flex-grow-1 p-2">
                 <p class="h5">{% translate "Planned for" %} {{ shopping_object.planning|date:"l d F Y"|capfirst }}
 
-                <p class="pt-1"><small>
-                    {% if shopping_object.done %}
-                        <i class="bi bi-cart-check"></i> {% translate "Done" %}
-                    {% elif opened_shoppinglist and opened_shoppinglist.id == shopping_object.id %}
-                        <i class="bi bi-cart-plus"></i> {% translate "Open" %}
-                    {% else %}
-                        <i class="bi bi-cart2"></i> {% translate "To do" %}
-                    {% endif %}
-                </small></p>
+                <p class="pt-1">
+                    <small><span id="shopping-detail-{{ shopping_object.id }}-status">
+                    {% include "atoum/shopping/partials/list_status.html" with shoppinglist_inventory=opened_shoppinglist.obj shopping_object=shopping_object only %}
+                    </span></small>
+                </p>
             </div>
 
-            {% if not opened_shoppinglist or opened_shoppinglist.id != shopping_object.id %}
+            {% if not opened_shoppinglist or opened_shoppinglist.obj.id != shopping_object.id %}
             <p class="controls">
                 <a href="{% url "atoum:shopping-list-open-selection" pk=shopping_object.id %}"
                    class="btn btn-outline-primary">
@@ -70,13 +66,23 @@
             {% if shopping_items %}
                 <div class="shopping-items list-group">
                     {% for item in shopping_items %}
-                        <label class="item list-group-item d-flex gap-2 justify-content-between">
-                            <input class="form-check-input flex-shrink-0" type="checkbox" value=""{% if item.done %} checked=""{% endif %}>
-                            <span class="quantity">{{ item.quantity }}</span>
+                        <label id="shopping-detail-{{ shopping_object.id }}-item-{{ item.id }}"
+                               class="item list-group-item d-flex gap-2 justify-content-between">
+                            <input class="form-check-input flex-shrink-0"
+                                   name="done"
+                                   type="checkbox"
+                                   value=""
+                                   autocomplete="off"
+                                   hx-target="#shopping-detail-{{ shopping_object.id }}-status"
+                                   hx-vals='js:{done:event.target.checked}'
+                                   hx-patch="{% url "atoum:shopping-list-product" pk=shopping_object.id product_id=item.product.id %}"
+                                   {% if item.done %} checked{% endif %}>
+
                             <span class="flex-fill">
                                 <span class="title">{{ item.product.title }}</span>
                                 <small class="d-block text-body-secondary">{{ item.product.parenting_crumbs_html }}</small>
                             </span>
+
                             <div class="controls mb-3" style="flex: 1 0 160px; max-width: 160px">
                                 {% shopping_product_controls item.product %}
                             </div>
