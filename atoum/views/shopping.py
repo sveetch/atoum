@@ -124,15 +124,6 @@ class ShoppinglistManageProductView(LoginRequiredMixin, TemplateView):
 
     This has been done for usage from htmx so it won't return a proper HTML page
     document.
-
-    TODO:
-        * Fix conflict of controls from detail that still manage inventory even they are
-          not the same shopping object;
-        * Rename 'shopping_inventory' variable to 'shopping_inventory' everywhere
-          (tag, processors, templates and here);
-        * The same with 'atoum_shopping_inventory' to 'atoum_shopping_inventory';
-        * Ensure the inventory is optional so we can manage a shopping from its detail
-          view, not only for an inventory;
     """
     model = Shopping
     template_name = "atoum/shopping/manage_inventory.html"
@@ -311,22 +302,8 @@ class ShoppinglistManageProductView(LoginRequiredMixin, TemplateView):
         if quantity is None:
             return HttpResponseBadRequest()
 
-        # Get shopping list inventory from session
-        inventory = session_data_processor(self.request).get(
-            "shopping_inventory",
-            None
-        )
-
-        if not inventory:
-            msg = _("No opened shopping list")
-            raise Http404(msg)
-        elif inventory.obj.id != self.object.id:
-            msg = _("Given Shopping is not the opened shopping list")
-            raise Http404(msg)
-
         # Proceed to operation
         self.shopping_item = self.update_or_create_shopping_item(quantity)
-
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def get(self, request, *args, **kwargs):

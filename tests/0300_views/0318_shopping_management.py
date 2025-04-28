@@ -11,15 +11,9 @@ from tests.initial import initial_catalog  # noqa: F401
 
 def test_anonymous(client, db, initial_catalog):  # noqa: F811
     """
-    Anonymous can not have an opened shopping list and are not allowed to perform a
-    request on management view.
+    Anonymous are not allowed to perform a request on management view.
     """
     shopping = ShoppingFactory()
-
-    # Set opened shopping list (even that in practice it should not be possible)
-    session = client.session
-    session["atoum_shopping_inventory"] = shopping.id
-    session.save()
 
     # Post request
     url = reverse("atoum:shopping-list-product", kwargs={
@@ -40,58 +34,11 @@ def test_anonymous(client, db, initial_catalog):  # noqa: F811
     assert response.status_code == 403
 
 
-def test_no_shopping_inventory(client, db, initial_catalog):  # noqa: F811
-    """
-    If there is no opened shopping list in user session a POST request will receive a
-    404 response.
-    """
-    user = UserFactory()
-    client.force_login(user)
-
-    shopping = ShoppingFactory()
-
-    url = reverse("atoum:shopping-list-product", kwargs={
-        "pk": shopping.id,
-        "product_id": initial_catalog.products["wing"].id,
-    })
-    response = client.post(url, follow=True)
-    assert response.redirect_chain == []
-    assert response.status_code == 404
-
-
-def test_shopping_different_shoppinglist(client, db, initial_catalog):  # noqa: F811
-    """
-    If request point to a shopping object that is not the opened shopping list, the view
-    will return 404 response.
-    """
-    user = UserFactory()
-    client.force_login(user)
-
-    unopened_shopping = ShoppingFactory()
-    opened_shopping = ShoppingFactory()
-
-    # Set a shopping list different than the one given in URL args
-    session = client.session
-    session["atoum_shopping_inventory"] = opened_shopping.id
-    session.save()
-
-    url = reverse("atoum:shopping-list-product", kwargs={
-        "pk": unopened_shopping.id,
-        "product_id": initial_catalog.products["wing"].id,
-    })
-    response = client.post(url, follow=True)
-    assert response.redirect_chain == []
-    assert response.status_code == 404
-
-
-@pytest.mark.parametrize("qty_value, row, delete, qty_returned", [
-    (3, 1, 1, 3),
-])
-def test_post_add(client, db, initial_catalog, qty_value, row, delete,  # noqa: F811
-                  qty_returned):
+@pytest.mark.parametrize("opened_inventory", [True, False])
+def test_post_add(client, db, initial_catalog, opened_inventory):  # noqa: F811
     """
     View perform operation and respond to POST with a HTML including controls and
-    possible row.
+    possible row (for opened inventory).
     """
     user = UserFactory()
     corn = initial_catalog.products["corn"]
@@ -102,16 +49,17 @@ def test_post_add(client, db, initial_catalog, qty_value, row, delete,  # noqa: 
     client.force_login(user)
 
     # Make Shopping list opened in session
-    session = client.session
-    session["atoum_shopping_inventory"] = shopping.id
-    session.save()
+    if opened_inventory:
+        session = client.session
+        session["atoum_shopping_inventory"] = shopping.id
+        session.save()
 
     # Post request to add product item in list
     url = reverse("atoum:shopping-list-product", kwargs={
         "pk": shopping.id,
         "product_id": wing.id,
     })
-    response = client.post(url, data={"quantity": qty_value}, follow=True)
+    response = client.post(url, data={"quantity": 3}, follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 200
 
@@ -119,7 +67,7 @@ def test_post_add(client, db, initial_catalog, qty_value, row, delete,  # noqa: 
     # HTML contains all controls
     assert len(dom.find("#id_shopping-product-{}_quantity".format(wing.id))) == 1
     assert len(dom.find("#btn_shopping-product-{}-post".format(wing.id))) == 1
-    assert len(dom.find("#btn_shopping-product-{}-delete".format(wing.id))) == delete
+    assert len(dom.find("#btn_shopping-product-{}-delete".format(wing.id))) == 1
 
     # Get the created shopping item
     wing_item = ShoppingItem.objects.filter(
@@ -130,16 +78,21 @@ def test_post_add(client, db, initial_catalog, qty_value, row, delete,  # noqa: 
         shopping=shopping.id,
         item=wing_item.id,
     )
-    # HTML contains the shopping item row to add/replace in shopping list
-    assert len(dom.find(wing_item_cssid)) == row
-    # Posted quantity value has been set as initial quantity
-    if qty_returned is not None:
+
+    if opened_inventory:
+        # HTML contains the shopping item row for opened inventory
+        assert len(dom.find(wing_item_cssid)) == 1
+
+        # Posted quantity value has been set as input value
         saved_quantity = dom.find(wing_item_cssid + " .quantity").text()
-        assert saved_quantity.strip() == str(qty_returned)
+        assert saved_quantity.strip() == str(3)
+    else:
+        # HTML does not contains the shopping item row for opened inventory
+        assert len(dom.find(wing_item_cssid)) == 0
 
 
-@pytest.mark.parametrize("qty_value", [0, -1])
-def test_post_add_fail(client, db, initial_catalog, qty_value):  # noqa: F811
+@pytest.mark.parametrize("opened_inventory", [True, False])
+def test_post_add_fail(client, db, initial_catalog, opened_inventory):  # noqa: F811
     """
     Invalid quantity will have an empty response
     """
@@ -151,27 +104,25 @@ def test_post_add_fail(client, db, initial_catalog, qty_value):  # noqa: F811
 
     client.force_login(user)
 
-    # Make Shopping list opened in session
-    session = client.session
-    session["atoum_shopping_inventory"] = shopping.id
-    session.save()
+    if opened_inventory:
+        # Make Shopping list opened in session
+        session = client.session
+        session["atoum_shopping_inventory"] = shopping.id
+        session.save()
 
     # Post request to add product item in list
     url = reverse("atoum:shopping-list-product", kwargs={
         "pk": shopping.id,
         "product_id": wing.id,
     })
-    response = client.post(url, data={"quantity": qty_value}, follow=True)
+    response = client.post(url, data={"quantity": 0}, follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 200
     assert response.content.decode().strip() == ""
 
 
-@pytest.mark.parametrize("qty_value, row, qty_returned", [
-    (3, 1, 3),
-])
-def test_post_edit(client, db, initial_catalog, qty_value, row,  # noqa: F811
-                   qty_returned):
+@pytest.mark.parametrize("opened_inventory", [True, False])
+def test_post_edit(client, db, initial_catalog, opened_inventory):  # noqa: F811
     """
     View perform operation and respond to POST with a HTML including controls and
     possible row.
@@ -183,10 +134,11 @@ def test_post_edit(client, db, initial_catalog, qty_value, row,  # noqa: F811
 
     client.force_login(user)
 
-    # Make Shopping list opened in session
-    session = client.session
-    session["atoum_shopping_inventory"] = shopping.id
-    session.save()
+    if opened_inventory:
+        # Make Shopping list opened in session
+        session = client.session
+        session["atoum_shopping_inventory"] = shopping.id
+        session.save()
 
     # Get the existing shopping item
     corn_item = ShoppingItem.objects.filter(
@@ -203,7 +155,7 @@ def test_post_edit(client, db, initial_catalog, qty_value, row,  # noqa: F811
         "pk": shopping.id,
         "product_id": corn.id,
     })
-    response = client.post(url, data={"quantity": qty_value}, follow=True)
+    response = client.post(url, data={"quantity": 3}, follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 200
 
@@ -212,16 +164,19 @@ def test_post_edit(client, db, initial_catalog, qty_value, row,  # noqa: F811
     assert len(dom.find("#id_shopping-product-{}_quantity".format(corn.id))) == 1
     assert len(dom.find("#btn_shopping-product-{}-post".format(corn.id))) == 1
     assert len(dom.find("#btn_shopping-product-{}-delete".format(corn.id))) == 1
-    # HTML contains the shopping item row to add/replace in shopping list
-    assert len(dom.find(corn_item_cssid)) == row
-    # Posted quantity value has been additionated to initial quantity
-    if qty_returned is not None:
+    if opened_inventory:
+        # HTML contains the shopping item row for opened inventory
+        assert len(dom.find(corn_item_cssid)) == 1
+        # Posted quantity value has been additionated to initial quantity
         saved_quantity = dom.find(corn_item_cssid + " .quantity").text()
-        assert saved_quantity.strip() == str(qty_returned)
+        assert saved_quantity.strip() == str(3)
+    else:
+        # HTML does not contains the shopping item row for opened inventory
+        assert len(dom.find(corn_item_cssid)) == 0
 
 
-@pytest.mark.parametrize("qty_value", [0, -1])
-def test_post_edit_fail(client, db, initial_catalog, qty_value):  # noqa: F811
+@pytest.mark.parametrize("opened_inventory", [True, False])
+def test_post_edit_fail(client, db, initial_catalog, opened_inventory):  # noqa: F811
     """
     Invalid quantity will have an empty response
     """
@@ -232,10 +187,11 @@ def test_post_edit_fail(client, db, initial_catalog, qty_value):  # noqa: F811
 
     client.force_login(user)
 
-    # Make Shopping list opened in session
-    session = client.session
-    session["atoum_shopping_inventory"] = shopping.id
-    session.save()
+    if opened_inventory:
+        # Make Shopping list opened in session
+        session = client.session
+        session["atoum_shopping_inventory"] = shopping.id
+        session.save()
 
     # Get the existing shopping item
     corn_item = ShoppingItem.objects.filter(
@@ -252,13 +208,14 @@ def test_post_edit_fail(client, db, initial_catalog, qty_value):  # noqa: F811
         "pk": shopping.id,
         "product_id": corn.id,
     })
-    response = client.post(url, data={"quantity": qty_value}, follow=True)
+    response = client.post(url, data={"quantity": 0}, follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 200
     assert response.content.decode().strip() == ""
 
 
-def test_post_delete(client, db, initial_catalog):  # noqa: F811
+@pytest.mark.parametrize("opened_inventory", [True, False])
+def test_post_delete(client, db, initial_catalog, opened_inventory):  # noqa: F811
     """
     View perform operation and respond to POST with a HTML including controls.
     """
@@ -270,10 +227,11 @@ def test_post_delete(client, db, initial_catalog):  # noqa: F811
 
     client.force_login(user)
 
-    # Make Shopping list opened in session
-    session = client.session
-    session["atoum_shopping_inventory"] = shopping.id
-    session.save()
+    if opened_inventory:
+        # Make Shopping list opened in session
+        session = client.session
+        session["atoum_shopping_inventory"] = shopping.id
+        session.save()
 
     # Get the existing shopping item
     corn_item = ShoppingItem.objects.filter(
@@ -313,11 +271,15 @@ def test_post_delete(client, db, initial_catalog):  # noqa: F811
 
     # Check the item row is here and define a deletion swap to htmlx
     item_row = dom.find(corn_item_cssid)
-    assert len(item_row) == 1
-    assert item_row[0].get("hx-swap-oob") == "delete"
+    if opened_inventory:
+        assert len(item_row) == 1
+        assert item_row[0].get("hx-swap-oob") == "delete"
+    else:
+        assert len(item_row) == 0
 
 
-def test_patch_done(client, db, initial_catalog):  # noqa: F811
+@pytest.mark.parametrize("opened_inventory", [True, False])
+def test_patch_done(client, db, initial_catalog, opened_inventory):  # noqa: F811
     """
     PATCH request should update the item field 'done' and update Shopping field 'done'
     also.
@@ -337,10 +299,11 @@ def test_patch_done(client, db, initial_catalog):  # noqa: F811
 
     client.force_login(user)
 
-    # Make Shopping list opened in session
-    session = client.session
-    session["atoum_shopping_inventory"] = shopping.id
-    session.save()
+    if opened_inventory:
+        # Make Shopping list opened in session
+        session = client.session
+        session["atoum_shopping_inventory"] = shopping.id
+        session.save()
 
     # Get the existing shopping item
     corn_item = ShoppingItem.objects.filter(shopping=shopping, product=corn).get()
@@ -374,7 +337,10 @@ def test_patch_done(client, db, initial_catalog):  # noqa: F811
     assert shopping.done == True
     dom = html_pyquery(response, rooted=True)
     item_row = dom.find(corn_done_cssid)
-    assert len(item_row) == 1
+    if opened_inventory:
+        assert len(item_row) == 1
+    else:
+        assert len(item_row) == 0
 
     # If an item is turning undone the shopping turns undone also
     response = client.patch(wing_url, data="done=false", follow=True)
@@ -388,4 +354,7 @@ def test_patch_done(client, db, initial_catalog):  # noqa: F811
     assert shopping.done == False
     dom = html_pyquery(response, rooted=True)
     item_row = dom.find(wing_done_cssid)
-    assert len(item_row) == 1
+    if opened_inventory:
+        assert len(item_row) == 1
+    else:
+        assert len(item_row) == 0

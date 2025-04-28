@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateformat import format as date_format
+from django.utils.functional import cached_property
 from django.utils.text import capfirst
 
 
@@ -126,6 +127,16 @@ class Shopping(models.Model):
             *self.HIERARCHY_SELECT_RELATED
         )
 
+    @cached_property
+    def inventory(self):
+        """
+        TODO: Provide shopping inventory with cache ?
+
+        Returns:
+            ?: ..
+        """
+        return ShoppingListInventory(obj.self)
+
     def update_shopping_done(self, commit=True):
         """
         Update the field ``done`` of a Shopping object depending its current value and
@@ -224,11 +235,12 @@ class ShoppingListInventory:
     """
     A simple dataclass to carry a Shopping list.
 
-    It is especially used to provide an opened Shopping list in template context with
+    It is especially used to provide a Shopping inventory in template context with
     its related products loaded in a single place to ensure no duplicate queries are
     performed.
     """
     obj: type(Shopping)
+    opened: bool = False
     items: list = dataclass_field(default_factory=list)
     item_ids: tuple = dataclass_field(default_factory=tuple, init=False)
 
@@ -238,7 +250,7 @@ class ShoppingListInventory:
 
         self.item_ids = tuple([v.product.id for v in self.items])
 
-    def is_product_selected(self, product):
+    def is_product_shopped(self, product):
         """
         Check if product is in Shopping list.
 
@@ -260,7 +272,7 @@ class ShoppingListInventory:
         Returns:
             integer: The quantity of product if in list else None.
         """
-        if self.is_product_selected(product):
+        if self.is_product_shopped(product):
             for item in self.items:
                 if item.product.id == product.id:
                     return item.quantity
@@ -275,7 +287,7 @@ class ShoppingListInventory:
         Returns:
             ShoppingItem: The item object if in list else None.
         """
-        if self.is_product_selected(product):
+        if self.is_product_shopped(product):
             for item in self.items:
                 if item.product.id == product.id:
                     return item

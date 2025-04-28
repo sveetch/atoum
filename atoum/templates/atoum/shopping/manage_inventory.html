@@ -1,11 +1,6 @@
 {% load atoum i18n %}{% spaceless %}
-    {% comment %}
-    TODO: There is conflict with controls and the ID it includes with shopping detail against
-    shopping inventory. It leads to detail controls for non inventory to wrongly update an
-    inventory for a different shopping.
-    {% endcomment %}
     {% if operation == "addition" or operation == "edition" %}
-        {% shopping_product_controls product %}
+        {% product_shopping_controls product shopping=shopping_object %}
 
         {% comment %}Append or edit row from possible opened shopping inventory{% endcomment %}
         {% if shopping_inventory and shopping_inventory.obj.id == shopping_object.id %}
@@ -14,27 +9,37 @@
             </template>
         {% endif %}
     {% elif operation == "deletion" %}
-        {% shopping_product_controls product %}
+        {% product_shopping_controls product shopping=shopping_object %}
 
         {% comment %}Remove row from possible opened shopping inventory{% endcomment %}
         {% if shopping_inventory and shopping_inventory.obj.id == shopping_object.id %}
             <template>
-                <div id="shopping-inventory-{{ shopping_inventory.obj.id }}-item-{{ shopping_item.id }}" hx-swap-oob="delete"></div>
+                <div id="shopping-inventory-{{ shopping_inventory.obj.id }}-item-{{ shopping_item.id }}"
+                     hx-swap-oob="delete"></div>
             </template>
         {% endif %}
 
         {% comment %}Delete row from shopping detail{% endcomment %}
         <template>
-            <div id="shopping-detail-{{ shopping_inventory.obj.id }}-item-{{ shopping_item.id }}" hx-swap-oob="delete"></div>
+            {% if shopping_object %}
+                <div id="shopping-detail-{{ shopping_object.id }}-item-{{ shopping_item.id }}"
+                     hx-swap-oob="delete"></div>
+            {% else %}
+                <div id="shopping-detail-{{ shopping_inventory.obj.id }}-item-{{ shopping_item.id }}"
+                     hx-swap-oob="delete"></div>
+            {% endif %}
         </template>
     {% elif operation == "patch_field_done" %}
-        {% comment %}Update status from shopping detail{% endcomment %}
-        {% include "atoum/shopping/partials/list_status.html" with shopping_inventory=shopping_inventory.obj shopping_object=shopping_object only %}
+        {% comment %}Update status from Shopping detail{% endcomment %}
+        {% if shopping_object %}
+            {% include "atoum/shopping/partials/list_status.html" with shopping_inventory=shopping_inventory.obj shopping_object=shopping_object only %}
+        {% endif %}
 
         {% comment %}Edit item status from possible opened shopping inventory{% endcomment %}
         {% if shopping_inventory and shopping_inventory.obj.id == shopping_object.id %}
             <template>
-                <td id="shopping-inventory-{{ shopping_inventory.obj.id }}-item-{{ shopping_item.id }}-done" hx-swap-oob="true">
+                <td id="shopping-inventory-{{ shopping_inventory.obj.id }}-item-{{ shopping_item.id }}-done"
+                    hx-swap-oob="true">
                     {% if shopping_item.done %}
                         <i class="bi bi-check-circle-fill state-done"></i>
                     {% else %}

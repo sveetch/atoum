@@ -1,9 +1,9 @@
 {% load i18n %}
-{% spaceless %}
-    {% if shopping_inventory %}
+{% comment %}{% spaceless %}{% endcomment %}
+    {% if current_shopping %}
         <form id="form_shopping-product-{{ product.id }}"
                 class="input-group input-group-sm"
-                hx-post="{% url "atoum:shopping-list-product" pk=shopping_inventory.obj.id product_id=product.id %}"
+                hx-post="{% url "atoum:shopping-list-product" pk=current_shopping.id product_id=product.id %}"
                 hx-target="this"
                 hx-swap="outerHTML">
             <input id="id_shopping-product-{{ product.id }}_quantity"
@@ -12,23 +12,28 @@
                     type="number"
                     min="1"
                     autocomplete="off"
-                    value="{% if product_shopping_item %}{{ product_shopping_item.quantity }}{% else %}1{% endif %}"
+                    value="{% if shopping_item %}{{ shopping_item.quantity }}{% else %}1{% endif %}"
                     style="width: 80px">
 
             <button id="btn_shopping-product-{{ product.id }}-post"
                     class="btn btn-outline-success" type="submit">
-                {% if is_product_selected %}
+                {% if is_product_shopped %}
                     <i class="bi bi-pencil"></i>
+                    <span class="visually-hidden">
+                        {% translate "Edit from shopping list" %}
+                    </span>
                 {% else %}
                     <i class="bi bi-plus-lg"></i>
+                    <span class="visually-hidden">
+                        {% translate "Add to shopping list" %}
+                    </span>
                 {% endif %}
-                <span class="visually-hidden">{% translate "Add to shopping list" %}</span>
             </button>
 
-            {% if is_product_selected %}
+            {% if is_product_shopped %}
                 <button id="btn_shopping-product-{{ product.id }}-delete"
                         class="btn btn-sm btn-outline-danger" type="button"
-                        hx-delete="{% url "atoum:shopping-list-product" pk=shopping_inventory.obj.id product_id=product.id %}"
+                        hx-delete="{% url "atoum:shopping-list-product" pk=current_shopping.id product_id=product.id %}"
                         hx-trigger="click" hx-target="#form_shopping-product-{{ product.id }}">
                     <i class="bi bi-trash3"></i>
                     <span class="visually-hidden">{% translate "Remove from shopping list" %}</span>
@@ -36,4 +41,4 @@
             {% endif %}
         </form>
     {% endif %}
-{% endspaceless %}
+{% comment %}{% endspaceless %}{% endcomment %}

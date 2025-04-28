@@ -1,6 +1,7 @@
 from collections.abc import Iterable
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.template import Library, loader
 
 register = Library()
@@ -91,25 +92,22 @@ def shopping_list_html(context, **kwargs):
 
 
 @register.simple_tag(takes_context=True)
-def shopping_product_controls(context, product, **kwargs):
+def product_shopping_controls(context, product, **kwargs):
     """
     Render HTML of available controls for a product against an opened shopping list.
 
-    TODO: We are adding 'shopping' for the proper shopping object to use. It could be
-    given when on a Shopping detail to have controls working only for the detailled
-    shopping object but optionnal since controls elsewhere (like product index or
-    category detail) should work only with an inventory (shopping list or futur stock).
+    This component is reserved to authenticated user. Rendered template has an isolated
+    context.
 
-    This component is reserved to authenticated user.
-
-    Ensure it does not fails if there is no shopping or inventory (just return empty
-    string?).
+    TODO:
+        * Optimize the way to get 'shopping_item' for non opened inventory that will
+          currently make a new query for each product this tag is called on;
 
     Exemple:
         Basic usage: ::
 
             {% load atoum %}
-            {% shopping_product_control SHOPPING PRODUCT [template="foo/bar.html"] %}
+            {% shopping_product_control PRODUCT [shopping] [template="foo/bar.html"] %}
 
     Arguments:
         product (atoum.models.Product): Product object.
@@ -118,7 +116,8 @@ def shopping_product_controls(context, product, **kwargs):
             with an Article object, so it should be safe to be empty for a Category.
 
     Keyword Arguments:
-        shopping (atoum.models.Shopping): Shopping object to use instead of inventory.
+        shopping (atoum.models.Shopping): Shopping object to use instead of inventory
+            from session.
 
     Returns:
         string: Rendered template tag fragment.
@@ -141,17 +140,33 @@ def shopping_product_controls(context, product, **kwargs):
         "LANGUAGE_CODE": context.get("LANGUAGE_CODE"),
         "debug": context.get("debug", False),
         "user": context.get("user", None),
+        "current_shopping": None,
         "shopping_object": shopping_object,
         "shopping_inventory": shopping_inventory,
-        "is_product_selected": (
-            shopping_inventory.is_product_selected(product)
-            if shopping_inventory else False
-        ),
         "product": product,
-        "product_shopping_item": (
-            shopping_inventory.item_for_product(product)
-            if shopping_inventory else False
-        ),
+        "is_product_shopped": False,
+        "shopping_item": None,
     }
+
+    if shopping_object and shopping_inventory and shopping_object.id == shopping_inventory.obj.id:
+        tag_context["current_shopping"] = shopping_inventory.obj
+        tag_context["is_product_shopped"] = shopping_inventory.is_product_shopped(product)
+        tag_context["shopping_item"] = shopping_inventory.item_for_product(product)
+    elif shopping_object:
+        tag_context["current_shopping"] = shopping_object
+        # TODO: We need a more efficient way to know if product is an item, the
+        # following is making a query for each tag usage (currently it breaks some test
+        # for their assertion of queryset count)
+        try:
+            tag_context["shopping_item"] = shopping_object.shoppingitem_set.get(product=product)
+        except ObjectDoesNotExist:
+            tag_context["shopping_item"] = None
+        tag_context["is_product_shopped"] = (
+            True if tag_context["shopping_item"] else False
+        )
+    elif shopping_inventory:
+        tag_context["current_shopping"] = shopping_inventory.obj
+        tag_context["is_product_shopped"] = shopping_inventory.is_product_shopped(product)
+        tag_context["shopping_item"] = shopping_inventory.item_for_product(product)
 
     return loader.get_template(template_path).render(tag_context)
