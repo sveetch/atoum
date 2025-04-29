@@ -27,10 +27,10 @@
 //
 // Initialize htmx
 //
-import "htmx.org";
-import "htmx-ext-response-targets";
+import htmx from 'htmx.org';
+//import "htmx-ext-response-targets";
 
-window.htmx = require("htmx.org");
+window.htmx = htmx;
 
 //
 // Make Bootstrap components usable from templates (like "bootstrap.Modal(..)")
