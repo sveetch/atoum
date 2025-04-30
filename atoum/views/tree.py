@@ -1,10 +1,11 @@
 from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 from ..models import Consumable
 
 
-class RecursiveTreeView(ListView):
+class RecursiveTreeView(LoginRequiredMixin, ListView):
     """
     Full recursive tree of Atoum objects (excepted Brand).
 

@@ -52,8 +52,8 @@ help:
 	@echo "  freeze-dependencies        -- to write installed dependencies versions in frozen.txt"
 	@echo "  install                    -- to install this project with virtualenv and Pip"
 	@echo
-	@echo "  Django commands"
-	@echo "  ==============="
+	@echo "  Django"
+	@echo "  ======"
 	@echo
 	@echo "  run                        -- to run Django development server"
 	@echo "  check-migrations           -- to check for pending application migrations (do not write anything)"
@@ -63,20 +63,20 @@ help:
 	@echo "  po                         -- to update every PO files from application for enabled languages"
 	@echo "  mo                         -- to build MO files from application PO files"
 	@echo
-	@echo "  Search indexes commands"
-	@echo "  ======================="
+	@echo "  Search indexes"
+	@echo "  =============="
 	@echo
 	@echo "  search-build               -- to (Re)Build search engine indexes"
 	@echo "  search-update              -- to update search engine indexes"
 	@echo
-	@echo "  Diskette commands"
-	@echo "  ================="
+	@echo "  Diskette"
+	@echo "  ========"
 	@echo
 	@echo "  disk-dump                  -- to create a Diskette archive with data and storages"
 	@echo "  disk-load                  -- to load a Diskette archive, your current database and storages will be overwritten"
 	@echo
-	@echo "  Frontend commands"
-	@echo "  ================="
+	@echo "  Frontend"
+	@echo "  ========"
 	@echo
 	@echo "  css                        -- to build uncompressed CSS from Sass sources"
 	@echo "  watch-css                  -- to watch for Sass changes to rebuild CSS"
@@ -159,6 +159,7 @@ create-var-dirs:
 	@mkdir -p var/db
 	@mkdir -p var/static/css
 	@mkdir -p var/media
+	@mkdir -p var/protected-media
 	@mkdir -p $(SANDBOX_DIR)/media
 	@mkdir -p $(STATICFILES_DIR)/css
 .PHONY: create-var-dirs
@@ -333,7 +334,7 @@ disk-dump:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Creating a Diskette archive <---$(FORMATRESET)\n"
 	@echo ""
-	$(PYTHON_BIN) $(DJANGO_MANAGE) diskette_dump -v 2 --indent 4
+	$(PYTHON_BIN) $(DJANGO_MANAGE) diskette_dump -v 2
 .PHONY: disk-dump
 
 disk-load:

@@ -268,13 +268,26 @@ INSTALLED_APPS.append("atoum")
 # App local directory has higher priority over sandbox
 LOCALE_PATHS = [BASE_DIR / "atoum/locale"] + LOCALE_PATHS
 
+
 """
-Diskette configuration using its defaults
+Sendfile configuration
+"""
+
+INSTALLED_APPS.append("django_sendfile")
+
+SENDFILE_BACKEND = "django_sendfile.backends.simple"
+SENDFILE_URL = "/protected"
+
+SENDFILE_ROOT = VAR_PATH / "protected-media"
+
+"""
+Diskette configuration
 """
 from diskette.settings import *  # noqa: E402,F401,F403
 
 INSTALLED_APPS.append("diskette")
 
+# Applications definitions for data to collect
 DISKETTE_APPS = [
     [
         "django.contrib.auth", {
@@ -299,9 +312,22 @@ DISKETTE_APPS = [
     ]
 ]
 
+# A list of Path objects for storages to collect in dump
 DISKETTE_STORAGES = [MEDIA_ROOT]
+
+# Excluded patterns from storage collect
 DISKETTE_STORAGES_EXCLUDES = [
     "cache/*",
     "pil/*",
     "public/thumbnails/*",
 ]
+
+# Filename for dump tarball file.
+DISKETTE_DUMP_FILENAME = "diskette{features}_{date}.tar.gz"
+
+# For where are stored created dump
+DISKETTE_DUMP_PATH = SENDFILE_ROOT / "dumps"
+
+# For where to extract archive storages contents
+DISKETTE_LOAD_STORAGES_PATH = BASE_DIR
+
