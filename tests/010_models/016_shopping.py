@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 import pytest
 from freezegun import freeze_time
 
-from atoum.models import Shopping, ShoppingItem, ShoppingListInventory
+from atoum.models import Shopping, ShoppingItem
 from atoum.factories import (
     AssortmentFactory, ConsumableFactory, CategoryFactory, ProductFactory,
     ShoppingFactory
@@ -138,21 +138,92 @@ def test_get_items(db, django_assert_num_queries):
     with django_assert_num_queries(1):
         # Enforce usage of relevant attributes to ensure they don't hide further
         # querysets
-        items_buffer = []
-        for item in shopping.get_items():
-            items_buffer.append((
-                item.created,
+        _ = [
+            (
                 item.product.title,
                 item.quantity,
                 item.product.parenting_crumbs()
-            ))
+            )
+            for item in shopping.get_items()
+        ]
+
+
+def test_current_items(db, django_assert_num_queries):
+    """
+    Method should return cached result of 'Shopping.get_items()'.
+    """
+    romaine = ProductFactory(title="Romaine")
+    arugula = ProductFactory(title="Arugula")
+
+    shopping = ShoppingFactory(fill_products=[
+        (romaine, {"quantity": 2}),
+        (arugula, {"quantity": 42}),
+    ])
+
+    with django_assert_num_queries(1):
+        # Enforce usage of relevant attributes to ensure they don't hide further
+        # querysets
+        _ = [
+            (
+                item.product.title,
+                item.quantity,
+                item.product.parenting_crumbs()
+            )
+            for item in shopping.current_items
+        ]
+        assert sorted(shopping.current_item_ids) == [romaine.id, arugula.id]
+
+    # Further usages don't perform new queryset
+    with django_assert_num_queries(0):
+        _ = [
+            (
+                item.product.title,
+                item.quantity,
+                item.product.parenting_crumbs()
+            )
+            for item in shopping.current_items
+        ]
+        assert sorted(shopping.current_item_ids) == [romaine.id, arugula.id]
+
+
+def test_product_related_methods(db, django_assert_num_queries):
+    """
+    Method should return cached list of item ids gotten from 'Shopping.current_items'.
+    """
+    romaine = ProductFactory(title="Romaine")
+    arugula = ProductFactory(title="Arugula")
+
+    shopping = ShoppingFactory(fill_products=[
+        (romaine, {"quantity": 2}),
+    ])
+
+    with django_assert_num_queries(1):
+        # Enforce usage of relevant attributes to ensure they don't hide further
+        # querysets
+
+        assert shopping.is_product_shopped(romaine) is True
+        assert shopping.is_product_shopped(arugula) is False
+        assert shopping.item_for_product(romaine).quantity == 2
+        assert shopping.item_for_product(arugula) is None
+        assert shopping.quantity_for_product(romaine) == 2
+        assert shopping.quantity_for_product(arugula) is None
+
+    # Further usages don't perform new queryset
+    with django_assert_num_queries(0):
+        assert shopping.is_product_shopped(romaine) is True
+        assert shopping.is_product_shopped(arugula) is False
 
 
 @freeze_time("2012-10-15 10:00:00")
 def test_get_status(db, django_assert_num_queries):
     """
-    Method should return correct data information about Shopping is open (no item done),
-    ongoing (some items done) or done (all items are done).
+    Method should return correct data information about Shopping if it is either :
+
+    * open (no item done yet);
+    * ongoing (some items done);
+    * done (all items are done).
+
+    And also stats about done and open items.
     """
     consumable = ConsumableFactory(title="Consum")
     assortment = AssortmentFactory(consumable=consumable, title="Assort")
@@ -195,26 +266,3 @@ def test_get_status(db, django_assert_num_queries):
     assert done.done is True
     with django_assert_num_queries(1):
         assert done.get_status() == {"status": "done", "dones": 5, "opens": 0}
-
-
-def test_list_inventory(db, django_assert_num_queries):
-    """
-    ShoppingInventory
-    """
-    romaine = ProductFactory(title="Romaine")
-    arugula = ProductFactory(title="Arugula")
-
-    shopping = ShoppingFactory(fill_products=[
-        (romaine, {"quantity": 2}),
-        (arugula, {"quantity": 42}),
-    ])
-
-    with django_assert_num_queries(1):
-        inventory = ShoppingListInventory(obj=shopping)
-
-    # No additional queries are performed
-    with django_assert_num_queries(0):
-        inventory.obj
-        list(inventory.items)
-        list(inventory.items)
-        list(inventory.item_ids)

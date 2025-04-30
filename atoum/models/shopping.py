@@ -1,5 +1,3 @@
-from dataclasses import dataclass, field as dataclass_field
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
@@ -118,7 +116,14 @@ class Shopping(models.Model):
 
     def get_items(self):
         """
-        Return a queryset for all Shopping item objects in a single query.
+        Return a queryset for all ShoppingItem objects in a single query.
+
+        .. Warning::
+            This method is not cached and therefore will spawn a new queryset each time
+            it is called. If you don't need to update Shopping or its item during the
+            same thread, prefer to use property ``FOOOOO`` instead that is cached and
+            avoid multiple querysets to get items on different operation during the
+            same thread.
 
         Returns:
             queryset: All ShoppingItem objects related to the Shopping object.
@@ -128,14 +133,80 @@ class Shopping(models.Model):
         )
 
     @cached_property
-    def inventory(self):
+    def current_items(self):
         """
-        TODO: Provide shopping inventory with cache ?
+        Get the current related ShoppingItem objects.
+
+        This method is cached, once called its results will never change no matter
+        you are updating the Shopping or its item objects.
 
         Returns:
-            ?: ..
+            queryset: Queryset of ShoppingItem related to the Shopping object.
         """
-        return ShoppingListInventory(obj.self)
+        return self.get_items()
+
+    @cached_property
+    def current_item_ids(self):
+        """
+        Return a tuple of related ShoppingItem object ids.
+
+        Depends on cached property ``Shopping.current_items``.
+
+        Returns:
+            tuple: Tuple of ShoppingItem ids.
+        """
+        return tuple([v.product.id for v in self.current_items])
+
+    def is_product_shopped(self, product):
+        """
+        Check if given Product is an item of the Shopping object.
+
+        Depends on cached property ``Shopping.current_items``.
+
+        Arguments:
+            product (atoum.models.Product): Product object.
+
+        Returns:
+            boolean: True if product is in list else None.
+        """
+        return product.id in self.current_item_ids
+
+    def item_for_product(self, product):
+        """
+        Return the shopping item for a product in shopping list.
+
+        Depends on cached property ``Shopping.current_items``.
+
+        Arguments:
+            product (atoum.models.Product): Product object.
+
+        Returns:
+            ShoppingItem: The item object for given Product if it is an item of the
+            Shopping object else it returns ``None``.
+        """
+        if self.is_product_shopped(product):
+            for item in self.current_items:
+                if item.product.id == product.id:
+                    return item
+
+        return None
+
+    def quantity_for_product(self, product):
+        """
+        Return the saved item quantity for the given Product.
+
+        Depends on cached property ``Shopping.current_items``.
+
+        Arguments:
+            product (atoum.models.Product): Product object.
+
+        Returns:
+            integer: The quantity of Product if it is an item of the Shopping object
+            else it returns ``None``.
+        """
+        item = self.item_for_product(product)
+
+        return item.quantity if item else None
 
     def update_shopping_done(self, commit=True):
         """
@@ -146,6 +217,9 @@ class Shopping(models.Model):
         the following cause the Shopping object to be directly marked as 'done'. It's
         not what would be expected, at least a new object without initial items should
         let it be 'undone'.
+
+        Returns:
+            boolean: True if an update of ``done`` value has been done else False.
         """
         new_value = None
 
@@ -228,68 +302,3 @@ class ShoppingItem(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
-
-@dataclass
-class ShoppingListInventory:
-    """
-    A simple dataclass to carry a Shopping list.
-
-    It is especially used to provide a Shopping inventory in template context with
-    its related products loaded in a single place to ensure no duplicate queries are
-    performed.
-    """
-    obj: type(Shopping)
-    opened: bool = False
-    items: list = dataclass_field(default_factory=list)
-    item_ids: tuple = dataclass_field(default_factory=tuple, init=False)
-
-    def __post_init__(self):
-        if not self.items:
-            self.items = self.obj.get_items()
-
-        self.item_ids = tuple([v.product.id for v in self.items])
-
-    def is_product_shopped(self, product):
-        """
-        Check if product is in Shopping list.
-
-        Arguments:
-            product (atoum.models.Product): Product object.
-
-        Returns:
-            boolean: True if product is in list else None.
-        """
-        return product.id in self.item_ids
-
-    def quantity_for_product(self, product):
-        """
-        Return the saved quantity for a product in shopping list.
-
-        Arguments:
-            product (atoum.models.Product): Product object.
-
-        Returns:
-            integer: The quantity of product if in list else None.
-        """
-        if self.is_product_shopped(product):
-            for item in self.items:
-                if item.product.id == product.id:
-                    return item.quantity
-
-    def item_for_product(self, product):
-        """
-        Return the shopping item object for a product in shopping list.
-
-        Arguments:
-            product (atoum.models.Product): Product object.
-
-        Returns:
-            ShoppingItem: The item object if in list else None.
-        """
-        if self.is_product_shopped(product):
-            for item in self.items:
-                if item.product.id == product.id:
-                    return item
-
-        return None

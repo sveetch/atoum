@@ -1,7 +1,6 @@
 from collections.abc import Iterable
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.template import Library, loader
 
 register = Library()
@@ -58,7 +57,7 @@ def shopping_list_html(context, **kwargs):
 
     It does not expect any other argument than the optional template one. Everything
     else is discovered from template context (which should have been fullfilled from
-    context processor with a ShoppingListInventory object).
+    context processor with a Shopping object).
 
     Exemple:
         Basic usage: ::
@@ -94,14 +93,10 @@ def shopping_list_html(context, **kwargs):
 @register.simple_tag(takes_context=True)
 def product_shopping_controls(context, product, **kwargs):
     """
-    Render HTML of available controls for a product against an opened shopping list.
+    Render HTML of available controls for a product against a Shopping object.
 
     This component is reserved to authenticated user. Rendered template has an isolated
     context.
-
-    TODO:
-        * Optimize the way to get 'shopping_item' for non opened inventory that will
-          currently make a new query for each product this tag is called on;
 
     Exemple:
         Basic usage: ::
@@ -128,11 +123,10 @@ def product_shopping_controls(context, product, **kwargs):
         return ""
 
     shopping_object = kwargs.get("shopping")
+    shopping_inventory = context.get("shopping_inventory", None)
     template_path = (
         kwargs.get("template") or settings.ATOUM_SHOPPING_PRODUCT_CONTROLS_TEMPLATE
     )
-
-    shopping_inventory = context.get("shopping_inventory", None)
 
     tag_context = {
         "request": context.request,
@@ -140,33 +134,26 @@ def product_shopping_controls(context, product, **kwargs):
         "LANGUAGE_CODE": context.get("LANGUAGE_CODE"),
         "debug": context.get("debug", False),
         "user": context.get("user", None),
-        "current_shopping": None,
         "shopping_object": shopping_object,
         "shopping_inventory": shopping_inventory,
+        "current_shopping": None,
         "product": product,
         "is_product_shopped": False,
         "shopping_item": None,
     }
 
-    if shopping_object and shopping_inventory and shopping_object.id == shopping_inventory.obj.id:
-        tag_context["current_shopping"] = shopping_inventory.obj
-        tag_context["is_product_shopped"] = shopping_inventory.is_product_shopped(product)
-        tag_context["shopping_item"] = shopping_inventory.item_for_product(product)
-    elif shopping_object:
+    if shopping_object:
         tag_context["current_shopping"] = shopping_object
-        # TODO: We need a more efficient way to know if product is an item, the
-        # following is making a query for each tag usage (currently it breaks some test
-        # for their assertion of queryset count)
-        try:
-            tag_context["shopping_item"] = shopping_object.shoppingitem_set.get(product=product)
-        except ObjectDoesNotExist:
-            tag_context["shopping_item"] = None
-        tag_context["is_product_shopped"] = (
-            True if tag_context["shopping_item"] else False
-        )
     elif shopping_inventory:
-        tag_context["current_shopping"] = shopping_inventory.obj
-        tag_context["is_product_shopped"] = shopping_inventory.is_product_shopped(product)
-        tag_context["shopping_item"] = shopping_inventory.item_for_product(product)
+        tag_context["current_shopping"] = shopping_inventory
+
+    if tag_context["current_shopping"]:
+        tag_context["current_shopping"] = tag_context["current_shopping"]
+        tag_context["is_product_shopped"] = (
+            tag_context["current_shopping"].is_product_shopped(product)
+        )
+        tag_context["shopping_item"] = (
+            tag_context["current_shopping"].item_for_product(product)
+        )
 
     return loader.get_template(template_path).render(tag_context)

@@ -193,16 +193,6 @@ def test_post_edit_fail(client, db, initial_catalog, opened_inventory):  # noqa:
         session["atoum_shopping_inventory"] = shopping.id
         session.save()
 
-    # Get the existing shopping item
-    corn_item = ShoppingItem.objects.filter(
-        shopping=shopping,
-        product=corn
-    ).get()
-    corn_item_cssid = "#shopping-inventory-{shopping}-item-{item}".format(
-        shopping=shopping.id,
-        item=corn_item.id,
-    )
-
     # Post request to edit product item in list
     url = reverse("atoum:shopping-list-product", kwargs={
         "pk": shopping.id,
@@ -295,7 +285,7 @@ def test_patch_done(client, db, initial_catalog, opened_inventory):  # noqa: F81
         (corn, {"quantity": 1, "done": False}),
         (wing, {"quantity": 1, "done": True}),
     ])
-    assert shopping.done == False
+    assert shopping.done is False
 
     client.force_login(user)
 
@@ -334,7 +324,7 @@ def test_patch_done(client, db, initial_catalog, opened_inventory):  # noqa: F81
         ("Wing", True)
     ]
     shopping.refresh_from_db()
-    assert shopping.done == True
+    assert shopping.done is True
     dom = html_pyquery(response, rooted=True)
     item_row = dom.find(corn_done_cssid)
     if opened_inventory:
@@ -351,7 +341,7 @@ def test_patch_done(client, db, initial_catalog, opened_inventory):  # noqa: F81
         ("Wing", False)
     ]
     shopping.refresh_from_db()
-    assert shopping.done == False
+    assert shopping.done is False
     dom = html_pyquery(response, rooted=True)
     item_row = dom.find(wing_done_cssid)
     if opened_inventory:

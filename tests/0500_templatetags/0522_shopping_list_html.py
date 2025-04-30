@@ -1,7 +1,6 @@
 from django.template import RequestContext
 
 from atoum.utils.tests import html_pyquery
-from atoum.models import ShoppingListInventory
 from atoum.factories import ShoppingFactory, UserFactory
 from atoum.templatetags.atoum import shopping_list_html
 
@@ -64,7 +63,7 @@ def test_render_opened_shopping(client, db, initial_catalog, rf,  # noqa: F811
             "LANGUAGE_CODE": "en",
             "debug": False,
             "user": user,
-            "shopping_inventory": ShoppingListInventory(obj=shopping),
+            "shopping_inventory": shopping,
         }
     )
     render = shopping_list_html(context)

@@ -88,7 +88,7 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
 
     url = reverse("atoum:shopping-list-detail", kwargs={"pk": shopping.id})
 
-    with django_assert_num_queries(4):
+    with django_assert_num_queries(5):
         response = client.get(url, follow=True)
 
     assert response.redirect_chain == []

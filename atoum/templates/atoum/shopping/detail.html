@@ -46,12 +46,12 @@
 
                 <p class="pt-1">
                     <small><span id="shopping-detail-{{ shopping_object.id }}-status">
-                    {% include "atoum/shopping/partials/list_status.html" with shopping_inventory=shopping_inventory.obj shopping_object=shopping_object only %}
+                    {% include "atoum/shopping/partials/list_status.html" with shopping_inventory=shopping_inventory shopping_object=shopping_object only %}
                     </span></small>
                 </p>
             </div>
 
-            {% if not shopping_inventory or shopping_inventory.obj.id != shopping_object.id %}
+            {% if not shopping_inventory or shopping_inventory.id != shopping_object.id %}
             <p class="controls">
                 <a href="{% url "atoum:shopping-list-open-selection" pk=shopping_object.id %}"
                    class="btn btn-outline-primary">
@@ -65,8 +65,8 @@
             {% if shopping_items %}
                 <div class="shopping-items list-group">
                     {% for item in shopping_items %}
-                        <label id="shopping-detail-{{ shopping_object.id }}-item-{{ item.id }}"
-                               class="item list-group-item d-flex gap-2 justify-content-between">
+                        <span id="shopping-detail-{{ shopping_object.id }}-item-{{ item.id }}"
+                               class="item to-bump list-group-item d-flex gap-2 justify-content-between">
                             <input class="form-check-input flex-shrink-0"
                                    name="done"
                                    type="checkbox"
@@ -85,7 +85,7 @@
                             <div class="controls mb-3" style="flex: 1 0 160px; max-width: 160px">
                                 {% product_shopping_controls item.product shopping=shopping_object %}
                             </div>
-                        </label>
+                        </span>
                     {% endfor %}
                 </div>
             {% else %}
@@ -94,3 +94,17 @@
         {% endwith %}
     </div>
 {% endspaceless %}{% endblock app_content %}
+
+{% block body-javascript-extra %}
+<script>
+// On content load from a request, apply css class to parent for highlight bump
+document.body.addEventListener("htmx:afterOnLoad", function(evt) {
+    let row = htmx.closest(evt.target, "span");
+    if(row) {
+        htmx.addClass(row, "bump");
+        // Use a delay so the animation has the time to finish
+        htmx.removeClass(row, "bump", 1200);
+    }
+});
+</script>
+{% endblock body-javascript-extra %}

@@ -15,7 +15,7 @@ def test_empty(client, db, rf):
 def test_opened_exists(client, db, rf):
     """
     When session have an opened shopping list ID that exists it should be resolved to
-    a ShoppingListInventory dataclasse.
+    a Shopping object marked as opened for current edition.
     """
     user = UserFactory()
     opened_shopping = ShoppingFactory()
@@ -33,7 +33,7 @@ def test_opened_exists(client, db, rf):
 
     assert "shopping_inventory" in context
     assert context["shopping_inventory"] is not None
-    assert context["shopping_inventory"].obj.id == opened_shopping.id
+    assert context["shopping_inventory"].id == opened_shopping.id
 
 
 def test_opened_dont_exists(client, db, rf):

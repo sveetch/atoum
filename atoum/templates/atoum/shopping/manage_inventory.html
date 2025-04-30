@@ -3,7 +3,7 @@
         {% product_shopping_controls product shopping=shopping_object %}
 
         {% comment %}Append or edit row from possible opened shopping inventory{% endcomment %}
-        {% if shopping_inventory and shopping_inventory.obj.id == shopping_object.id %}
+        {% if shopping_inventory and shopping_inventory.id == shopping_object.id %}
             <template>
                 {% include "atoum/shopping/partials/opened_list_item.html" with shopping_inventory=shopping_inventory item=shopping_item htmx_swap=True operation=operation only %}
             </template>
@@ -12,9 +12,9 @@
         {% product_shopping_controls product shopping=shopping_object %}
 
         {% comment %}Remove row from possible opened shopping inventory{% endcomment %}
-        {% if shopping_inventory and shopping_inventory.obj.id == shopping_object.id %}
+        {% if shopping_inventory and shopping_inventory.id == shopping_object.id %}
             <template>
-                <div id="shopping-inventory-{{ shopping_inventory.obj.id }}-item-{{ shopping_item.id }}"
+                <div id="shopping-inventory-{{ shopping_inventory.id }}-item-{{ shopping_item.id }}"
                      hx-swap-oob="delete"></div>
             </template>
         {% endif %}
@@ -24,21 +24,21 @@
             {% if shopping_object %}
                 <div id="shopping-detail-{{ shopping_object.id }}-item-{{ shopping_item.id }}"
                      hx-swap-oob="delete"></div>
-            {% else %}
-                <div id="shopping-detail-{{ shopping_inventory.obj.id }}-item-{{ shopping_item.id }}"
+            {% elif shopping_inventory %}
+                <div id="shopping-detail-{{ shopping_inventory.id }}-item-{{ shopping_item.id }}"
                      hx-swap-oob="delete"></div>
             {% endif %}
         </template>
     {% elif operation == "patch_field_done" %}
         {% comment %}Update status from Shopping detail{% endcomment %}
         {% if shopping_object %}
-            {% include "atoum/shopping/partials/list_status.html" with shopping_inventory=shopping_inventory.obj shopping_object=shopping_object only %}
+            {% include "atoum/shopping/partials/list_status.html" with shopping_inventory=shopping_inventory shopping_object=shopping_object only %}
         {% endif %}
 
         {% comment %}Edit item status from possible opened shopping inventory{% endcomment %}
-        {% if shopping_inventory and shopping_inventory.obj.id == shopping_object.id %}
+        {% if shopping_inventory and shopping_inventory.id == shopping_object.id %}
             <template>
-                <td id="shopping-inventory-{{ shopping_inventory.obj.id }}-item-{{ shopping_item.id }}-done"
+                <td id="shopping-inventory-{{ shopping_inventory.id }}-item-{{ shopping_item.id }}-done"
                     hx-swap-oob="true">
                     {% if shopping_item.done %}
                         <i class="bi bi-check-circle-fill state-done"></i>

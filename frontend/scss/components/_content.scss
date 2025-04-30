@@ -13,6 +13,15 @@
     }
 }
 
+// TODO: This was a "quick done to work" that need to be moved to a component
+// Currently used in shopping detail, we may merge it with the 'table.tr.bump'
+.to-bump {
+    &.bump {
+        animation-duration: 1s;
+        animation-name: highlight-product-row;
+    }
+}
+
 .page-content {
     background-color: var(--site-content-bg);
 
@@ -54,17 +63,9 @@
                             background-color: transparent;
 
                             &.quantity {
-                                // padding: 0;
                                 text-align: right;
                                 vertical-align: middle;
                                 width: rem-calc(60px);
-
-                                // input {
-                                //     width: 100%;
-                                //     font-size: inherit;
-                                //     text-align: right;
-                                //     border: 0;
-                                // }
                             }
 
                             &:first-child {
