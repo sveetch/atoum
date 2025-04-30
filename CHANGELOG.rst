@@ -3,8 +3,8 @@
 Changelog
 =========
 
-Development
-***********
+Version 0.4.1 - 2025/04/30
+**************************
 
 * Search form now applies autofocus on query input if it is empty;
 * Search form now makes all models as checked if none was checked;
@@ -14,6 +14,9 @@ Development
 * Implemented 'done' field control to update a product state;
 * Changed shopping management so it work also from shopping detail and not anymore
   only from inventory;
+* Refactored Shopping inventory and some related code;
+* Dropped inventory dataclass in profit of Shopping model method with cache;
+* Finished Shopping interface with htmx;
 
 
 Version 0.4.0 - 2025/03/20
