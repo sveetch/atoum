@@ -1,14 +1,37 @@
 from django.urls import reverse
 
+from atoum.factories import ConsumableFactory, UserFactory
 from atoum.utils.tests import html_pyquery
 
 from tests.initial import initial_catalog  # noqa: F401
+
+
+def test_anonymous(client, db, settings):
+    """
+    Anonymous are not allowed and is redirect to login.
+    """
+    url = reverse("atoum:consumable-index")
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == [
+        ("{}?next={}".format(settings.LOGIN_URL, url), 302),
+    ]
+    assert response.status_code == 200
+
+    consumable = ConsumableFactory()
+    url = reverse("atoum:consumable-detail", kwargs={"slug": consumable.slug})
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == [
+        ("{}?next={}".format(settings.LOGIN_URL, url), 302),
+    ]
+    assert response.status_code == 200
 
 
 def test_index_empty(client, db):
     """
     Consumable index should just respond with an empty list.
     """
+    client.force_login(UserFactory())
+
     url = reverse("atoum:consumable-index")
     response = client.get(url, follow=True)
     assert response.redirect_chain == []
@@ -23,10 +46,11 @@ def test_index_filled(client, db, initial_catalog,  # noqa: F811
     """
     Consumable index should list all available consumables.
     """
+    client.force_login(UserFactory())
+
     url = reverse("atoum:consumable-index")
 
-    # Only a single queryset to list objects
-    with django_assert_num_queries(1):
+    with django_assert_num_queries(3):
         response = client.get(url, follow=True)
 
     assert response.redirect_chain == []
@@ -42,12 +66,12 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
     """
     Consumable detail should list its related assortments.
     """
+    client.force_login(UserFactory())
+
     foods = initial_catalog.consumables["foods"]
     url = reverse("atoum:consumable-detail", kwargs={"slug": foods.slug})
 
-    # A queryset for the main object, another one to list its related objects and
-    # another one for pagination
-    with django_assert_num_queries(3):
+    with django_assert_num_queries(5):
         response = client.get(url, follow=True)
 
     assert response.redirect_chain == []

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.views.generic import ListView
 from django.views.generic.detail import SingleObjectMixin
@@ -9,7 +10,7 @@ from ..models import Consumable
 from .mixins import AtoumBreadcrumMixin
 
 
-class ConsumableIndexView(AtoumBreadcrumMixin, ListView):
+class ConsumableIndexView(AtoumBreadcrumMixin, LoginRequiredMixin, ListView):
     """
     List of consumables
     """
@@ -34,7 +35,8 @@ class ConsumableIndexView(AtoumBreadcrumMixin, ListView):
         ).order_by("title")
 
 
-class ConsumableDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
+class ConsumableDetailView(AtoumBreadcrumMixin, LoginRequiredMixin, SingleObjectMixin,
+                           ListView):
     """
     Consumable detail and its related assortment list
     """

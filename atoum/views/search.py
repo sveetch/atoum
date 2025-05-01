@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from haystack.query import RelatedSearchQuerySet
@@ -7,7 +8,7 @@ from ..forms import GlobalSearchForm
 from .mixins import AtoumBreadcrumMixin
 
 
-class GlobalSearchView(AtoumBreadcrumMixin, SearchView):
+class GlobalSearchView(AtoumBreadcrumMixin, LoginRequiredMixin, SearchView):
     """
     View to implement search for indexed Atoum models.
     """

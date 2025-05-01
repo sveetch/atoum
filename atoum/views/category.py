@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest
 from django.views.generic import ListView
@@ -16,7 +16,7 @@ from .assortment import AssortmentDetailView
 from .mixins import AtoumBreadcrumMixin
 
 
-class CategoryIndexView(AtoumBreadcrumMixin, ListView):
+class CategoryIndexView(AtoumBreadcrumMixin, LoginRequiredMixin, ListView):
     """
     List of categories
     """
@@ -43,7 +43,8 @@ class CategoryIndexView(AtoumBreadcrumMixin, ListView):
         ]
 
 
-class CategoryDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
+class CategoryDetailView(AtoumBreadcrumMixin, LoginRequiredMixin, SingleObjectMixin,
+                         ListView):
     """
     Category detail and its related category list
     """

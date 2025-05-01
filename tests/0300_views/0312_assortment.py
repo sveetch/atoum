@@ -10,10 +10,35 @@ from atoum.utils.tests import html_pyquery
 from tests.initial import initial_catalog  # noqa: F401
 
 
+def test_anonymous(client, db, settings):
+    """
+    Anonymous are not allowed and is redirect to login.
+    """
+    url = reverse("atoum:assortment-index")
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == [
+        ("{}?next={}".format(settings.LOGIN_URL, url), 302),
+    ]
+    assert response.status_code == 200
+
+    assortment = AssortmentFactory()
+    url = reverse("atoum:assortment-detail", kwargs={
+        "consumable_slug": assortment.consumable.slug,
+        "assortment_slug": assortment.slug,
+    })
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == [
+        ("{}?next={}".format(settings.LOGIN_URL, url), 302),
+    ]
+    assert response.status_code == 200
+
+
 def test_index_empty(client, db):
     """
     Assortment index should just respond with an empty list.
     """
+    client.force_login(UserFactory())
+
     url = reverse("atoum:assortment-index")
     response = client.get(url, follow=True)
     assert response.redirect_chain == []
@@ -28,11 +53,13 @@ def test_index_filled(client, db, initial_catalog,  # noqa: F811
     """
     Assortment index should list available assortments with pagination.
     """
+    client.force_login(UserFactory())
+
     url = reverse("atoum:assortment-index")
 
     # Only a count queryset from pagination and the other one to list objects with
     # their relation preloaded
-    with django_assert_num_queries(2):
+    with django_assert_num_queries(4):
         response = client.get(url, follow=True)
 
     assert response.redirect_chain == []
@@ -57,6 +84,8 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
     """
     Assortment detail should list its related categories.
     """
+    client.force_login(UserFactory())
+
     meats = initial_catalog.assortments["meats"]
     url = reverse(
         "atoum:assortment-detail",
@@ -68,7 +97,7 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
 
     # A queryset for the main object, another one to list its related objects and
     # another one for pagination
-    with django_assert_num_queries(3):
+    with django_assert_num_queries(5):
         response = client.get(url, follow=True)
 
     assert response.redirect_chain == []

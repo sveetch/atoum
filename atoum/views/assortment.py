@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest
 from django.views.generic import ListView
@@ -15,7 +15,7 @@ from .consumable import ConsumableDetailView
 from .mixins import AtoumBreadcrumMixin
 
 
-class AssortmentIndexView(AtoumBreadcrumMixin, ListView):
+class AssortmentIndexView(AtoumBreadcrumMixin, LoginRequiredMixin, ListView):
     """
     List of assortments
     """
@@ -42,7 +42,8 @@ class AssortmentIndexView(AtoumBreadcrumMixin, ListView):
         ]
 
 
-class AssortmentDetailView(AtoumBreadcrumMixin, SingleObjectMixin, ListView):
+class AssortmentDetailView(AtoumBreadcrumMixin, LoginRequiredMixin, SingleObjectMixin,
+                           ListView):
     """
     Assortment detail and its related category list
     """

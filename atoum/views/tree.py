@@ -20,8 +20,7 @@ class RecursiveTreeView(LoginRequiredMixin, ListView):
         categories and then products.
 
     .. TODO::
-        At least if we can make this more efficient and needs to keep it, make it
-        restricted to staff users. And possibly cache it ?
+        possibly cache it ?
     """
     model = Consumable
     template_name = "atoum/recursivetree.html"

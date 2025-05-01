@@ -150,6 +150,7 @@ clean-frontend-install:
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Cleaning frontend install <---$(FORMATRESET)\n"
 	@echo ""
 	rm -Rf $(FRONTEND_DIR)/node_modules
+	rm -Rf $(FRONTEND_DIR)/package-lock.json
 .PHONY: clean-frontend-install
 
 clean: clean-var clean-doc clean-backend-install clean-frontend-install clean-frontend-build clean-pycache

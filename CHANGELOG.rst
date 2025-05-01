@@ -12,6 +12,9 @@ Development
 * Fixed Logout entry from menu to use POST request;
 * Included 'accounts' app in sandbox to include customized auth stuff like login
   form instead of the admin one;
+* Upgraded to Bootstrap v5.3.5 and some minor upgrades for Bootstrap dependencies;
+* Every views are now required to be authenticated and tests ensure it is well
+  implemented;
 
 
 Version 0.4.1 - 2025/04/30

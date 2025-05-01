@@ -1,5 +1,6 @@
 from django.urls import reverse
 
+from atoum.factories import UserFactory
 from atoum.utils.tests import html_pyquery
 
 from tests.initial import initial_catalog, index_catalog  # noqa: F401
@@ -32,10 +33,24 @@ def parse_result_items(elements):
     ]
 
 
+def test_anonymous(client, db, settings):
+    """
+    Anonymous are not allowed and is redirect to login.
+    """
+    url = reverse("atoum:search-results")
+    response = client.get(url, follow=True)
+    assert response.redirect_chain == [
+        ("{}?next={}".format(settings.LOGIN_URL, url), 302),
+    ]
+    assert response.status_code == 200
+
+
 def test_index_empty(client, db):  # noqa: F811
     """
     Search view should just respond with an empty message without any results.
     """
+    client.force_login(UserFactory())
+
     url = reverse("atoum:search-results")
     response = client.get(url, follow=True)
     assert response.redirect_chain == []
@@ -52,6 +67,7 @@ def test_index_basic(client, db, initial_catalog, index_catalog):  # noqa: F811
     there is no results. With minimal characters requirement the query should result
     for expected items.
     """
+    client.force_login(UserFactory())
 
     url = reverse("atoum:search-results")
     response = client.get(url, data={"q": "b"})
@@ -73,11 +89,13 @@ def test_index_models(client, db, initial_catalog, index_catalog,  # noqa: F811
     """
     Search engine can gather results from different models.
     """
+    client.force_login(UserFactory())
+
     url = reverse("atoum:search-results")
 
     # With all model enabled (default)
     # Use a queryset per model
-    with django_assert_num_queries(4):
+    with django_assert_num_queries(6):
         response = client.get(url, data={"q": "other"})
 
     assert response.status_code == 200
@@ -90,7 +108,7 @@ def test_index_models(client, db, initial_catalog, index_catalog,  # noqa: F811
     ]
 
     # With a few set of models selected
-    with django_assert_num_queries(2):
+    with django_assert_num_queries(4):
         response = client.get(url, data={
             "q": "other",
             "models": ["atoum.category", "atoum.product"]

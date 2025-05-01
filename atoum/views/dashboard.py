@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -6,7 +7,7 @@ from ..models import Assortment, Category, Consumable, Product
 from .mixins import AtoumBreadcrumMixin
 
 
-class DashboardView(AtoumBreadcrumMixin, TemplateView):
+class DashboardView(AtoumBreadcrumMixin, LoginRequiredMixin, TemplateView):
     """
     Catalog dashboard view
 

@@ -1,4 +1,4 @@
-# Frozen requirement versions for 'atoum==0.4.2rc2' installation
+# Frozen requirement versions for 'atoum==0.4.2rc3' installation
 Django==5.0.14
 django-smart-media==0.4.1
 django-autocomplete-light==3.12.1
