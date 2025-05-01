@@ -29,12 +29,9 @@
     <body class="{% block body-classes %}{% endblock body-classes %}" {% block body-attrs %}{% endblock body-attrs %}>
         {% block body-container %}
             {% spaceless %}
-                <div class="page-body">
+                <div class="layout-base">
                     <div class="page-menu">
-                        <a href="/" class="page-brand">
-                            <img src="{% static "images/logo.svg" %}" alt="">
-                            Atoum
-                        </a>
+                        {% include "partials/brand.html" %}
 
                         <ul class="menu-apps">
                             {% comment %}{% include "partials/menu-apps_sample.html" %}{% endcomment %}
@@ -101,11 +98,14 @@
                                                 </li>
                                             {% endif %}
                                             <li>
-                                                <a href="{% url "admin:logout" %}"><i class="bi bi-box-arrow-right"></i> {% trans "Sign out" %}</a>
+                                                <form method="post" action="{% url "accounts:logout" %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit"><i class="bi bi-box-arrow-right"></i> {% trans "Sign out" %}</button>
+                                                </form>
                                             </li>
                                         {% else %}
                                             <li>
-                                                <a href="{% url "admin:login" %}"><i class="bi bi-box-arrow-in-left"></i> {% trans "Login" %}</a>
+                                                <a href="{% url "accounts:login" %}"><i class="bi bi-box-arrow-in-left"></i> {% trans "Login" %}</a>
                                             </li>
                                         {% endif %}
                                     </ul>

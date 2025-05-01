@@ -11,14 +11,14 @@ from atoum.factories import ShoppingFactory, UserFactory
 from tests.initial import initial_catalog  # noqa: F401
 
 
-def test_index_anonymous(client, db):
+def test_index_anonymous(client, db, settings):
     """
     Anonymous are not allowed and is redirect to login.
     """
     url = reverse("atoum:shopping-list-index")
     response = client.get(url, follow=True)
     assert response.redirect_chain == [
-        ("/admin/login/?next={}".format(url), 302)
+        ("{}?next={}".format(settings.LOGIN_URL, url), 302),
     ]
     assert response.status_code == 200
 

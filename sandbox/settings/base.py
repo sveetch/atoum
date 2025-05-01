@@ -148,16 +148,21 @@ INSTALLED_APPS = [
     "django.forms",
 ]
 
+# Ensure we can override applications widgets templates from project template
+# directory, require also 'django.forms' in INSTALLED_APPS
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+
+"""
+Sandbox authentication configuration
+"""
+INSTALLED_APPS.append("sandbox.accounts")
+
 # URL to redirect for authentication
-LOGIN_URL = "/admin/login/"
+LOGIN_URL = "/accounts/login/"
 # URL to redirect once logged in
 LOGIN_REDIRECT_URL = "/"
 # URL to redirect once logged out
 LOGOUT_REDIRECT_URL = "/"
-
-# Ensure we can override applications widgets templates from project template
-# directory, require also 'django.forms' in INSTALLED_APPS
-FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 
 """

@@ -14,4 +14,3 @@ class StyleguideIndexView(LoginRequiredMixin, StyleguideViewMixin):
     manifest_json_filepath = settings.STYLEGUIDE_DUMP_PATH
     save_dump = settings.STYLEGUIDE_SAVE_DUMP
     development_mode = settings.DEBUG
-    raise_exception = True

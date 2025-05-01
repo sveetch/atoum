@@ -1,0 +1,33 @@
+{% extends "skeleton.html" %}
+{% load crispy_forms_tags i18n static %}
+{% block header-title %}{% translate "Authentication" %} - {{ block.super }}{% endblock header-title %}
+
+{% block body-container %}
+{% spaceless %}
+    <div class="layout-cover">
+        <div class="page-menu">
+            {% include "partials/brand.html" %}
+        </div>
+
+        <div class="page-content d-flex justify-content-center align-items-center">
+            <div class="accounts-login-content">
+                <h1>{% translate "Authentication" %}</h1>
+
+                {% if next %}
+                    {% if user.is_authenticated %}
+                    <p>{% translate "Your account doesn't have access to this page. To proceed, please login with an account that has access." %}</p>
+                    {% else %}
+                    <p>{% translate "Please login to see this page." %}</p>
+                    {% endif %}
+                {% endif %}
+
+                <form method="post" action="{% url 'accounts:login' %}"
+                      id="accounts-login-form" class="needs-validation">
+                    {% crispy form %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock body-container %}

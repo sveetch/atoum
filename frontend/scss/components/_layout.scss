@@ -10,8 +10,8 @@ $layout-context-height: rem-calc(95px);
 body {
     height: 100%;
 
-    // Main grid container
-    .page-body {
+    // Base layout has an advanced structure with menus, context, content, footer, etc..
+    .layout-base {
         display: grid;
         height: 100%;
         grid-template-columns: $layout-menu-width auto;
@@ -21,52 +21,83 @@ body {
             "menu main";
         column-gap: 0;
         row-gap: 0;
-    }
 
-    // Main menu
-    .page-menu {
-        grid-area: menu;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
+        // Main menu
+        .page-menu {
+            grid-area: menu;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
 
-    // Sub menu
-    .page-context {
-        grid-area: context;
-    }
+        // Sub menu
+        .page-context {
+            grid-area: context;
+        }
 
-    // Main content container
-    .page-content {
-        grid-area: main;
-        overflow-y: auto;
+        // Main content container
+        .page-content {
+            grid-area: main;
+            overflow-y: auto;
 
-        // When splitted mode is enabled with a main content and an aside content
-        &.splitted {
-            overflow-y: none;
-            display: grid;
-            height: 100%;
-            grid-template-columns: 3fr 1fr;
-            grid-template-rows: auto 1fr;
-            grid-template-areas:
-                "breadcrumbs contentsidebar"
-                "contentmain contentsidebar";
-            column-gap: 0;
-            row-gap: 0;
+            // When splitted mode is enabled with a main content and an aside content
+            &.splitted {
+                overflow-y: none;
+                display: grid;
+                height: 100%;
+                grid-template-columns: 3fr 1fr;
+                grid-template-rows: auto 1fr;
+                grid-template-areas:
+                    "breadcrumbs contentsidebar"
+                    "contentmain contentsidebar";
+                column-gap: 0;
+                row-gap: 0;
 
-            .breadcrumb-container {
-                grid-area: breadcrumbs;
+                .breadcrumb-container {
+                    grid-area: breadcrumbs;
+                }
+
+                .main-content {
+                    grid-area: contentmain;
+                    overflow-y: auto;
+                }
+
+                .aside-content {
+                    grid-area: contentsidebar;
+                    overflow-y: auto;
+                }
             }
 
-            .main-content {
-                grid-area: contentmain;
-                overflow-y: auto;
-            }
+        }
+    }
 
-            .aside-content {
-                grid-area: contentsidebar;
-                overflow-y: auto;
+    // Cover layout is a very simple structure with a simple menu and content
+    .layout-cover {
+        display: grid;
+        height: 100%;
+        grid-template-columns: auto;
+        grid-template-rows: $layout-context-height auto;
+        grid-template-areas:
+            "head"
+            "main";
+        column-gap: 0;
+        row-gap: 0;
+
+        // Menu
+        .page-menu {
+            grid-area: head;
+            display: flex;
+            justify-content: center;
+
+            .page-brand {
+                @include bb-flex(0, 0, auto);
             }
         }
 
+        // Main content container
+        .page-content {
+            grid-area: main;
+            overflow-y: auto;
+        }
     }
+
 }

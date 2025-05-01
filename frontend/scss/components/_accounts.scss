@@ -1,0 +1,25 @@
+///
+/// Accounts application parts
+///
+
+.accounts-login-content {
+    width: 100%;
+    max-width: map-get($container-max-widths, "sm");
+    padding-right: $container-padding-x;
+    padding-left: $container-padding-x;
+    margin-right: auto;
+    margin-left: auto;
+
+    .alert-block {
+        & > ul {
+            padding: 0.5rem;
+            margin-bottom: 1rem !important;
+            list-style-type: none;
+            color: var(--bs-form-invalid-color);
+
+            li + li {
+                margin-top: 0.5rem;
+            }
+        }
+    }
+}

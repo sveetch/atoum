@@ -98,15 +98,17 @@
                 padding-right: 1rem;
                 color: inherit;
 
-                &::after {
-                    @include bb-icon(map-get($bootstrap-icons-map, "dash-lg"));
-                    position: absolute;
-                    right: 0;
-                }
-
-                &.collapsed {
+                &[data-bs-toggle] {
                     &::after {
-                        content: map-get($bootstrap-icons-map, "plus-lg");
+                        @include bb-icon(map-get($bootstrap-icons-map, "dash-lg"));
+                        position: absolute;
+                        right: 0;
+                    }
+
+                    &.collapsed {
+                        &::after {
+                            content: map-get($bootstrap-icons-map, "plus-lg");
+                        }
                     }
                 }
             }
@@ -124,17 +126,6 @@
             }
 
             li button {
-                &::after {
-                    right: 0.2rem;
-                    @include bb-icon(map-get($bootstrap-icons-map, "chevron-up"));
-                }
-
-                &.collapsed {
-                    &::after {
-                        content: map-get($bootstrap-icons-map, "chevron-down");
-                    }
-                }
-
                 &:hover {
                     color: var(--site-menu-emphasis);
                     background-color: var(--site-menu-hover-bg);
@@ -143,6 +134,19 @@
                     .bi,
                     .icon {
                         color: inherit;
+                    }
+                }
+
+                &[data-bs-toggle] {
+                    &::after {
+                        right: 0.2rem;
+                        @include bb-icon(map-get($bootstrap-icons-map, "chevron-up"));
+                    }
+
+                    &.collapsed {
+                        &::after {
+                            content: map-get($bootstrap-icons-map, "chevron-down");
+                        }
                     }
                 }
             }

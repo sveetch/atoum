@@ -9,6 +9,9 @@ Development
 * Upgraded Diskette to v0.5.0 and update its configuration to ensure it is working
   well and dumps are safe to load;
 * Made Styleguide view required to be authenticated;
+* Fixed Logout entry from menu to use POST request;
+* Included 'accounts' app in sandbox to include customized auth stuff like login
+  form instead of the admin one;
 
 
 Version 0.4.1 - 2025/04/30

@@ -10,6 +10,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/", include("sandbox.accounts.urls", namespace="accounts")),
     path("styleguide/", include("sandbox.styleguide.urls", namespace="styleguide")),
     path("", include("atoum.urls")),
 ]
