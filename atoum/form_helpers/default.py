@@ -56,7 +56,7 @@ class DefaultFormHelper(FormHelper):
 
     def provide_tag(self, value=None):
         value = value or self.DEFAULT_ENABLETAG
-        if value:
+        if value is not None:
             self.form_tag = value
 
     def provide_method(self, value=None):

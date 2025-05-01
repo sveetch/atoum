@@ -14,9 +14,6 @@ class AuthenticationFormHelper(DefaultFormHelper):
     """
     DEFAULT_ENABLETAG = False
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def provide_action(self, value=None):
         self.form_action = reverse("accounts:login")
 
