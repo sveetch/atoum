@@ -153,7 +153,7 @@ INSTALLED_APPS = [
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 """
-Sandbox authentication configuration
+Sandbox internal stuff
 """
 INSTALLED_APPS.append("sandbox.accounts")
 
@@ -163,6 +163,10 @@ LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 # URL to redirect once logged out
 LOGOUT_REDIRECT_URL = "/"
+
+TEMPLATES[0]["OPTIONS"]["context_processors"].append(
+    "sandbox.utils.context_processors.project_globals"
+)
 
 
 """
