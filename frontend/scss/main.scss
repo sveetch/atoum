@@ -52,7 +52,7 @@
 // @import "bootstrap/scss/alert";
 // @import "bootstrap/scss/progress";
 @import "bootstrap/scss/list-group";
-// @import "bootstrap/scss/close";
+@import "bootstrap/scss/close";
 // @import "bootstrap/scss/toasts";
 // @import "bootstrap/scss/modal";
 // @import "bootstrap/scss/tooltip";
@@ -85,6 +85,8 @@
 // Objects
 @import "./objects/color-mode";
 @import "./objects/theming";
+@import "./objects/brand";
+@import "./objects/breadcrumb";
 @import "./objects/callout";
 @import "./objects/features";
 @import "./objects/cartouches";
@@ -95,8 +97,8 @@
 @import "./components/layout";
 @import "./components/menu";
 @import "./components/context";
-@import "./components/breadcrumb";
 @import "./components/content";
+@import "./components/aside";
 @import "./components/accounts";
 @import "./components/search";
 

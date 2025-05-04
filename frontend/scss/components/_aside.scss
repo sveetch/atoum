@@ -1,0 +1,139 @@
+///
+/// Aside contents
+///
+
+.aside-content {
+    padding: 0;
+    border-left: $onepixel solid var(--site-menu-subtle);
+    background-color: var(--bs-body-bg);
+
+    @include media-breakpoint-down($layout-breakpoint) {
+        border-top: $onepixel solid var(--site-menu-subtle);
+        border-right: $onepixel solid var(--site-menu-subtle);
+        border-top-left-radius: $border-radius-sm;
+        border-top-right-radius: $border-radius-sm;
+        box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #aside-shopping {
+        .head {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: $onepixel solid var(--site-context-subtle);
+
+            .title {
+                margin: 0;
+                padding: space("normal") space("short");
+                color: var(--bs-primary-text-emphasis);
+                font-weight: $font-weight-bold;
+            }
+
+            .controls {
+                margin-right: 0.5rem;
+                align-items: center;
+
+                .cta-manage {
+                    line-height: 1;
+
+                    span {
+                            @include visually-hidden;
+                    }
+                    &::after {
+                        @include bb-icon(map-get($bootstrap-icons-map, "gear-fill"));
+                    }
+                }
+
+                .cta-disable {
+                    line-height: 1;
+
+                    span {
+                            @include visually-hidden;
+                    }
+                    &::after {
+                        @include bb-icon(map-get($bootstrap-icons-map, "clipboard-check-fill"));
+                    }
+                }
+
+                .toggler-enable {
+                    line-height: 1;
+
+                    &::after {
+                        @include bb-icon(map-get($bootstrap-icons-map, "layer-forward"));
+                        // For when opened
+                        //@include bb-icon(map-get($bootstrap-icons-map, "layer-backward"));
+                    }
+
+                    @include media-breakpoint-up($layout-breakpoint) {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        .inventory {
+            thead {
+                display: none;
+            }
+            tbody {
+                tr {
+                    td {
+                        @include font-size($small2-font-size);
+                        background-color: transparent;
+
+                        &.quantity {
+                            text-align: right;
+                            vertical-align: middle;
+                            width: rem-calc(60px);
+                        }
+
+                        &:first-child {
+                            border-left: 0;
+                        }
+                        &:last-child {
+                            border-right: 0;
+                        }
+                    }
+
+                    // Class to apply highlight animation row cell
+                    // TODO: Gather in a common object with '.to-bump'
+                    &.bump {
+                        td {
+                            animation-duration: 3s;
+                            animation-name: highlight-product-row;
+                        }
+                    }
+
+                    &:last-child {
+                        td {
+                            border-bottom: 0;
+                        }
+                    }
+                }
+            }
+
+            &.empty {
+                @include font-size($h6-font-size);
+                padding: space("large") space("normal");
+                font-style: italic;
+                text-align: center;
+            }
+        }
+    }
+}
+
+// Show up the inventory table for mobile only
+@include media-breakpoint-down($layout-breakpoint) {
+    body {
+        &.shopping-inventory-opened {
+            .aside-content {
+                #aside-shopping {
+                    .toggler-enable {
+                        &::after {
+                            content: map-get($bootstrap-icons-map, "layer-backward") !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

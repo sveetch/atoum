@@ -31,7 +31,12 @@ class AdvancedSearchFormHelper(DefaultFormHelper):
         self.layout = Layout(
             FieldWithButtons(
                 Field("q", placeholder=_("Search"), required="", **query_extras),
-                StrictButton("Go!", type="submit", css_class="btn-primary"),
+                StrictButton(
+                    "Go!",
+                    type="submit",
+                    css_class="btn-primary",
+                    aria_label="Submit search",
+                ),
                 input_size="input-group-sm"
             ),
             ListGroupCheckboxes(

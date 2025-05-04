@@ -1,5 +1,5 @@
 ///
-/// Page context container
+/// Search document and component
 ///
 
 .search-results {
@@ -12,5 +12,23 @@
 
     .form-check-label {
         @include font-size($small1-font-size);
+    }
+}
+
+// Search document alter the base layout for mobile behaviors
+#document-search {
+    @include media-breakpoint-down($layout-breakpoint) {
+        .layout-base {
+            grid-template-rows: $layout-head-height auto;
+            grid-template-areas:
+                "brand"
+                "main";
+        }
+        .page-context {
+            display: none;
+        }
+        .breadcrumb-container {
+            display: none;
+        }
     }
 }

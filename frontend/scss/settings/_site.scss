@@ -12,3 +12,8 @@ $onepixel: 0.0625rem; // For 1rem = 16px
 
 // Name of theme colors related to Atoum sections
 $atoum-sections: "consumable", "assortment", "category", "product";
+
+// Layout structure parameters
+$layout-menu-width: rem-calc(260px);
+$layout-head-height: rem-calc(95px);
+$layout-breakpoint: lg;

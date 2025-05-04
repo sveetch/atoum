@@ -7,9 +7,7 @@
         <small class="text-body-secondary"><i class="bi bi-archive"></i> {% translate "Product" %}</small>
     </p>
 
-    <h1>
-        {{ product_object.title }}
-    </h1>
+    <h1>{{ product_object.title }}</h1>
 {% endspaceless %}{% endblock title-content %}
 
 {% block page-submenu %}
@@ -18,7 +16,7 @@
         <div class="manage-object dropdown">
             <button class="btn btn-primary dropdown-toggle" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-gear"></i> {% translate "Manage" %}
+                <i class="bi bi-gear"></i><span class="visually-hidden"> {% translate "Manage" %}</span>
             </button>
             <ul class="dropdown-menu">
                 <li>

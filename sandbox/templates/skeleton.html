@@ -30,8 +30,9 @@
         {% block body-container %}
             {% spaceless %}
                 <div class="layout-base">
-                    <div class="page-menu">
-                        {% include "partials/brand.html" %}
+                    {% include "partials/brand.html" %}
+
+                    <div id="main-menu" class="page-menu">
 
                         <ul class="menu-apps">
                             {% comment %}{% include "partials/menu-apps_sample.html" %}{% endcomment %}
@@ -87,6 +88,10 @@
                                 </button>
 
                                 <div class="collapse show" id="menu-account-collapse">
+                                    {% if request.user.is_authenticated %}
+                                        <p>You are connected as <strong>{{ request.user.username }}</strong></p>
+                                    {% endif %}
+
                                     <ul>
                                         {% if request.user.is_authenticated %}
                                             {% if request.user.is_staff %}
@@ -113,8 +118,8 @@
                             </li>
                         </ul>
 
-                        {% include "partials/color_mode_toggler.html" %}
                     </div>
+                    {% include "partials/color_mode_toggler.html" %}
 
                     {% block page-context %}
                         <div class="page-context">

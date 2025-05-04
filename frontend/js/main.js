@@ -62,10 +62,12 @@ import {
 // myModal.show();
 
 import { BootstrapColorMode } from "./components/color-modes";
+import { CssClassToggler } from "./components/cssclass-toggler";
 
 ///
 /// Initialize components after DOM is loaded
 ///
 document.addEventListener("DOMContentLoaded", function () {
     BootstrapColorMode();
+    CssClassToggler();
 });

@@ -15,13 +15,13 @@
             <div class="manage-object dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-gear"></i> {% translate "Manage" %}
+                    <i class="bi bi-gear"></i><span class="visually-hidden"> {% translate "Manage" %}</span>
                 </button>
                 <ul class="dropdown-menu">
                     <li>
                         <a href="{% url "admin:atoum_category_add" %}"
                             class="dropdown-item">
-                            <small class="me-3"><i class="bi bi-plus-lg text-success"></i> {% translate "Add a new Category" %}</small>
+                            <small class="me-3"><i class="bi bi-plus-lg text-success"></i> <span>{% translate "Add a new Category" %}</small>
                         </a>
                     </li>
                 </ul>

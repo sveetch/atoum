@@ -15,6 +15,7 @@ Development
 * Upgraded to Bootstrap v5.3.5 and some minor upgrades for Bootstrap dependencies;
 * Every views are now required to be authenticated and tests ensure it is well
   implemented;
+* Improved responsive layout so it should be fully usable;
 
 
 Version 0.4.1 - 2025/04/30

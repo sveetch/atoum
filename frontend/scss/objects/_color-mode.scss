@@ -9,8 +9,10 @@
     color: var(--site-menu-color);
 
     @include media-breakpoint-down(lg) {
-        // Shift hamburger toggler, this is dependant from navbar integration
-        right: 3.5rem !important;
+        left: auto;
+        top: 2rem;
+        bottom: auto;
+        right: 1rem;
     }
 
     .btn {

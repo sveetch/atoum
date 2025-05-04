@@ -3,6 +3,7 @@
 $bb-cartouches-item-padding-x: space("normal") !default;
 $bb-cartouches-item-padding-y: space("normal") !default;
 
+// TODO: A lot of colors are enforced and do not support color themes
 
 .cartouches {
     display: grid;
@@ -16,11 +17,15 @@ $bb-cartouches-item-padding-y: space("normal") !default;
         --cartouches-item-hover-color: #{theme-color("darkest")};
 
         display: flex;
-        grid-column: auto/span 3;
+        grid-column: auto/span 6;
         text-decoration: none;
         text-align: left;
         border: $onepixel solid $gray-300;
         border-radius: $border-radius-sm;
+
+        @include media-breakpoint-up($layout-breakpoint) {
+            grid-column: auto/span 3;
+        }
 
         .cover {
             @include bb-flex(1, 0, 2rem);

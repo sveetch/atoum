@@ -1,6 +1,8 @@
 {% extends "skeleton.html" %}
 {% load atoum i18n %}
 
+{% block body-classes %}{% if shopping_inventory %} shopping-inventory-enabled{% endif %}{% endblock body-classes %}
+
 {% block content-classes %}{% if shopping_inventory %} splitted{% endif %}{% endblock content-classes %}
 
 {% block content %}

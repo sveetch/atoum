@@ -1,6 +1,8 @@
 {% extends "atoum/base.html" %}
 {% load atoum crispy_forms_tags i18n %}
 
+{% block body-attrs %}id="document-search"{% endblock body-attrs %}
+
 {% block title-content %}{% spaceless %}
     <h1>
         <i class="bi bi-search"></i>
@@ -15,9 +17,7 @@
         <hr>
 
         {% if query %}
-            <h3 class="h4 mb-4">
-                {% translate "Results" %}
-            </h3>
+            <h3 class="h4 mb-4">{% translate "Results" %}</h3>
 
             {% with results=page_obj.object_list %}
                 {% if results %}

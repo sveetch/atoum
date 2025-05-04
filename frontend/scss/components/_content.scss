@@ -13,7 +13,7 @@
     }
 }
 
-// TODO: This was a "quick done to work" that need to be moved to a component
+// TODO: This was a "quick done to work" that need to be moved to a component/object
 // Currently used in shopping detail, we may merge it with the 'table.tr.bump'
 .to-bump {
     &.bump {
@@ -24,81 +24,8 @@
 
 .page-content {
     background-color: var(--site-content-bg);
+}
 
-    .main-content {
-        padding: space("normal");
-    }
-
-    .aside-content {
-        padding: 0;
-        border-left: $onepixel solid var(--site-menu-subtle);
-        background-color: var(--bs-body-bg);
-
-        #aside-shopping {
-            .head {
-                display: flex;
-                justify-content: space-between;
-                border-bottom: $onepixel solid var(--site-context-subtle);
-
-                .title {
-                    margin: 0;
-                    padding: space("normal") space("short");
-                    color: var(--bs-primary-text-emphasis);
-                    font-weight: $font-weight-bold;
-                }
-
-                .controls {
-                    align-items: center;
-                }
-            }
-
-            table {
-                thead {
-                    display: none;
-                }
-                tbody {
-                    tr {
-                        td {
-                            @include font-size($small2-font-size);
-                            background-color: transparent;
-
-                            &.quantity {
-                                text-align: right;
-                                vertical-align: middle;
-                                width: rem-calc(60px);
-                            }
-
-                            &:first-child {
-                                border-left: 0;
-                            }
-                            &:last-child {
-                                border-right: 0;
-                            }
-                        }
-
-                        // Class to apply highlight animation
-                        &.bump {
-                            td {
-                                animation-duration: 3s;
-                                animation-name: highlight-product-row;
-                            }
-                        }
-
-                        &:last-child {
-                            td {
-                                border-bottom: 0;
-                            }
-                        }
-                    }
-                }
-            }
-
-            .empty {
-                @include font-size($h6-font-size);
-                padding: space("large") space("normal");
-                font-style: italic;
-                text-align: center;
-            }
-        }
-    }
+.main-content {
+    padding: space("normal");
 }

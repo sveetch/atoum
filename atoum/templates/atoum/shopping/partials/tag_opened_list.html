@@ -11,24 +11,32 @@
                     {{ shopping_inventory }}
                 </h3>
 
-                <div class="controls btn-group btn-group-sm" role="group" aria-label="Current shopping list controls">
-                    <a href="{{ shopping_inventory.get_absolute_url }}" class="btn btn-outline-primary">
-                        {% translate "Show" %}
+                <div class="controls btn-group" role="group" aria-label="Current shopping list controls">
+                    <a href="{{ shopping_inventory.get_absolute_url }}"
+                       class="btn cta-manage btn-outline-primary"
+                       title="{% trans "Manage" %}"
+                       aria-label="{% trans "Manage" %}">
+                        <span>{% translate "Manage" %}</span>
                     </a>
-                    <a href="{% url "atoum:shopping-list-close-selection" %}?next={{ request.path }}" class="btn btn-outline-primary">
-                        {% translate "Close" %}
+
+                    <a href="{% url "atoum:shopping-list-close-selection" %}?next={{ request.path }}"
+                       class="btn cta-disable btn-outline-primary"
+                       title="{% trans "Disable" %}"
+                       aria-label="{% trans "Disable" %}">
+                        <span>{% translate "Disable" %}</span>
                     </a>
+
+                    <button class="class-toggler toggler-enable btn btn-outline-primary"
+                            type="button"
+                            data-target="body"
+                            data-target-css="shopping-inventory-opened"
+                            aria-label="{% trans "Toggle shopping inventory" %}"
+                            aria-expanded="false"></button>
                 </div>
             </div>
 
-            {% comment %}<div class="d-flex justify-content-end">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Current shopping list controls">
-                    <button type="button" class="btn btn-outline-primary">{% translate "Save" %}</button>
-                </div>
-            </div>{% endcomment %}
-
             {% if shopping_inventory.current_items %}
-                <table class="table table-hover table-bordered" id="shopping-inventory-{{ shopping_inventory.id }}">
+                <table class="inventory table table-hover table-bordered" id="shopping-inventory-{{ shopping_inventory.id }}">
                     <thead>
                         <tr>
                             <th>{% translate "Quantity" %}</th>
@@ -43,7 +51,7 @@
                     </tbody>
                 </table>
             {% else %}
-                <p class="empty">{% translate "No products yet." %}</p>
+                <p class="inventory empty">{% translate "No products yet." %}</p>
             {% endif %}
         </div>
     {% endif %}

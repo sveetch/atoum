@@ -19,25 +19,6 @@
     background-color: var(--site-menu-bg);
     border-right: $onepixel solid var(--site-menu-subtle);
 
-    .page-brand {
-        @include font-size(2rem);
-        color: var(--site-menu-emphasis);
-        display: flex;
-        height: $layout-context-height;
-        padding: space("shorter") var(--site-menu-padding-x);
-        justify-content: flex-start;
-        align-items: center;
-        font-weight: $font-weight-bold;
-        text-decoration: none;
-        border-bottom: $onepixel solid var(--site-menu-subtle);
-        text-transform: uppercase;
-
-        img {
-            width: rem-calc(40px);
-            margin-right: space("shorter");
-        }
-    }
-
     .menu-apps {
         margin: 0;
         padding: space("normal") var(--site-menu-padding-x);
@@ -90,6 +71,17 @@
                 font-weight: $font-weight-semibold;
                 text-transform: uppercase;
                 color: var(--site-menu-subtle);
+            }
+
+            p:not(.title) {
+                @include menu-item-base();
+                @include font-size($small2-font-size);
+                margin: 0;
+                color: var(--site-menu-subtle);
+
+                b, strong {
+                    color: var(--site-menu-color);
+                }
             }
 
             button {
