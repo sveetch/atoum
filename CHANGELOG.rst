@@ -16,6 +16,7 @@ Development
 * Every views are now required to be authenticated and tests ensure it is well
   implemented;
 * Improved responsive layout so it should be fully usable;
+* Fixed package configuration with 'pyproject.toml' file and some path changes;
 
 
 Version 0.4.1 - 2025/04/30

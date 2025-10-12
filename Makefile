@@ -13,7 +13,7 @@ SPHINX_RELOAD_BIN=$(PYTHON_BIN) docs/sphinx_reload.py
 TOX_BIN=$(VENV_PATH)/bin/tox
 TWINE_BIN=$(VENV_PATH)/bin/twine
 
-DJANGO_MANAGE=$(SANDBOX_DIR)/manage.py
+DJANGO_MANAGE=manage.py
 
 PACKAGE_NAME=atoum
 PACKAGE_SLUG=atoum
@@ -326,7 +326,7 @@ search-build:
 
 search-update:
 	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> (Re)Build search indexes <---$(FORMATRESET)\n"
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Update search indexes <---$(FORMATRESET)\n"
 	@echo ""
 	$(PYTHON_BIN) $(DJANGO_MANAGE) update_index -v 3 --remove
 .PHONY: search-update
