@@ -17,6 +17,7 @@ class DefaultFormHelper(FormHelper):
     DEFAULT_INPUTS = None
     DEFAULT_LAYOUT = None
     DEFAULT_METHOD = "post"
+    DEFAULT_INCLUDE_MEDIA = True
 
     def __init__(self, *args, **kwargs):
         self.provide_attrs(kwargs.pop("attrs", None))
@@ -31,6 +32,7 @@ class DefaultFormHelper(FormHelper):
             layout_kwargs=kwargs.pop("layout_kwargs", None)
         )
         self.provide_inputs(kwargs.pop("inputs", None))
+        self.provide_include_media(kwargs.pop("include_media", None))
 
         super().__init__(*args, **kwargs)
 
@@ -55,9 +57,18 @@ class DefaultFormHelper(FormHelper):
             self.form_id = value
 
     def provide_tag(self, value=None):
-        value = value or self.DEFAULT_ENABLETAG
-        if value is not None:
-            self.form_tag = value
+        self.form_tag = (
+            value
+            if value is not None
+            else self.DEFAULT_ENABLETAG
+        )
+
+    def provide_include_media(self, value=None):
+        self.include_media = (
+            value
+            if value is not None
+            else self.DEFAULT_INCLUDE_MEDIA
+        )
 
     def provide_method(self, value=None):
         value = value or self.DEFAULT_METHOD

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-05 22:18+0200\n"
+"POT-Creation-Date: 2025-10-19 16:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,12 +20,13 @@ msgstr ""
 #: admin/assortment.py:63 models/category.py:77
 #: templates/atoum/assortment/detail.html:52
 #: templates/atoum/category/index.html:3 templates/atoum/category/index.html:8
-#: templates/atoum/dashboard.html:40 views/category.py:25
+#: templates/atoum/dashboard.html:40 views/category.py:26
 msgid "Categories"
 msgstr ""
 
 #: admin/brand.py:31 admin/category.py:64 models/product.py:113
-#: templates/atoum/category/detail.html:55 templates/atoum/dashboard.html:50
+#: templates/atoum/admin/product/move_to.html:31
+#: templates/atoum/category/detail.html:53 templates/atoum/dashboard.html:50
 #: templates/atoum/product/index.html:3 templates/atoum/product/index.html:8
 #: views/product.py:26
 msgid "Products"
@@ -35,28 +36,42 @@ msgstr ""
 #: templates/atoum/assortment/index.html:3
 #: templates/atoum/assortment/index.html:8
 #: templates/atoum/consumable/detail.html:52 templates/atoum/dashboard.html:30
-#: views/assortment.py:24
+#: views/assortment.py:25
 msgid "Assortments"
+msgstr ""
+
+#: admin/product.py:81
+msgid "Move selected products to a category"
 msgstr ""
 
 #: admin/shopping.py:45
 msgid "Title"
 msgstr ""
 
-#: form_helpers/search.py:25 templates/atoum/search/results.html:7
-#: views/search.py:16
+#: form_helpers/search.py:33 templates/atoum/search/results.html:9
+#: views/search.py:17
 msgid "Search"
+msgstr ""
+
+#: forms/product.py:36 models/category.py:76 models/product.py:37
+#: templates/atoum/category/detail.html:7
+#: templates/atoum/search/results.html:37
+msgid "Category"
+msgstr ""
+
+#: forms/product.py:76
+msgid "Destination category"
 msgstr ""
 
 #: models/assortment.py:25 models/consumable.py:52
 #: templates/atoum/consumable/detail.html:7
-#: templates/atoum/search/results.html:40
+#: templates/atoum/search/results.html:45
 msgid "Consumable"
 msgstr ""
 
 #: models/assortment.py:29 models/brand.py:29 models/category.py:29
-#: models/consumable.py:22 models/product.py:49 models/shopping.py:23
-#: models/shopping.py:150
+#: models/consumable.py:22 models/product.py:49 models/shopping.py:24
+#: models/shopping.py:271
 msgid "creation date"
 msgstr ""
 
@@ -66,7 +81,7 @@ msgid "modification date"
 msgstr ""
 
 #: models/assortment.py:39 models/brand.py:39 models/category.py:39
-#: models/consumable.py:32 models/product.py:59 models/shopping.py:33
+#: models/consumable.py:32 models/product.py:59 models/shopping.py:34
 msgid "title"
 msgstr ""
 
@@ -77,7 +92,7 @@ msgstr ""
 
 #: models/assortment.py:74 models/category.py:25
 #: templates/atoum/assortment/detail.html:7
-#: templates/atoum/search/results.html:28
+#: templates/atoum/search/results.html:29
 msgid "Assortment"
 msgstr ""
 
@@ -89,7 +104,7 @@ msgstr ""
 msgid "cover image"
 msgstr ""
 
-#: models/brand.py:71 templates/atoum/product/detail.html:63
+#: models/brand.py:71 templates/atoum/product/detail.html:64
 msgid "Brand"
 msgstr ""
 
@@ -97,15 +112,9 @@ msgstr ""
 msgid "Brands"
 msgstr ""
 
-#: models/category.py:76 models/product.py:37
-#: templates/atoum/category/detail.html:7
-#: templates/atoum/search/results.html:34
-msgid "Category"
-msgstr ""
-
 #: models/consumable.py:53 templates/atoum/consumable/index.html:3
 #: templates/atoum/consumable/index.html:8 templates/atoum/dashboard.html:20
-#: views/consumable.py:18
+#: views/consumable.py:20
 msgid "Consumables"
 msgstr ""
 
@@ -114,72 +123,91 @@ msgid "brand"
 msgstr ""
 
 #: models/product.py:112 templates/atoum/product/detail.html:7
-#: templates/atoum/search/results.html:45
-#: templates/atoum/shopping/partials/tag_shopping_aside_html.html:36
+#: templates/atoum/search/results.html:52
+#: templates/atoum/shopping/partials/tag_opened_list.html:43
 msgid "Product"
 msgstr ""
 
-#: models/shopping.py:28
+#: models/shopping.py:29
 msgid "planning date"
 msgstr ""
 
-#: models/shopping.py:39 models/shopping.py:97 models/shopping.py:163
+#: models/shopping.py:40 models/shopping.py:98 models/shopping.py:284
 msgid "done"
 msgstr ""
 
-#: models/shopping.py:45
+#: models/shopping.py:46
 msgid "items"
 msgstr ""
 
-#: models/shopping.py:69
+#: models/shopping.py:70
 msgid "Shopping"
 msgstr ""
 
-#: models/shopping.py:70
+#: models/shopping.py:71
 msgid "Shoppings"
 msgstr ""
 
-#: models/shopping.py:97
+#: models/shopping.py:98
 msgid "open"
 msgstr ""
 
-#: models/shopping.py:161
+#: models/shopping.py:282
 msgid "quantity"
 msgstr ""
 
-#: models/shopping.py:169
+#: models/shopping.py:290
 msgid "Shopping item"
 msgstr ""
 
-#: models/shopping.py:170
+#: models/shopping.py:291
 msgid "Shopping items"
+msgstr ""
+
+#: templates/atoum/admin/product/move_to.html:20
+msgid "Home"
+msgstr ""
+
+#: templates/atoum/admin/product/move_to.html:29
+msgid "Choose a new category where to move the following products."
+msgstr ""
+
+#: templates/atoum/admin/product/move_to.html:44
+msgid "Yes, I’m sure"
+msgstr ""
+
+#: templates/atoum/admin/product/move_to.html:45
+msgid "No, take me back"
 msgstr ""
 
 #: templates/atoum/assortment/detail.html:19
 #: templates/atoum/assortment/index.html:18
-#: templates/atoum/category/detail.html:21
+#: templates/atoum/category/detail.html:19
 #: templates/atoum/category/index.html:18
 #: templates/atoum/consumable/detail.html:19
 #: templates/atoum/consumable/index.html:18
-#: templates/atoum/product/detail.html:21 templates/atoum/product/index.html:18
-#: templates/atoum/shopping/detail.html:21
+#: templates/atoum/product/detail.html:19 templates/atoum/product/index.html:18
+#: templates/atoum/shopping/detail.html:19
 #: templates/atoum/shopping/index.html:18
+#: templates/atoum/shopping/partials/tag_opened_list.html:17
+#: templates/atoum/shopping/partials/tag_opened_list.html:18
+#: templates/atoum/shopping/partials/tag_opened_list.html:19
 msgid "Manage"
 msgstr ""
 
 #: templates/atoum/assortment/detail.html:25
-#: templates/atoum/category/detail.html:27
+#: templates/atoum/category/detail.html:25
 #: templates/atoum/consumable/detail.html:25
-#: templates/atoum/product/detail.html:27
-#: templates/atoum/shopping/detail.html:27
+#: templates/atoum/product/detail.html:25
+#: templates/atoum/shopping/detail.html:26
 msgid "Change"
 msgstr ""
 
 #: templates/atoum/assortment/detail.html:31
-#: templates/atoum/category/detail.html:33
+#: templates/atoum/category/detail.html:31
 #: templates/atoum/consumable/detail.html:31
-#: templates/atoum/product/detail.html:33
-#: templates/atoum/shopping/detail.html:33
+#: templates/atoum/product/detail.html:31
+#: templates/atoum/shopping/detail.html:32
 msgid "Delete"
 msgstr ""
 
@@ -203,15 +231,15 @@ msgstr ""
 msgid "No assortment yet."
 msgstr ""
 
-#: templates/atoum/category/detail.html:40
-#: templates/atoum/product/index.html:24
+#: templates/atoum/category/detail.html:38
+#: templates/atoum/product/index.html:26
 msgid "Add a new Product"
 msgstr ""
 
-#: templates/atoum/category/detail.html:62
-#: templates/atoum/product/index.html:42
-#: templates/atoum/shopping/detail.html:84
-#: templates/atoum/shopping/partials/tag_shopping_aside_html.html:62
+#: templates/atoum/category/detail.html:70
+#: templates/atoum/product/index.html:53
+#: templates/atoum/shopping/detail.html:92
+#: templates/atoum/shopping/partials/tag_opened_list.html:54
 msgid "No products yet."
 msgstr ""
 
@@ -225,7 +253,7 @@ msgid "No consumable yet."
 msgstr ""
 
 #: templates/atoum/dashboard.html:3 templates/atoum/dashboard.html:6
-#: views/dashboard.py:22
+#: views/dashboard.py:23
 msgid "Dashboard"
 msgstr ""
 
@@ -241,101 +269,122 @@ msgstr ""
 msgid "Pagination"
 msgstr ""
 
-#: templates/atoum/product/detail.html:67
+#: templates/atoum/product/detail.html:68
 msgid "No brand."
 msgstr ""
 
-#: templates/atoum/product/detail.html:71
+#: templates/atoum/product/detail.html:72
 msgid "Description"
 msgstr ""
 
-#: templates/atoum/product/detail.html:75
+#: templates/atoum/product/detail.html:76
 msgid "No description."
+msgstr ""
+
+#: templates/atoum/product/partials/controls.html:24
+msgid "Edit from shopping list"
+msgstr ""
+
+#: templates/atoum/product/partials/controls.html:29
+msgid "Add to shopping list"
+msgstr ""
+
+#: templates/atoum/product/partials/controls.html:40
+msgid "Remove from shopping list"
 msgstr ""
 
 #: templates/atoum/recursivetree.html:5
 msgid "Tree"
 msgstr ""
 
-#: templates/atoum/search/results.html:19
+#: templates/atoum/search/results.html:20
 msgid "Results"
 msgstr ""
 
-#: templates/atoum/search/results.html:30
+#: templates/atoum/search/results.html:31
 msgid "In consumable"
 msgstr ""
 
-#: templates/atoum/search/results.html:36
+#: templates/atoum/search/results.html:39
 msgid "In assortment"
 msgstr ""
 
-#: templates/atoum/search/results.html:47
+#: templates/atoum/search/results.html:54
 msgid "In category"
 msgstr ""
 
-#: templates/atoum/search/results.html:53
+#: templates/atoum/search/results.html:61
 msgid "No results found."
 msgstr ""
 
-#: templates/atoum/search/results.html:59
+#: templates/atoum/search/results.html:67
 msgid "No search pattern was submitted."
 msgstr ""
 
-#: templates/atoum/shopping/detail.html:7 templates/atoum/shopping/index.html:8
-#: views/shopping.py:21
-msgid "Shopping lists"
+#: templates/atoum/shopping/detail.html:7 templates/atoum/shopping/index.html:3
+msgid "Shopping list"
 msgstr ""
 
-#: templates/atoum/shopping/detail.html:46
-#: templates/atoum/shopping/index.html:51
+#: templates/atoum/shopping/detail.html:45
+#: templates/atoum/shopping/index.html:47
 msgid "Planned for"
 msgstr ""
 
-#: templates/atoum/shopping/detail.html:51
-#: templates/atoum/shopping/index.html:43
-#: templates/atoum/shopping/partials/tag_shopping_aside_html.html:37
-msgid "Done"
-msgstr ""
-
-#: templates/atoum/shopping/detail.html:53
-#: templates/atoum/shopping/index.html:45
-msgid "Open"
-msgstr ""
-
-#: templates/atoum/shopping/detail.html:55
-msgid "To do"
-msgstr ""
-
-#: templates/atoum/shopping/detail.html:63
+#: templates/atoum/shopping/detail.html:58
 msgid "Add new products"
 msgstr ""
 
-#: templates/atoum/shopping/index.html:3
-msgid "Shopping list"
+#: templates/atoum/shopping/index.html:8 views/shopping.py:23
+msgid "Shopping lists"
 msgstr ""
 
 #: templates/atoum/shopping/index.html:24
 msgid "Add a new Shopping list"
 msgstr ""
 
-#: templates/atoum/shopping/index.html:55
-#: templates/atoum/shopping/partials/tag_shopping_aside_html.html:16
+#: templates/atoum/shopping/index.html:51
 msgid "Show"
 msgstr ""
 
-#: templates/atoum/shopping/index.html:64
+#: templates/atoum/shopping/index.html:60
 msgid "No shopping list yet."
 msgstr ""
 
-#: templates/atoum/shopping/partials/tag_shopping_aside_html.html:19
-msgid "Close"
+#: templates/atoum/shopping/partials/list_status.html:3
+#: templates/atoum/shopping/partials/tag_opened_list.html:44
+msgid "Done"
 msgstr ""
 
-#: templates/atoum/shopping/partials/tag_shopping_aside_html.html:35
+#: templates/atoum/shopping/partials/list_status.html:5
+msgid "Open"
+msgstr ""
+
+#: templates/atoum/shopping/partials/list_status.html:7
+msgid "To do"
+msgstr ""
+
+#: templates/atoum/shopping/partials/tag_opened_list.html:24
+#: templates/atoum/shopping/partials/tag_opened_list.html:25
+#: templates/atoum/shopping/partials/tag_opened_list.html:26
+msgid "Disable"
+msgstr ""
+
+#: templates/atoum/shopping/partials/tag_opened_list.html:33
+msgid "Toggle shopping inventory"
+msgstr ""
+
+#: templates/atoum/shopping/partials/tag_opened_list.html:42
 msgid "Quantity"
 msgstr ""
 
-#: views/assortment.py:90 views/category.py:103 views/product.py:108
-#: views/shopping.py:74 views/shopping.py:103
+#: views/admin/product.py:22
+msgid "Move product(s) to a category"
+msgstr ""
+
+#: views/admin/product.py:96
+msgid "{} object(s) assigned to category: {}"
+msgstr ""
+
+#: views/assortment.py:96 views/category.py:107 views/product.py:109
 msgid "No {} found matching the query"
 msgstr ""

@@ -17,6 +17,7 @@ Development
   implemented;
 * Improved responsive layout so it should be fully usable;
 * Fixed package configuration with 'pyproject.toml' file and some path changes;
+* Added an admin action for products to move selected objects to a category;
 
 
 Version 0.4.1 - 2025/04/30
