@@ -18,10 +18,10 @@
             </span>&nbsp;-
             <span class="badge text-bg-warning fs-6">
                 <i class="bi bi-tags"></i> Categorie
-            </span>&nbsp;-
+            </span>{% comment %}&nbsp;-
             <span class="text-bg-light">
                 <i class="bi bi-archive"></i> Produit
-            </span>
+            </span>{% endcomment %}
         </p>
     </div>
 
@@ -31,23 +31,23 @@
         <ul class="tree consumable-list">
             {% for consumable in object_list %}
                 <li>
-                    <span class="badge text-bg-success fs-4">{{ consumable.title }}</span>
+                    <a href="{{ consumable.get_absolute_url }}" class="badge text-bg-success fs-4">{{ consumable.title }}</a>
 
                     {% with assortments=consumable.get_assortments %}
                         {% if assortments %}
                         <ul class="assortment-list my-2">
                             {% for assortment in assortments %}
                             <li class="mb-2">
-                                <span class="badge rounded-pill text-bg-primary fs-5">{{ assortment.title }}</span>
+                                <a href="{{ assortment.get_absolute_url }}" class="badge rounded-pill text-bg-primary fs-5">{{ assortment.title }}</a>
 
                                 {% with categories=assortment.get_categories %}
                                     {% if categories %}
                                     <ul class="category-list my-1">
                                         {% for category in categories %}
                                         <li class="mb-1">
-                                            <span class="badge text-bg-warning fs-6">{{ category.title }}</span>
+                                            <a href="{{ category.get_absolute_url }}" class="badge text-bg-warning fs-6">{{ category.title }}</a>
 
-                                            {% with products=category.get_products %}
+                                            {% comment %}{% with products=category.get_products %}
                                                 {% if products %}
                                                 <ul class="product-list my-1">
                                                     {% for product in products %}
@@ -57,7 +57,7 @@
                                                     {% endfor %}
                                                 </ul>
                                                 {% endif %}
-                                            {% endwith %}
+                                            {% endwith %}{% endcomment %}
                                         </li>
                                         {% endfor %}
                                     </ul>

@@ -19,6 +19,17 @@ Development
 * Fixed package configuration with 'pyproject.toml' file and some path changes;
 * Added an admin action for products to move selected objects to a category;
 
+.. Todo::
+    * DAL autocompletion field in admin would be largely better if using Haystack
+      search. But this seems difficult to insert in DAL machinary because of Haystack
+      search system which reside in a form mixin;
+    * Creating a new empty shopping should not make it "done";
+    * A "done" shopping is available to enter for edition (like adding product) but
+      fail to fill the cart on the first action, but then after is working because the
+      first action has removed "done" status;
+      * We should not allow to edit again a "done" shopping;
+    * Admin product "move to" action is not tested yet;
+
 
 Version 0.4.1 - 2025/04/30
 **************************
