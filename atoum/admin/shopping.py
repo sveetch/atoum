@@ -44,11 +44,12 @@ class ShoppingAdmin(admin.ModelAdmin):
         return str(obj)
     get_title.short_description = _("Title")
 
-    def save_formset(self, request, form, formset, change):
-        """
-        Customize inlines item saving (because it can not be done on the inline form
-        itself).
-        """
-        super().save_formset(request, form, formset, change)
-
-        form.instance.update_shopping_done()
+    # def save_formset(self, request, form, formset, change):
+    #     """
+    #     DEPRECATED
+    #     Customize inlines item saving (because it can not be done on the inline form
+    #     itself).
+    #     """
+    #     super().save_formset(request, form, formset, change)
+    #
+    #     form.instance.update_shopping_done()

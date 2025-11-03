@@ -51,13 +51,15 @@
                 </p>
             </div>
 
-            {% if not shopping_inventory or shopping_inventory.id != shopping_object.id %}
-            <p class="controls">
-                <a href="{% url "atoum:shopping-list-open-selection" pk=shopping_object.id %}"
-                   class="btn btn-outline-primary">
-                    <i class="bi bi-plus-lg"></i> {% translate "Add new products" %}
-                </a>
-            </p>
+            {% if not shopping_object.done %}
+                {% if not shopping_inventory or shopping_inventory.id != shopping_object.id %}
+                    <p class="controls">
+                        <a href="{% url "atoum:shopping-list-open-selection" pk=shopping_object.id %}"
+                        class="btn btn-outline-primary">
+                            <i class="bi bi-plus-lg"></i> {% translate "Open in basket" %}
+                        </a>
+                    </p>
+                {% endif %}
             {% endif %}
         </div>
 

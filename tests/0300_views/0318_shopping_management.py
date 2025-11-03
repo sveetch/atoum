@@ -296,26 +296,18 @@ def test_patch_done(client, db, initial_catalog, opened_inventory):  # noqa: F81
         session.save()
 
     # Get the existing shopping item
+    ShoppingItem.objects.filter(shopping=shopping, product=wing).get()
     corn_item = ShoppingItem.objects.filter(shopping=shopping, product=corn).get()
-    wing_item = ShoppingItem.objects.filter(shopping=shopping, product=wing).get()
     corn_url = reverse("atoum:shopping-list-product", kwargs={
         "pk": shopping.id,
         "product_id": corn.id,
-    })
-    wing_url = reverse("atoum:shopping-list-product", kwargs={
-        "pk": shopping.id,
-        "product_id": wing.id,
     })
     corn_done_cssid = "#shopping-inventory-{shopping}-item-{item}-done".format(
         shopping=shopping.id,
         item=corn_item.id,
     )
-    wing_done_cssid = "#shopping-inventory-{shopping}-item-{item}-done".format(
-        shopping=shopping.id,
-        item=wing_item.id,
-    )
 
-    # With every items done the shopping should be done also
+    # All items done don't set the shopping object as done
     response = client.patch(corn_url, data="done=true", follow=True)
     assert response.redirect_chain == []
     assert response.status_code == 200
@@ -324,26 +316,9 @@ def test_patch_done(client, db, initial_catalog, opened_inventory):  # noqa: F81
         ("Wing", True)
     ]
     shopping.refresh_from_db()
-    assert shopping.done is True
-    dom = html_pyquery(response, rooted=True)
-    item_row = dom.find(corn_done_cssid)
-    if opened_inventory:
-        assert len(item_row) == 1
-    else:
-        assert len(item_row) == 0
-
-    # If an item is turning undone the shopping turns undone also
-    response = client.patch(wing_url, data="done=false", follow=True)
-    assert response.redirect_chain == []
-    assert response.status_code == 200
-    assert [(v.product.title, v.done) for v in shopping.get_items()] == [
-        ("Corn", True),
-        ("Wing", False)
-    ]
-    shopping.refresh_from_db()
     assert shopping.done is False
     dom = html_pyquery(response, rooted=True)
-    item_row = dom.find(wing_done_cssid)
+    item_row = dom.find(corn_done_cssid)
     if opened_inventory:
         assert len(item_row) == 1
     else:

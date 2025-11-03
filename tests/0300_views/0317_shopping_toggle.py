@@ -22,7 +22,7 @@ def test_anonymous(client, db):
     assert response.status_code == 403
 
 
-def test_authenticated_close(client, db):
+def test_close(client, db):
     """
     Closing opened shopping list will remove it from session, no matter it is valid
     value or not.
@@ -55,7 +55,7 @@ def test_authenticated_close(client, db):
     assert "atoum_shopping_inventory" not in client.session
 
 
-def test_authenticated_open_invalid(client, db):
+def test_open_invalid(client, db):
     """
     Invalid Shopping ID will result on a 404.
     """
@@ -70,14 +70,14 @@ def test_authenticated_open_invalid(client, db):
     assert "atoum_shopping_inventory" not in client.session
 
 
-def test_authenticated_open_valid(client, db):
+def test_open_valid(client, db):
     """
     Valid Shopping ID should be set in session as the opened shopping list and possible
     redirection path followed.
     """
     user = UserFactory()
     shopping_1 = ShoppingFactory()
-    shopping_2 = ShoppingFactory()
+    shopping_2 = ShoppingFactory(done=True)
 
     dashboard_url = reverse("atoum:dashboard")
     consommables_url = reverse("atoum:consumable-index")
@@ -93,8 +93,19 @@ def test_authenticated_open_valid(client, db):
     assert "atoum_shopping_inventory" in client.session
     assert client.session["atoum_shopping_inventory"] == shopping_1.id
 
-    # When session has already an opened ID it will be overwritten, also the given
-    # URL path for redirection is followed
+    # A done Shopping can not be opened
+    url = reverse("atoum:shopping-list-open-selection", kwargs={"pk": shopping_2.id})
+    response = client.get(url, data={"next": consommables_url}, follow=True)
+    assert response.redirect_chain == [(consommables_url, 302)]
+    assert response.status_code == 200
+    assert "atoum_shopping_inventory" in client.session
+    # Opened shopping has not been changed
+    assert client.session["atoum_shopping_inventory"] == shopping_1.id
+
+    # An undone Shopping can be opened also if session already has an opened ID it will
+    # be overwritten, and given URL path for redirection is followed
+    shopping_2.done = False
+    shopping_2.save()
     url = reverse("atoum:shopping-list-open-selection", kwargs={"pk": shopping_2.id})
     response = client.get(url, data={"next": consommables_url}, follow=True)
     assert response.redirect_chain == [(consommables_url, 302)]

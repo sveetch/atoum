@@ -53,10 +53,10 @@ def test_admin_ping_detail(db, admin_client):
         {"romaine_done": True, "arugula_done": False},
         {"shopping_done": False, "romaine_done": True, "arugula_done": False},
     ),
-    # If all items are done, the shoppinglist should be done
+    # If all items are done, the shoppinglist is still undone
     (
         {"romaine_done": True, "arugula_done": True},
-        {"shopping_done": True, "romaine_done": True, "arugula_done": True},
+        {"shopping_done": False, "romaine_done": True, "arugula_done": True},
     ),
     # If shoppinglist is marked done, all items should be done too
     # TODO: We currently don't enforce this from admin
@@ -67,7 +67,7 @@ def test_admin_ping_detail(db, admin_client):
 ])
 def test_admin_detail_inlines(db, admin_client, payload, expected):
     """
-    Shopping list 'done' state should depend from its items state.
+    Shopping list 'done' state do not depend from its items state.
     """
     # Products to shop
     romaine = ProductFactory(title="Romaine")

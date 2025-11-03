@@ -25,7 +25,7 @@ def test_index_anonymous(client, db, settings):
 
 def test_index_empty(client, db):
     """
-    Shopping list index should just respond with an empty list.
+    Shopping index should just respond with an empty list.
     """
     user = UserFactory()
     client.force_login(user)
@@ -43,7 +43,7 @@ def test_index_empty(client, db):
 def test_index_filled(client, db, initial_catalog,  # noqa: F811
                       django_assert_num_queries):
     """
-    Shopping list index should list all available Shopping objects.
+    Shopping index should list all Shopping objects.
     """
     user = UserFactory()
     client.force_login(user)
@@ -75,7 +75,7 @@ def test_index_filled(client, db, initial_catalog,  # noqa: F811
 def test_detail_filled(client, db, initial_catalog,  # noqa: F811
                        django_assert_num_queries):
     """
-    Shopping list detail should list its related items.
+    Shopping detail should list its related items.
     """
     user = UserFactory()
     client.force_login(user)
@@ -100,3 +100,69 @@ def test_detail_filled(client, db, initial_catalog,  # noqa: F811
         for v in dom.find(".shopping-detail .shopping-items .item .title")
     ]
     assert titles == ["Corn", "Steack", "Tomatoe"]
+
+
+def test_detail_controls(client, db, initial_catalog):  # noqa: F811
+    """
+    Check about controls in detail view according to Shopping and basket variations.
+    """
+    # shopping_title_selector = ".shopping-detail .shopping-items .item .title"
+    shopping_controls_selector = ".shopping-detail .head .controls a"
+
+    user = UserFactory()
+    client.force_login(user)
+
+    # Create various Shopping objects
+    shopping_empty = ShoppingFactory()
+    shopping_undone = ShoppingFactory(fill_products=[
+        (initial_catalog.products["tomatoe"], {"quantity": 42}),
+    ])
+    shopping_done = ShoppingFactory(done=True, fill_products=[
+        (initial_catalog.products["steack"], {"quantity": 1}),
+    ])
+
+    # Shortcut to get control link from a shopping detail response
+    def get_controls(shopping):
+        url = reverse("atoum:shopping-list-detail", kwargs={"pk": shopping.id})
+        response = client.get(url)
+        assert response.status_code == 200
+        return html_pyquery(response)
+
+    # Without any opened Shopping, an undone Shopping is elligible to be opened
+    dom = get_controls(shopping_undone)
+    assert dom.find(shopping_controls_selector).attr("href") == reverse(
+        "atoum:shopping-list-open-selection",
+        kwargs={"pk": shopping_undone.id}
+    )
+
+    # Without any opened Shopping, an undone Shopping is elligible to be opened even
+    # if empty
+    dom = get_controls(shopping_empty)
+    assert dom.find(shopping_controls_selector).attr("href") == reverse(
+        "atoum:shopping-list-open-selection",
+        kwargs={"pk": shopping_empty.id}
+    )
+
+    # Even without any opened Shopping, a Shopping done is not elligible
+    dom = get_controls(shopping_done)
+    assert dom.find(shopping_controls_selector).attr("href") is None
+
+    # Make undone Shopping opened in basket
+    session = client.session
+    session["atoum_shopping_inventory"] = shopping_undone.id
+    session.save()
+
+    # A Shopping already set in basket does not show controls
+    dom = get_controls(shopping_undone)
+    assert dom.find(shopping_controls_selector).attr("href") is None
+
+    # A done Shopping is never elligible
+    dom = get_controls(shopping_done)
+    assert dom.find(shopping_controls_selector).attr("href") is None
+
+    # Any undone Shopping that is not set in basket will show controls
+    dom = get_controls(shopping_empty)
+    assert dom.find(shopping_controls_selector).attr("href") == reverse(
+        "atoum:shopping-list-open-selection",
+        kwargs={"pk": shopping_empty.id}
+    )

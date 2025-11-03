@@ -93,7 +93,8 @@ class Shopping(models.Model):
         Get a status computed from 'done' state and number of done items.
 
         Returns:
-            dict:
+            dict: A dict with the Shopping 'done' state, numbers of done items and
+            the total number of open (not done) items.
         """
         computed = _("done") if self.done is True else _("open")
         states = self.shoppingitem_set.values_list(
@@ -121,8 +122,8 @@ class Shopping(models.Model):
         .. Warning::
             This method is not cached and therefore will spawn a new queryset each time
             it is called. If you don't need to update Shopping or its item during the
-            same thread, prefer to use property ``FOOOOO`` instead that is cached and
-            avoid multiple querysets to get items on different operation during the
+            same thread, prefer to use property ``current_items`` instead that is cached
+            and avoid multiple querysets to get items on different operation during the
             same thread.
 
         Returns:
@@ -213,10 +214,7 @@ class Shopping(models.Model):
         Update the field ``done`` of a Shopping object depending its current value and
         its items.
 
-        TODO: When creating a new fresh Shopping object, if no items have been added
-        the following cause the Shopping object to be directly marked as 'done'. It's
-        not what would be expected, at least a new object without initial items should
-        let it be 'undone'.
+        DEPRECATED: Keeped as code references until release.
 
         Returns:
             boolean: True if an update of ``done`` value has been done else False.

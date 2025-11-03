@@ -89,6 +89,9 @@ class ShoppinglistToggleSelectionView(LoginRequiredMixin, RedirectURLMixin, View
     """
     View to open or close a Shopping list for product selection.
 
+    Only an undone Shopping object can be opened as a basket. Done Shopping is just
+    ignored but session is still cleaned.
+
     For opening it requires the shopping ID in "pk" argument from URL. For closing it
     does not require anything and just blindly purge the session variable.
     """
@@ -109,7 +112,9 @@ class ShoppinglistToggleSelectionView(LoginRequiredMixin, RedirectURLMixin, View
         # If shopping id is given add it as opened in session
         if "pk" in self.kwargs:
             self.object = self.get_object()
-            self.request.session["atoum_shopping_inventory"] = self.object.id
+            # Only open undone Shopping
+            if self.object.done is False:
+                self.request.session["atoum_shopping_inventory"] = self.object.id
         # Else assume we have to close any opened shopping from session
         else:
             del self.request.session["atoum_shopping_inventory"]
@@ -233,11 +238,12 @@ class ShoppinglistManageProductView(LoginRequiredMixin, TemplateView):
             product=self.product
         )
 
-        # NOTE: We can use the update() method instead
+        # NOTE: We could use the update() method instead
         obj.done = done
         obj.save()
 
-        self.object.update_shopping_done()
+        # DEPRECATED
+        # self.object.update_shopping_done()
 
         self.operation_name = "patch_field_done"
 

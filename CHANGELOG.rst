@@ -18,17 +18,17 @@ Development
 * Improved responsive layout so it should be fully usable;
 * Fixed package configuration with 'pyproject.toml' file and some path changes;
 * Added an admin action for products to move selected objects to a category;
+* Remove automatic 'shopping.done' changing, now it have to be done manually to avoid
+  unexpected behaviors and user experiences;
+* A done Shopping can not be set in basket anymore;
 
 .. Todo::
-    * DAL autocompletion field in admin would be largely better if using Haystack
-      search. But this seems difficult to insert in DAL machinary because of Haystack
-      search system which reside in a form mixin;
-    * Creating a new empty shopping should not make it "done";
-    * A "done" shopping is available to enter for edition (like adding product) but
-      fail to fill the cart on the first action, but then after is working because the
-      first action has removed "done" status;
-      * We should not allow to edit again a "done" shopping;
-    * Admin product "move to" action is not tested yet;
+    * [ ] A done Shopping can not be edited anymore;
+    * [ ] Frontend should have a variable to tell him if all shopping item are done and
+      if so, pop a proposition to set the Shopping object as done;
+    * [ ] Fix frontend bug when adding a product on an empty Shopping;
+    * [ ] Admin product "move to" action is not tested yet;
+    * [ ] Rename "opened" Shopping mention to "basket" in code and tests;
 
 
 Version 0.4.1 - 2025/04/30
